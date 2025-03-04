@@ -8,6 +8,7 @@ import urllib.parse
 # File for storing scores and questions
 DATA_FILE = "game_scores.json"
 QUESTIONS_FILE = "questions.json"
+PLAYERS_FILE = "players.json"
 
 # Initialize session state
 if "questions" not in st.session_state:
@@ -51,6 +52,28 @@ def delete_question():
 # Ensure questions are loaded into session
 if not st.session_state.questions:
     st.session_state.questions = load_questions()
+    
+# save players
+def save_players(players):
+    with open(PLAYERS_FILE, "w") as f:
+        json.dump(st.session_state.players, f, indent=4)
+        
+# load players
+def load_players():
+    if os.path.exists(PLAYERS_FILE):
+        with open(PLAYERS_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+# delete a player
+def delete_player():
+    st.title("Delete Player")
+    player = st.selectbox("Select a player to delete", st.session_state.players)
+    if st.button("Delete Player"):
+        del st.session_state.players[player]
+        save_players()
+        st.success("Player deleted!")
+        st.rerun()
 
 # Load scores
 def load_scores():
@@ -64,6 +87,7 @@ def save_scores(scores):
         json.dump(scores, f, indent=4)
 
 scores = load_scores()
+
 
 # Detect URL parameters
 query_params = st.query_params
@@ -136,10 +160,15 @@ elif page == "Setup Players":
     
     if st.button("Save Players"):
         st.session_state.players = players
+        save_players(players)
         st.success("Players saved!")
     
     st.subheader("Current Players:")
     st.write(st.session_state.players)
+    
+    # delete a player
+    delete_player()
+    
 
 # Page 3: Generate Player Links
 elif page == "Player Links":
