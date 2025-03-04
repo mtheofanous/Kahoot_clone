@@ -70,8 +70,8 @@ def delete_player():
     st.title("Delete Player")
     player = st.selectbox("Select a player to delete", st.session_state.players)
     if st.button("Delete Player"):
-        del st.session_state.players[player]
-        save_players()
+        st.session_state.players.remove[player]
+        save_players(st.session_state.players)
         st.success("Player deleted!")
         st.rerun()
 
