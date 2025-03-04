@@ -25,6 +25,8 @@ if "current_player" not in st.session_state:
     st.session_state.current_player = None  # Track current player
 if "quiz_finished" not in st.session_state:
     st.session_state.quiz_finished = False  # Track if quiz is completed
+if "final_scores" not in st.session_state:
+    st.session_state.final_scores = False  # Track if final scores are displayed
 if "current_question_index" not in st.session_state:
     st.session_state.current_question_index = 0  # Track the current question number
 
@@ -107,12 +109,14 @@ if player_name and not st.session_state.quiz_finished:
     page = "Player Quiz"
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
+elif st.session_state.final_scores:
+    page = "Final Scores"
 else:
-    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Results"])
+    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Questions & Answers"])
 
 def player_links():
     st.title("Player Links")
-    base_url = "https://kahootclone.streamlit.app/"  # Change to your deployment URL
+    base_url = "http://localhost:8501/" #https://kahootclone.streamlit.app/"  # Change to your deployment URL
     for player in st.session_state.players.keys():
         player_url = base_url + "?page=Player_Quiz&player=" + urllib.parse.quote(player)
         st.write(f"{player}: [Click here]({player_url})")
@@ -178,136 +182,32 @@ elif page == "Player Links":
     player_links()
     
 # Page 4: Player Quiz
-# elif page == "Player Quiz":
-#     st.title(f"Hello {player_name}! Your Quiz")
-    
-#     questions = load_questions()
-#     for i, question in enumerate(questions):
-#         with st.container():
-#             st.markdown(f"### 🎯 Question {i+1}")
-#             st.markdown(f"**{question['question']}**")
-#             st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{i}")
-    
-#     if st.button("✅ Submit Answers"):
-#         score = 0
-#         for i, question in enumerate(questions):
-#             if st.session_state.responses.get(player_name) == question["correct"]:
-#                 score += 1
-#         scores[player_name] = {"score": score, "current_question": len(questions)}
-#         save_scores(scores)
-#         st.session_state.quiz_finished = True
-#         st.rerun()
-
-import streamlit as st
-import pandas as pd
-import random
-import json
-import os
-import urllib.parse
-
-# File for storing scores and questions
-DATA_FILE = "game_scores.json"
-QUESTIONS_FILE = "questions.json"
-
-# Initialize session state
-if "questions" not in st.session_state:
-    st.session_state.questions = []
-if "players" not in st.session_state:
-    st.session_state.players = {}
-if "responses" not in st.session_state:
-    st.session_state.responses = {}
-if "completed_players" not in st.session_state:
-    st.session_state.completed_players = set()
-if "show_podium" not in st.session_state:
-    st.session_state.show_podium = False
-if "current_player" not in st.session_state:
-    st.session_state.current_player = None  # Track current player
-if "quiz_finished" not in st.session_state:
-    st.session_state.quiz_finished = False  # Track if quiz is completed
-if "current_question_index" not in st.session_state:
-    st.session_state.current_question_index = 0  # Track the current question number
-
-# Load questions from file if session is empty
-def load_questions():
-    if os.path.exists(QUESTIONS_FILE):
-        with open(QUESTIONS_FILE, "r") as f:
-            return json.load(f)
-    return []
-
-# Save questions to file
-def save_questions(questions):
-    with open(QUESTIONS_FILE, "w") as f:
-        json.dump(questions, f, indent=4)
-
-# Ensure questions are loaded into session
-if not st.session_state.questions:
-    st.session_state.questions = load_questions()
-
-# Load scores
-def load_scores():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {}
-
-def save_scores(scores):
-    with open(DATA_FILE, "w") as f:
-        json.dump(scores, f, indent=4)
-
-scores = load_scores()
-
-# Detect URL parameters
-query_params = st.query_params
-player_name = query_params.get("player", [None])[0]
-url_page = query_params.get("page", [None])[0]
-
-# Ensure session state updates when a new player clicks a link
-if player_name and st.session_state.current_player != player_name:
-    st.session_state.current_player = player_name  # Update session state
-    st.session_state.current_question_index = 0  # Reset question index for new player
-    st.rerun()  # Reload to ensure correct session
-
-# Override navigation if player is accessing their quiz link
-if player_name and not st.session_state.quiz_finished:
-    page = "Player Quiz"
-elif st.session_state.quiz_finished:
-    page = "Quiz Finished"
-else:
-    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Results"])
-
-# Page 4: Player Quiz
-if page == "Player Quiz":
+elif page == "Player Quiz":
     st.title(f"Hello {player_name}! Your Quiz")
     
     questions = load_questions()
     total_questions = len(questions)
-    current_index = st.session_state.current_question_index
-    
-    if current_index < total_questions:
-        question = questions[current_index]
-        st.markdown(f"### 🎯 Question {current_index + 1}")
+    current_question = st.session_state.current_question_index
+    if current_question < total_questions:
+        question = questions[current_question]
+        st.markdown(f"### 🎯 Question {current_question+1}/{total_questions}")
         st.markdown(f"**{question['question']}**")
-        selected_answer = st.radio("Select your answer:", question["options"], key=f"{player_name}_{current_index}")
+        st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{current_question}")
         
-        if st.button("Next Question →"):
-            if player_name not in st.session_state.responses:
-                st.session_state.responses[player_name] = {}
-            st.session_state.responses[player_name][current_index] = selected_answer
-            
-            # Ensure player is initialized in scores
-            if player_name not in scores:
-                scores[player_name] = {"score": 0}
-            
-            if selected_answer == question["correct"]:
-                scores[player_name]["score"] += 1
-                save_scores(scores)
-            
+        if st.button("✅ Submit Answer"):
+  
+            if st.session_state.responses.get(player_name) == question["correct"]:
+                scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
+            save_scores(scores)
             st.rerun()
     else:
+        st.title("🎉 Quiz Completed!"
+                 f"Thank you for participating, {player_name}!")
+        st.markdown("Your responses have been recorded.")
         st.session_state.quiz_finished = True
         st.rerun()
-
+    
 
 # Page 5: Quiz Finished
 elif page == "Quiz Finished":
@@ -316,11 +216,10 @@ elif page == "Quiz Finished":
     st.markdown("Thank you for participating. Your responses have been recorded.")
     st.markdown("Click on **Results** in the sidebar to see the final scores!")
 
-# Page 6: Results
-elif page == "Results":
-    st.title("Quiz Results")
+# Page 6: Questions & Answers
+elif page == "Questions & Answers":
+    st.title("Quiz Questions & Answers")
     
-    st.subheader("Questions & Answers:")
     questions = load_questions()
     for i, question in enumerate(questions):
         with st.container():
@@ -331,13 +230,21 @@ elif page == "Results":
                     st.markdown(f"✅ **{opt}**")
                 else:
                     st.markdown(f"🔹 {opt}")
+
+    st.markdown("Click on **Final Scores** in the sidebar to see the leaderboard and podium!")
+    if st.button("Final Scores"):
+        st.session_state.final_scores = True
+        st.rerun()
+
+# Page 7: Final Scores & Podium
+elif page == "Final Scores":
+    st.title("Final Scores & Podium")
     
-    st.subheader("Final Scores:")
-    sorted_scores = sorted(scores.items(), key=lambda x: x[1]["score"], reverse=True)
-    scores_df = pd.DataFrame([(p, s["score"]) for p, s in sorted_scores], columns=["Player", "Score"])
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    scores_df = pd.DataFrame([(p, s) for p, s in sorted_scores], columns=["Player", "Score"])
     st.dataframe(scores_df)
-    
-    if len(sorted_scores) >= len(st.session_state.players) and all(s["current_question"] >= len(st.session_state.questions) for _, s in sorted_scores):
+
+    if len(sorted_scores) >= len(st.session_state.players):
         if st.button("📢 Show Winners"):
             st.session_state.show_podium = True
     
@@ -345,8 +252,24 @@ elif page == "Results":
         st.balloons()
         st.markdown("<h2 style='color: #FFD700;'>🥇 Podium Winners 🥈🥉</h2>", unsafe_allow_html=True)
         if len(sorted_scores) > 0:
-            st.markdown(f"🥇 **{sorted_scores[0][0]}** - {sorted_scores[0][1]['score']} points")
+            st.markdown(f"🥇 **{sorted_scores[0][0]}** - {sorted_scores[0][1]} points")
         if len(sorted_scores) > 1:
-            st.markdown(f"🥈 **{sorted_scores[1][0]}** - {sorted_scores[1][1]['score']} points")
+            st.markdown(f"🥈 **{sorted_scores[1][0]}** - {sorted_scores[1][1]} points")
         if len(sorted_scores) > 2:
-            st.markdown(f"🥉 **{sorted_scores[2][0]}** - {sorted_scores[2][1]['score']} points")
+            st.markdown(f"🥉 **{sorted_scores[2][0]}** - {sorted_scores[2][1]} points")
+
+    st.markdown("Click on **Questions & Answers** in the sidebar to review the quiz!")
+
+
+    if st.button("🔄 Play Again"):
+        st.session_state.quiz_finished = False
+        st.session_state.current_question_index = 0
+        st.session_state.responses = {}
+        st.session_state.completed_players = set()
+        st.session_state.show_podium = False
+        st.session_state.current_player = None
+        st.rerun()
+        
+if __name__ == "__main__":
+    pass
+
