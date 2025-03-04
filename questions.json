@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "question": "marios",
+        "options": [
+            "marios@gmail.com",
+            "asd",
+            "3",
+            "sd"
+        ],
+        "correct": "marios@gmail.com"
+    }
+]
