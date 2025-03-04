@@ -36,6 +36,17 @@ def load_questions():
 def save_questions(questions):
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(questions, f, indent=4)
+        
+# delete a question
+def delete_question():
+    st.title("Delete Question")
+    question = st.selectbox("Select a question to delete", st.session_state.questions)
+    if st.button("Delete Question"):
+        st.session_state.questions.remove(question)
+        save_questions(st.session_state.questions)
+        st.success("Question deleted!")
+        st.rerun()
+
 
 # Ensure questions are loaded into session
 if not st.session_state.questions:
@@ -96,8 +107,21 @@ if page == "Add Questions":
         save_questions(st.session_state.questions)  # Save questions to file
         st.success("Question added!")
     
-    st.subheader("Current Questions:")
-    st.write(st.session_state.questions)
+    # preview the questions
+    st.subheader("Preview Questions:")
+    questions = load_questions()
+    for i, question in enumerate(questions):
+        with st.container():
+            st.markdown(f"### Question {i+1}")
+            st.markdown(f"**{question['question']}**")
+            for opt in question["options"]:
+                if opt == question["correct"]:
+                    st.markdown(f"✅ **{opt}**")
+                else:
+                    st.markdown(f"🔹 {opt}")
+    # delete a question
+    delete_question()
+    
 
 # Page 2: Setup Players
 elif page == "Setup Players":
