@@ -283,12 +283,11 @@ elif page == "Results":
     st.subheader("Final Scores:")
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     scores_df = pd.DataFrame([(p, s) for p, s in sorted_scores], columns=["Player", "Score"])
-    # st.dataframe(scores_df)
 
-    if len(sorted_scores) >= len(st.session_state.players):
-        if st.button("📢 Show Winners"):
-            st.session_state.show_podium = True    
-    if st.session_state.show_podium:
+    # if len(sorted_scores) >= len(st.session_state.players):
+    if st.button("📢 Show Winners"):
+#         st.session_state.show_podium = True    
+# if st.session_state.show_podium:
         st.balloons()
         c = st.columns([1, 1, 1, 4, 1, 1])
         c[3].markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
