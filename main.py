@@ -8,7 +8,6 @@ import urllib.parse
 # File for storing scores and questions
 DATA_FILE = "game_scores.json"
 QUESTIONS_FILE = "questions.json"
-PLAYERS_FILE = "players.json"
 
 # Initialize session state
 if "questions" not in st.session_state:
@@ -37,43 +36,10 @@ def load_questions():
 def save_questions(questions):
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(questions, f, indent=4)
-        
-# delete a question
-def delete_question():
-    st.title("Delete Question")
-    question = st.selectbox("Select a question to delete", st.session_state.questions)
-    if st.button("Delete Question"):
-        st.session_state.questions.remove(question)
-        save_questions(st.session_state.questions)
-        st.success("Question deleted!")
-        st.rerun()
-
 
 # Ensure questions are loaded into session
 if not st.session_state.questions:
     st.session_state.questions = load_questions()
-    
-# save players
-def save_players(players):
-    with open(PLAYERS_FILE, "w") as f:
-        json.dump(st.session_state.players, f, indent=4)
-        
-# load players
-def load_players():
-    if os.path.exists(PLAYERS_FILE):
-        with open(PLAYERS_FILE, "r") as f:
-            return json.load(f)
-    return {}
-
-# delete a player
-def delete_player():
-    st.title("Delete Player")
-    player = st.selectbox("Select a player to delete", st.session_state.players)
-    if st.button("Delete Player"):
-        st.session_state.players.remove[player]
-        save_players(st.session_state.players)
-        st.success("Player deleted!")
-        st.rerun()
 
 # Load scores
 def load_scores():
@@ -88,6 +54,34 @@ def save_scores(scores):
 
 scores = load_scores()
 
+# Function to save players
+def save_players(players):
+    with open("players.json", "w") as f:
+        json.dump(players, f, indent=4)
+
+# Function to load players
+def load_players():
+    if os.path.exists("players.json"):
+        with open("players.json", "r") as f:
+            return json.load(f)
+    return {}
+
+# Ensure players are loaded into session
+if not st.session_state.players:
+    st.session_state.players = load_players()
+
+# Function to delete a player
+def delete_player():
+    st.title("Delete Player")
+    if st.session_state.players:
+        player = st.selectbox("Select a player to delete", list(st.session_state.players.keys()))
+        if st.button("Delete Player"):
+            del st.session_state.players[player]
+            save_players(st.session_state.players)
+            st.success(f"Player {player} deleted!")
+            st.rerun()
+    else:
+        st.warning("No players to delete.")
 
 # Detect URL parameters
 query_params = st.query_params
@@ -107,103 +101,8 @@ elif st.session_state.quiz_finished:
 else:
     page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Results"])
 
-def player_links():
-    st.title("Player Links")
-    base_url = "https://kahootclone.streamlit.app/"  # Change to your deployment URL
-    for player in st.session_state.players.keys():
-        player_url = base_url + "?page=Player_Quiz&player=" + urllib.parse.quote(player)
-        st.write(f"{player}: [Click here]({player_url})")
-
-# Page 1: Add Questions
-if page == "Add Questions":
-    st.title("Add Questions")
-    question = st.text_input("Enter the question:")
-    options = [st.text_input(f"Option {i+1}") for i in range(4)]
-    correct_answer = st.selectbox("Select the correct answer:", options)
-    
-    if st.button("Add Question"):
-        new_question = {
-            "question": question,
-            "options": options,
-            "correct": correct_answer
-        }
-        st.session_state.questions.append(new_question)
-        save_questions(st.session_state.questions)  # Save questions to file
-        st.success("Question added!")
-    
-    # preview the questions
-    st.subheader("Preview Questions:")
-    questions = load_questions()
-    for i, question in enumerate(questions):
-        with st.container():
-            st.markdown(f"### Question {i+1}")
-            st.markdown(f"**{question['question']}**")
-            for opt in question["options"]:
-                if opt == question["correct"]:
-                    st.markdown(f"✅ **{opt}**")
-                else:
-                    st.markdown(f"🔹 {opt}")
-    # delete a question
-    delete_question()
-    
-
-# Page 2: Setup Players
-elif page == "Setup Players":
-    st.title("Setup Players")
-    num_players = st.number_input("Enter number of players:", min_value=1, value=2)
-    
-    players = {}
-    for i in range(num_players):
-        name = st.text_input(f"Enter name for Player {i+1}")
-        if name:
-            players[name] = 0  # Initialize score
-    
-    if st.button("Save Players"):
-        st.session_state.players = players
-        save_players(players)
-        st.success("Players saved!")
-    
-    st.subheader("Current Players:")
-    st.write(st.session_state.players)
-    
-    # delete a player
-    delete_player()
-    
-
-# Page 3: Generate Player Links
-elif page == "Player Links":
-    player_links()
-    
-# Page 4: Player Quiz
-elif page == "Player Quiz":
-    st.title(f"Hello {player_name}! Your Quiz")
-    
-    questions = load_questions()
-    for i, question in enumerate(questions):
-        with st.container():
-            st.markdown(f"### 🎯 Question {i+1}")
-            st.markdown(f"**{question['question']}**")
-            st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{i}")
-    
-    if st.button("✅ Submit Answers"):
-        score = 0
-        for i, question in enumerate(questions):
-            if st.session_state.responses.get(player_name) == question["correct"]:
-                score += 1
-        scores[player_name] = {"score": score, "current_question": len(questions)}
-        save_scores(scores)
-        st.session_state.quiz_finished = True
-        st.rerun()
-
-# Page 5: Quiz Finished
-elif page == "Quiz Finished":
-    st.title("🎉 Congratulations! 🎉")
-    st.subheader("You have successfully completed the questionnaire!")
-    st.markdown("Thank you for participating. Your responses have been recorded.")
-    st.markdown("Click on **Results** in the sidebar to see the final scores!")
-
 # Page 6: Results
-elif page == "Results":
+if page == "Results":
     st.title("Quiz Results")
     
     st.subheader("Questions & Answers:")
