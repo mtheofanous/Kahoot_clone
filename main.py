@@ -4,11 +4,25 @@ import random
 import json
 import os
 import urllib.parse
+import time 
+
+st.set_page_config(
+    page_title="Quiz",
+    page_icon="🔵",
+    layout="centered" 
+)
 
 # File for storing scores and questions
 DATA_FILE = "game_scores.json"
 QUESTIONS_FILE = "questions.json"
 PLAYERS_FILE = "players.json"
+
+TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
+# display in the left corner
+col1, col2 = st.columns([4, 2])
+with col2:
+    st.image(TELADOC_LOGO, width=400)
+
 
 # Initialize session state
 if "questions" not in st.session_state:
@@ -25,8 +39,6 @@ if "current_player" not in st.session_state:
     st.session_state.current_player = None  # Track current player
 if "quiz_finished" not in st.session_state:
     st.session_state.quiz_finished = False  # Track if quiz is completed
-if "final_scores" not in st.session_state:
-    st.session_state.final_scores = False  # Track if final scores are displayed
 if "current_question_index" not in st.session_state:
     st.session_state.current_question_index = 0  # Track the current question number
 
@@ -44,9 +56,9 @@ def save_questions(questions):
         
 # delete a question
 def delete_question():
-    st.title("Delete Question")
-    question = st.selectbox("Select a question to delete", st.session_state.questions)
-    if st.button("Delete Question"):
+    st.sidebar.title("Delete Question")
+    question = st.sidebar.selectbox("Select a question to delete", st.session_state.questions)
+    if st.sidebar.button("Delete Question"):
         st.session_state.questions.remove(question)
         save_questions(st.session_state.questions)
         st.success("Question deleted!")
@@ -89,6 +101,31 @@ def load_scores():
 def save_scores(scores):
     with open(DATA_FILE, "w") as f:
         json.dump(scores, f, indent=4)
+        
+import streamlit as st
+
+def reset_game():
+    # Ensure all session state attributes are initialized
+    if "scores" not in st.session_state:
+        st.session_state.scores = {}  # Initialize scores if it doesn't exist
+    
+    st.session_state.questions = []
+    st.session_state.players = {}
+    st.session_state.responses = {}
+    st.session_state.completed_players = set()
+    st.session_state.show_podium = False
+    st.session_state.current_player = None
+    st.session_state.quiz_finished = False
+    st.session_state.current_question_index = 0
+    
+    # Save state
+    save_questions(st.session_state.questions)
+    save_players(st.session_state.players)
+    save_scores(st.session_state.scores)
+    
+    st.success("Game reset successfully!")
+    st.rerun()
+
 
 scores = load_scores()
 
@@ -109,18 +146,19 @@ if player_name and not st.session_state.quiz_finished:
     page = "Player Quiz"
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
-elif st.session_state.final_scores:
-    page = "Final Scores"
 else:
-    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Questions & Answers"])
+    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Results"])
 
 def player_links():
     st.title("Player Links")
     base_url = "http://localhost:8501/" #https://kahootclone.streamlit.app/"  # Change to your deployment URL
     for player in st.session_state.players.keys():
-        player_url = base_url + "?page=Player_Quiz&player=" + urllib.parse.quote(player)
-        st.write(f"{player}: [Click here]({player_url})")
-
+        with st.container(border=True):
+            player_url = base_url + "?page=Player_Quiz&player=" + urllib.parse.quote(player)
+            st.write(f"{player}: [Click here]({player_url})")
+            # show the player link
+            st.write(f"Send Link: {player_url}")
+ 
 # Page 1: Add Questions
 if page == "Add Questions":
     st.title("Add Questions")
@@ -141,17 +179,27 @@ if page == "Add Questions":
     # preview the questions
     st.subheader("Preview Questions:")
     questions = load_questions()
-    for i, question in enumerate(questions):
-        with st.container():
-            st.markdown(f"### Question {i+1}")
-            st.markdown(f"**{question['question']}**")
-            for opt in question["options"]:
-                if opt == question["correct"]:
-                    st.markdown(f"✅ **{opt}**")
-                else:
-                    st.markdown(f"🔹 {opt}")
+    with st.expander("Click to preview questions"):
+        # Splitting questions into two columns
+        col1, col2 = st.columns(2)
+
+        for i, question in enumerate(questions):
+            # Alternate placement of questions in columns
+            col = col1 if i % 2 == 0 else col2
+            with col:
+                with st.container(border=True):
+                    st.markdown(f"<h3 style='color:#662D91;'>Question {i+1}</h3>", unsafe_allow_html=True)
+                    st.markdown(f"**{question['question']}**")
+                    for opt in question["options"]:
+                        if opt == question["correct"]:
+                            st.markdown(f"✅ **{opt}**")
+                        else:
+                            st.markdown(f"🔹 {opt}")
     # delete a question
     delete_question()
+    # Reset the game
+    if st.sidebar.button("🔄 Reset Game"):
+        reset_game()
     
 
 # Page 2: Setup Players
@@ -171,7 +219,9 @@ elif page == "Setup Players":
         st.success("Players saved!")
     
     st.subheader("Current Players:")
-    st.write(st.session_state.players)
+    for player in st.session_state.players:
+        with st.container(border=True):
+            st.write(player)
     
     # delete a player
     delete_player()
@@ -190,9 +240,10 @@ elif page == "Player Quiz":
     current_question = st.session_state.current_question_index
     if current_question < total_questions:
         question = questions[current_question]
-        st.markdown(f"### 🎯 Question {current_question+1}/{total_questions}")
+        st.markdown(f"<h3 style='color:#662D91;'>Question {current_question+1}/{total_questions}</h3>", unsafe_allow_html=True)
         st.markdown(f"**{question['question']}**")
-        st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{current_question}")
+        with st.container(border=True):
+            st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{current_question}")
         
         if st.button("✅ Submit Answer"):
   
@@ -216,60 +267,50 @@ elif page == "Quiz Finished":
     st.markdown("Thank you for participating. Your responses have been recorded.")
     st.markdown("Click on **Results** in the sidebar to see the final scores!")
 
-# Page 6: Questions & Answers
-elif page == "Questions & Answers":
-    st.title("Quiz Questions & Answers")
+elif page == "Results":
+    st.title("Quiz Results")
     
+    st.subheader("Questions & Answers:")
     questions = load_questions()
     for i, question in enumerate(questions):
-        with st.container():
-            st.markdown(f"### Question {i+1}")
-            st.markdown(f"**{question['question']}**")
+        with st.expander(f"Question {i+1} - {question['question']}"):
             for opt in question["options"]:
                 if opt == question["correct"]:
                     st.markdown(f"✅ **{opt}**")
                 else:
                     st.markdown(f"🔹 {opt}")
-
-    st.markdown("Click on **Final Scores** in the sidebar to see the leaderboard and podium!")
-    if st.button("Final Scores"):
-        st.session_state.final_scores = True
-        st.rerun()
-
-# Page 7: Final Scores & Podium
-elif page == "Final Scores":
-    st.title("Final Scores & Podium")
-    
+                    
+    st.subheader("Final Scores:")
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     scores_df = pd.DataFrame([(p, s) for p, s in sorted_scores], columns=["Player", "Score"])
-    st.dataframe(scores_df)
+    # st.dataframe(scores_df)
 
     if len(sorted_scores) >= len(st.session_state.players):
         if st.button("📢 Show Winners"):
-            st.session_state.show_podium = True
-    
+            st.session_state.show_podium = True    
     if st.session_state.show_podium:
         st.balloons()
-        st.markdown("<h2 style='color: #FFD700;'>🥇 Podium Winners 🥈🥉</h2>", unsafe_allow_html=True)
+        c = st.columns([1, 1, 1, 4, 1, 1])
+        c[3].markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
+        columna = st.columns(3)
+        col = st.columns(4)
         if len(sorted_scores) > 0:
-            st.markdown(f"🥇 **{sorted_scores[0][0]}** - {sorted_scores[0][1]} points")
+            with columna[1].container(border=True):
+                st.markdown(f"<h4>🥇 {sorted_scores[0][0]}</h4>", unsafe_allow_html=True)
         if len(sorted_scores) > 1:
-            st.markdown(f"🥈 **{sorted_scores[1][0]}** - {sorted_scores[1][1]} points")
+            with col[1].container(border=True):
+                st.markdown(f"<h4>🥈 {sorted_scores[1][0]}</h4>", unsafe_allow_html=True)
         if len(sorted_scores) > 2:
-            st.markdown(f"🥉 **{sorted_scores[2][0]}** - {sorted_scores[2][1]} points")
+            with col[2].container(border=True):
+                st.markdown(f"<h4>🥉 {sorted_scores[2][0]}</h4>", unsafe_allow_html=True)
+        # show all players ranking
+        st.subheader("All Players Ranking:")
+        for i, (player, score) in enumerate(sorted_scores):
+            st.write(f"{i+1}. {player} - {score} points")
+        # st.write(sorted_scores)
+        st.write("🏁 Thank you for playing! 🏁")
 
-    st.markdown("Click on **Questions & Answers** in the sidebar to review the quiz!")
-
-
-    if st.button("🔄 Play Again"):
-        st.session_state.quiz_finished = False
-        st.session_state.current_question_index = 0
-        st.session_state.responses = {}
-        st.session_state.completed_players = set()
-        st.session_state.show_podium = False
-        st.session_state.current_player = None
-        st.rerun()
         
+
 if __name__ == "__main__":
     pass
-
