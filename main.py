@@ -4,18 +4,27 @@ import random
 import json
 import os
 import urllib.parse
-import time 
+import time
+import datetime
+import glob
 
 st.set_page_config(
     page_title="Quiz",
     page_icon="🔵",
-    layout="centered" 
+    layout="centered", 
+
+
 )
 
 # File for storing scores and questions
 DATA_FILE = "game_scores.json"
 QUESTIONS_FILE = "questions.json"
 PLAYERS_FILE = "players.json"
+ANSWERS_FILE = "answers.json"
+# Directory for saved question sets
+QUESTION_SETS_DIR = "question_sets"
+if not os.path.exists(QUESTION_SETS_DIR):
+    os.makedirs(QUESTION_SETS_DIR)  # Create directory if it doesn't exist
 
 TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
 # display in the left corner
@@ -42,6 +51,29 @@ if "quiz_finished" not in st.session_state:
 if "current_question_index" not in st.session_state:
     st.session_state.current_question_index = 0  # Track the current question number
 
+# Function to save the current question set to a custom file
+def save_question_set(filename):
+    filepath = os.path.join(QUESTION_SETS_DIR, filename + ".json")
+    with open(filepath, "w") as f:
+        json.dump(st.session_state.questions, f, indent=4)
+    st.success(f"Question set saved as '{filename}.json'")
+
+# Function to load a question set from a custom file
+# Function to load a question set from a custom file
+def load_question_set(filename):
+    filepath = os.path.join(QUESTION_SETS_DIR, filename)
+    try:
+        with open(filepath, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        st.error(f"File '{filename}' not found.")
+        return []
+    except json.JSONDecodeError:
+        st.error(f"Error decoding JSON from '{filename}'. Ensure the file is correctly formatted.")
+        return []
+
+    
+
 # Load questions from file if session is empty
 def load_questions():
     if os.path.exists(QUESTIONS_FILE):
@@ -49,8 +81,9 @@ def load_questions():
             return json.load(f)
     return []
 
-# Save questions to file
+
 def save_questions(questions):
+
     with open(QUESTIONS_FILE, "w") as f:
         json.dump(questions, f, indent=4)
         
@@ -116,6 +149,24 @@ def save_scores(scores):
     with open(DATA_FILE, "w") as f:
         json.dump(scores, f, indent=4)
         
+# Function to load answers
+def load_answers():
+    if os.path.exists(ANSWERS_FILE):
+        with open(ANSWERS_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+# Function to save answers
+def save_answers(answers):
+    with open(ANSWERS_FILE, "w") as f:
+        json.dump(answers, f, indent=4)
+        
+answers = load_answers()
+
+# Ensure answers are initialized in session state
+if "answers" not in st.session_state:
+    st.session_state.answers = answers
+
 def reset_game():
     # Ensure all session state attributes are initialized
     if "scores" not in st.session_state:
@@ -129,18 +180,17 @@ def reset_game():
     st.session_state.current_player = None
     st.session_state.quiz_finished = False
     st.session_state.current_question_index = 0
-    
+    st.session_state.answers = {}
     # Save state
     save_questions(st.session_state.questions)
     save_players(st.session_state.players)
     save_scores(st.session_state.scores)
+    save_answers(st.session_state.answers)
     
     st.success("Game reset successfully!")
     st.rerun()
 
-
 scores = load_scores()
-
 
 # Detect URL parameters
 query_params = st.query_params
@@ -154,7 +204,6 @@ if player_name:
 else:
     player_name = None
 
-    
 url_page = query_params.get("page", [None])[0]
 
 # Ensure session state updates when a new player clicks a link
@@ -169,11 +218,11 @@ if player_name and not st.session_state.quiz_finished:
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
 else:
-    page = st.sidebar.radio("Select Page", ["Add Questions", "Setup Players", "Player Links", "Results"])
+    page = st.sidebar.selectbox("**MENU**", ["Create Questions", 'Load Questions',"Setup Players", "Player Links", "Results", "Winners"])
 
 def player_links():
     st.title("Player Links")
-    base_url =  "http://localhost:8501/"   # Change to your deployment URL "https://kahootclone.streamlit.app/"
+    base_url =  "https://kahootclone.streamlit.app/"   # Change to your deployment URL "http://localhost:8501/" "https://kahootclone.streamlit.app/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
@@ -183,8 +232,8 @@ def player_links():
             st.write(f"Send Link: {player_url}")
  
 # Page 1: Add Questions
-if page == "Add Questions":
-    st.title("Add Questions")
+if page == "Create Questions":
+    st.title("Create Questions")
     question = st.text_input("Enter the question:")
     options = [st.text_input(f"Option {i+1}") for i in range(4)]
     correct_answer = st.selectbox("Select the correct answer:", options)
@@ -202,6 +251,7 @@ if page == "Add Questions":
     # preview the questions
     st.subheader("Preview Questions:")
     questions = load_questions()
+    st.session_state.questions = questions
     with st.expander("Click to preview questions"):
         # Splitting questions into two columns
         col1, col2 = st.columns(2)
@@ -218,12 +268,37 @@ if page == "Add Questions":
                             st.markdown(f"✅ **{opt}**")
                         else:
                             st.markdown(f"🔹 {opt}")
+    # Save question set with a custom name
+    st.subheader("Save Questions Package")
+    filename = st.text_input("Enter a filename to save this question set (without extension)")
+    if st.button("Save Question Set"):
+        if filename:
+            save_question_set(filename)
+        else:
+            st.error("Please enter a valid filename.")
+
     # delete a question
     delete_question()
+        
     # Reset the game
     if st.sidebar.button("🔄 Reset Game"):
         reset_game()
     
+elif page == 'Load Questions':
+    st.subheader("Load a Saved Question Package")
+    saved_filenames = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
+
+    # debug
+    st.write(saved_filenames)
+
+    selected_file = st.selectbox("Select a question set to load:", saved_filenames)
+    if selected_file:
+        st.session_state.questions = load_question_set(selected_file)
+        save_questions(st.session_state.questions)  # Save loaded questions to ensure persistence
+        st.success(f"Question set '{selected_file}' loaded successfully!")
+        st.rerun()
+        
+        
 
 # Page 2: Setup Players
 elif page == "Setup Players":
@@ -254,11 +329,12 @@ elif page == "Setup Players":
 elif page == "Player Links":
     player_links()
     
+    
 # Page 4: Player Quiz
 elif page == "Player Quiz":
     st.title(f"Hello {player_name}! Your Quiz")
     
-    questions = load_questions()
+    questions = st.session_state.questions
     total_questions = len(questions)
     current_question = st.session_state.current_question_index
     if current_question < total_questions:
@@ -271,11 +347,24 @@ elif page == "Player Quiz":
         if st.button("✅ Submit Answer"):
             if player_name not in scores:
                 scores[player_name] = 0  # Ensure the player starts with 0
+                
+            if player_name not in st.session_state.answers:
+                st.session_state.answers[player_name] = {}
+                
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
+                
+            st.session_state.answers[player_name][f"Q{current_question+1}"] = {
+                "question": question["question"],
+                "selected_answer": st.session_state.responses[player_name],
+                "correct_answer": question["correct"],
+                "timestamp": timestamp
+            }
 
             if st.session_state.responses.get(player_name) == question["correct"]:
                 scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
             save_scores(scores)
+            save_answers(st.session_state.answers)
             st.rerun()
     else:
         st.title("🎉 Quiz Completed!"
@@ -292,49 +381,91 @@ elif page == "Quiz Finished":
     st.markdown("Thank you for participating. Your responses have been recorded.")
     st.markdown("Click on **Results** in the sidebar to see the final scores!")
 
+
 elif page == "Results":
     st.title("Quiz Results")
     
-    st.subheader("Questions & Answers:")
+    # Load questions and answers
     questions = load_questions()
+    answers = load_answers()
+
+    st.subheader("Questions & Answers:")
+
+    # Process answer statistics
     for i, question in enumerate(questions):
         with st.expander(f"Question {i+1} - {question['question']}"):
+            # Count responses for each option
+            response_counts = {opt: 0 for opt in question["options"]}
+            total_responses = 0
+
+            for player, responses in answers.items():
+                if f"Q{i+1}" in responses:
+                    selected_answer = responses[f"Q{i+1}"]["selected_answer"]
+                    response_counts[selected_answer] += 1
+                    total_responses += 1
+            
+            # Display answer choices with percentages
             for opt in question["options"]:
+                count = response_counts[opt]
+                percentage = (count / total_responses * 100) if total_responses > 0 else 0
                 if opt == question["correct"]:
-                    st.markdown(f"✅ **{opt}**")
+                    st.markdown(f"✅ **{opt}** - {count} responses ({percentage:.1f}%)")
                 else:
-                    st.markdown(f"🔹 {opt}")
-                    
+                    st.markdown(f"🔹 {opt} - {count} responses ({percentage:.1f}%)")
+            
+            # Show total responses
+            st.markdown(f"**Total Responses:** {total_responses}")
+
+elif page == "Winners":
     st.subheader("Final Scores:")
+    scores = load_scores()
+    answers = load_answers()
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    # show me the timestamp of the last answer for each player
+    for player, response in answers.items():
+        last_answer = list(response.keys())[-1]
+        timestamp = response[last_answer]["timestamp"]
+        st.write(f"{player} last answered at: {timestamp}")
     scores_df = pd.DataFrame([(p, s) for p, s in sorted_scores], columns=["Player", "Score"])
+    # make a dataframe with columns player, score and last answer timestamp
+    try:
+        final_scores_df = pd.DataFrame([(p, s, list(answers[p].keys())[-1], answers[p][list(answers[p].keys())[-1]]["timestamp"]) for p, s in sorted_scores], columns=["Player", "Score", "Last Answer", "Timestamp"])
+        # sort first by score and then by timestamp
+        final_scores_df = final_scores_df.sort_values(by=["Score", "Timestamp"], ascending=[False, True])
 
-    # if len(sorted_scores) >= len(st.session_state.players):
-    if st.button("📢 Show Winners"):
 
-        st.balloons()
-        c = st.columns([1, 1, 1, 4, 1, 1])
-        c[3].markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
-        columna = st.columns(3)
-        col = st.columns(4)
-        if len(sorted_scores) > 0:
-            with columna[1].container(border=True):
-                st.markdown(f"<h4>🥇 {sorted_scores[0][0]}</h4>", unsafe_allow_html=True)
-        if len(sorted_scores) > 1:
-            with col[1].container(border=True):
-                st.markdown(f"<h4>🥈 {sorted_scores[1][0]}</h4>", unsafe_allow_html=True)
-        if len(sorted_scores) > 2:
-            with col[2].container(border=True):
-                st.markdown(f"<h4>🥉 {sorted_scores[2][0]}</h4>", unsafe_allow_html=True)
-        # show all players ranking
-        st.subheader("All Players Ranking:")
-        for i, (player, score) in enumerate(sorted_scores):
-            st.markdown(f"<p style='font-size:24px; font-weight:bold;'>{i+1}. {player} - {score} points</p>", unsafe_allow_html=True)
+        if st.button("📢 Show Winners"):
 
-        # st.write(sorted_scores)
-        st.markdown("<p style='font-size:36px; font-weight:bold;'> Thank you for playing! </p>", unsafe_allow_html=True)
-
+            st.balloons()
+            c = st.columns([1, 1, 1, 4, 1, 1])
+            c[3].markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
+            columna = st.columns(3)
+            col = st.columns(4)
+            if len(sorted_scores) > 0:
+                with columna[1].container(border=True):
+                    st.markdown(f"<h4>🥇 {final_scores_df.loc[0,'Player']}</h4>", unsafe_allow_html=True)
+            if len(sorted_scores) > 1:
+                with col[1].container(border=True):
+                    st.markdown(f"<h4>🥈 {final_scores_df.loc[1,'Player']}</h4>", unsafe_allow_html=True)
+            if len(sorted_scores) > 2:
+                with col[2].container(border=True):
+                    st.markdown(f"<h4>🥉 {final_scores_df.loc[2,'Player']}</h4>", unsafe_allow_html=True)
+            # show all players ranking
+            st.subheader("All Players Ranking:")
+            # Display all players in order based on final_scores_df
+            for i, (player, score, last_answer, timestamp) in enumerate(final_scores_df.itertuples(index=False)):
+                st.markdown(f"<p style='font-size:24px; font-weight:bold;'>{i+1}. {player} - {score} points</p>", unsafe_allow_html=True)
+                st.write(f"Last answered at: {timestamp}")
         
+            # st.write(sorted_scores)
+            st.markdown("<p style='font-size:36px; font-weight:bold;'> Thank you for playing! </p>", unsafe_allow_html=True)
+
+    except:
+        st.write('Not all players have answered yet')
+        # show who has not answered yet
+        not_answered = set(st.session_state.players.keys()) - set(answers.keys())
+        st.write("Players who have not answered yet:")
+        st.write(not_answered)
 
 if __name__ == "__main__":
     pass
