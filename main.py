@@ -95,15 +95,27 @@ def delete_player():
 def load_scores():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return {}
+            scores = json.load(f)
+    else:
+        scores = {}
+
+    # Ensure all players exist in scores with at least 0 points
+    for player in st.session_state.players.keys():
+        if player not in scores:
+            scores[player] = 0
+
+    return scores
+
 
 def save_scores(scores):
+    # Ensure every player exists in scores, even if they have 0 points
+    for player in st.session_state.players.keys():
+        if player not in scores:
+            scores[player] = 0  # Assign a default score of 0
+
     with open(DATA_FILE, "w") as f:
         json.dump(scores, f, indent=4)
         
-import streamlit as st
-
 def reset_game():
     # Ensure all session state attributes are initialized
     if "scores" not in st.session_state:
@@ -132,7 +144,17 @@ scores = load_scores()
 
 # Detect URL parameters
 query_params = st.query_params
-player_name = query_params.get("player", [None])[0]
+
+player_name = query_params.get("player")
+
+if player_name:
+    if isinstance(player_name, list):
+        player_name = player_name[0]  # Get the first value if it's a list
+    player_name = urllib.parse.unquote(str(player_name))  # Ensure it's a string and decode
+else:
+    player_name = None
+
+    
 url_page = query_params.get("page", [None])[0]
 
 # Ensure session state updates when a new player clicks a link
@@ -151,10 +173,11 @@ else:
 
 def player_links():
     st.title("Player Links")
-    base_url = "https://kahootclone.streamlit.app/" #http://localhost:8501/   # Change to your deployment URL
+    base_url =  "http://localhost:8501/"   # Change to your deployment URL "https://kahootclone.streamlit.app/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
-            player_url = base_url + "?page=Player_Quiz&player=" + urllib.parse.quote(player)
+            player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
+
             st.write(f"{player}: [Click here]({player_url})")
             # show the player link
             st.write(f"Send Link: {player_url}")
@@ -246,7 +269,9 @@ elif page == "Player Quiz":
             st.session_state.responses[player_name] = st.radio("Select your answer:", question["options"], key=f"{player_name}_{current_question}")
         
         if st.button("✅ Submit Answer"):
-  
+            if player_name not in scores:
+                scores[player_name] = 0  # Ensure the player starts with 0
+
             if st.session_state.responses.get(player_name) == question["correct"]:
                 scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
@@ -286,8 +311,7 @@ elif page == "Results":
 
     # if len(sorted_scores) >= len(st.session_state.players):
     if st.button("📢 Show Winners"):
-#         st.session_state.show_podium = True    
-# if st.session_state.show_podium:
+
         st.balloons()
         c = st.columns([1, 1, 1, 4, 1, 1])
         c[3].markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
@@ -305,9 +329,10 @@ elif page == "Results":
         # show all players ranking
         st.subheader("All Players Ranking:")
         for i, (player, score) in enumerate(sorted_scores):
-            st.write(f"{i+1}. {player} - {score} points")
+            st.markdown(f"<p style='font-size:24px; font-weight:bold;'>{i+1}. {player} - {score} points</p>", unsafe_allow_html=True)
+
         # st.write(sorted_scores)
-        st.write("🏁 Thank you for playing! 🏁")
+        st.markdown("<p style='font-size:36px; font-weight:bold;'> Thank you for playing! </p>", unsafe_allow_html=True)
 
         
 
