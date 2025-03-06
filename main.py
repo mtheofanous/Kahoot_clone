@@ -19,12 +19,12 @@ st.markdown("""
         /* Change the font for the entire app */
         html, body, [class*="st-"] {
             font-family: 'Poppins', sans-serif;
-            font-size: 18px !important;
+            font-size: 14px !important;
         }
 
         /* Sidebar customization */
         .sidebar-content {
-            font-size: 16px !important;
+            font-size: 14px !important;
 
         }
 
