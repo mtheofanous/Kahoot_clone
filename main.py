@@ -24,7 +24,7 @@ st.markdown("""
 
         /* Sidebar customization */
         .sidebar-content {
-            font-size: 20px !important;
+            font-size: 16px !important;
 
         }
 
