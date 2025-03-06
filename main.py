@@ -9,11 +9,9 @@ import datetime
 import glob
 
 st.set_page_config(
-    page_title="Quiz",
-    page_icon="🔵",
-    layout="centered", 
-
-
+    page_title="🎉 Quiz Time!",
+    page_icon="❓",
+    layout="centered" 
 )
 
 # File for storing scores and questions
@@ -218,11 +216,11 @@ if player_name and not st.session_state.quiz_finished:
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
 else:
-    page = st.sidebar.selectbox("**MENU**", ["Create Questions", 'Load Questions',"Setup Players", "Player Links", "Results", "Winners"])
+    page = st.sidebar.radio("Select Page", ["Create Questions", 'Load Questions', "Preview Questions","Setup Players", "Player Links", "Reset Game","Results"])
 
 def player_links():
     st.title("Player Links")
-    base_url =  "https://kahootclone.streamlit.app/"   # Change to your deployment URL "http://localhost:8501/" "https://kahootclone.streamlit.app/"
+    base_url =  "http://localhost:8501/"   # Change to your deployment URL "https://kahootclone.streamlit.app/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
@@ -233,7 +231,7 @@ def player_links():
  
 # Page 1: Add Questions
 if page == "Create Questions":
-    st.title("Create Questions")
+    st.title("Add Questions")
     question = st.text_input("Enter the question:")
     options = [st.text_input(f"Option {i+1}") for i in range(4)]
     correct_answer = st.selectbox("Select the correct answer:", options)
@@ -247,7 +245,11 @@ if page == "Create Questions":
         st.session_state.questions.append(new_question)
         save_questions(st.session_state.questions)  # Save questions to file
         st.success("Question added!")
+        
+    st.write("Preview and manage questions in the 'Preview Questions' section.")
+    st.write("You can also save the question set for later use.")
     
+if page == "Preview Questions":
     # preview the questions
     st.subheader("Preview Questions:")
     questions = load_questions()
@@ -279,25 +281,28 @@ if page == "Create Questions":
 
     # delete a question
     delete_question()
-        
+
+elif page == "Reset Game":
+    st.title("Reset Game")
+    st.write("This will reset the game and clear all questions, players, and scores.")
     # Reset the game
-    if st.sidebar.button("🔄 Reset Game"):
+    if st.button("🔄 Reset Game"):
         reset_game()
     
 elif page == 'Load Questions':
     st.subheader("Load a Saved Question Package")
     saved_filenames = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
 
-    # debug
-    st.write(saved_filenames)
-
     selected_file = st.selectbox("Select a question set to load:", saved_filenames)
     if selected_file:
-        st.session_state.questions = load_question_set(selected_file)
-        # save_questions(st.session_state.questions)  # Save loaded questions to ensure persistence
-        st.success(f"Question set '{selected_file}' loaded successfully!")
-        st.rerun()
-        
+        if st.button("Load Question Set"):
+                
+            st.session_state.questions = load_question_set(selected_file)
+            save_questions(st.session_state.questions)  # Save loaded questions to ensure persistence
+            st.success(f"Question set '{selected_file}' loaded successfully!")
+            time.sleep(1)
+            st.rerun()
+                
         
 
 # Page 2: Setup Players
@@ -352,6 +357,8 @@ elif page == "Player Quiz":
                 st.session_state.answers[player_name] = {}
                 
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f")
+            
+            time.sleep(0.5)
                 
             st.session_state.answers[player_name][f"Q{current_question+1}"] = {
                 "question": question["question"],
@@ -363,7 +370,10 @@ elif page == "Player Quiz":
             if st.session_state.responses.get(player_name) == question["correct"]:
                 scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
+            
+            time.sleep(0.5)
             save_scores(scores)
+            time.sleep(0.5)
             save_answers(st.session_state.answers)
             st.rerun()
     else:
@@ -416,7 +426,7 @@ elif page == "Results":
             # Show total responses
             st.markdown(f"**Total Responses:** {total_responses}")
 
-elif page == "Winners":
+                    
     st.subheader("Final Scores:")
     scores = load_scores()
     answers = load_answers()
@@ -432,7 +442,8 @@ elif page == "Winners":
         final_scores_df = pd.DataFrame([(p, s, list(answers[p].keys())[-1], answers[p][list(answers[p].keys())[-1]]["timestamp"]) for p, s in sorted_scores], columns=["Player", "Score", "Last Answer", "Timestamp"])
         # sort first by score and then by timestamp
         final_scores_df = final_scores_df.sort_values(by=["Score", "Timestamp"], ascending=[False, True])
-
+        st.write(final_scores_df)
+        st.write(scores_df)
 
         if st.button("📢 Show Winners"):
 
