@@ -7,6 +7,7 @@ import urllib.parse
 import time
 import datetime
 import glob
+import pyperclip
 
 st.set_page_config(
     page_title="🎉 Quiz Time!",
@@ -26,9 +27,9 @@ if not os.path.exists(QUESTION_SETS_DIR):
 
 TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
 # display in the left corner
-col1, col2 = st.columns([4, 2])
+col1, col2 = st.columns([4, 3])
 with col2:
-    st.image(TELADOC_LOGO, width=400)
+    st.image(TELADOC_LOGO, width=600)
 
 
 # Initialize session state
@@ -216,60 +217,158 @@ if player_name and not st.session_state.quiz_finished:
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
 else:
-    page = st.sidebar.radio("Select Page", ["Create Questions", 'Load Questions', "Preview Questions","Setup Players", "Player Links", "Reset Game","Results"])
+    page = st.sidebar.radio("***MENU***", ["Create Questions", 'Load Questions', "Preview Questions","Setup Players", "Player Links", "Reset Game","Results"])
 
 def player_links():
     st.title("Player Links")
-    base_url =  "https://kahootclone.streamlit.app/"   # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
+    base_url =  "https://kahootclone.streamlit.app/"  # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
+            st.write("Open the link below in a new tab to start the quiz:")
 
             st.write(f"{player}: [Click here]({player_url})")
-            # show the player link
-            st.write(f"Send Link: {player_url}")
+            st.write(f"Or copy the link above and share it with {player} to start the quiz!")
+            
+    # Hidden text input (stores the link for copying)
+            link_box = st.text_input(f"Player {player} Link", player_url, key=f"link_{player}", disabled=True)
+
+            # Copy button using `pyperclip`
+            if st.button(f"Copy Link for {player}", key=f"copy_{player}"):
+                pyperclip.copy(player_url)  # Copies to clipboard
+                st.success(f"Link copied to clipboard for {player}!")
+            
  
 # Page 1: Add Questions
-if page == "Create Questions":
-    st.title("Add Questions")
-    question = st.text_input("Enter the question:")
-    options = [st.text_input(f"Option {i+1}") for i in range(4)]
-    correct_answer = st.selectbox("Select the correct answer:", options)
+# if page == "Create Questions":
+#     st.title("Create Questions")
+#     st.write("Add questions, answer options and select the correct answer.")
+#     question = st.text_input("Enter the question:", key="question", max_chars=500, help="Enter the question here", value="")
+#     options = [st.text_input(f"Option {i+1}") for i in range(4)]
+#     correct_answer = st.selectbox("Select the correct answer:", options)
     
-    if st.button("Add Question"):
-        new_question = {
-            "question": question,
-            "options": options,
-            "correct": correct_answer
-        }
-        st.session_state.questions.append(new_question)
-        save_questions(st.session_state.questions)  # Save questions to file
-        st.success("Question added!")
+#     if st.button("Add Question"):
+#         new_question = {
+#             "question": question,
+#             "options": options,
+#             "correct": correct_answer
+#         }
+#         st.session_state.questions.append(new_question)
+#         save_questions(st.session_state.questions)  # Save questions to file
+#         st.success("Question added!")
+#         time.sleep(1.5)
+#         # clear the inputs
         
+#         st.rerun()
+        
+    # st.write("Preview and manage questions in the 'Preview Questions' section.")
+    # st.write("You can also save the question set for later use.")
+
+
+if page == "Create Questions":
+    st.title("Create Questions")
+    st.write("Add questions, answer options, and select the correct answer.")
+
+    # Initialize session state for questions
+    if "questions" not in st.session_state:
+        st.session_state.questions = []
+
+    # Unique session state key counter for input fields
+    if "input_key_counter" not in st.session_state:
+        st.session_state.input_key_counter = 0
+
+    # Generate unique keys to force input refresh
+    question_key = f"question_{st.session_state.input_key_counter}"
+    option_keys = [f"option_{st.session_state.input_key_counter}_{i}" for i in range(4)]
+    correct_answer_key = f"correct_{st.session_state.input_key_counter}"
+
+    # Input fields
+    question = st.text_input("Enter the question:", key=question_key, max_chars=500)
+
+    options = [
+        st.text_input(f"Option {i+1}", key=option_keys[i]) for i in range(4)
+    ]
+
+    correct_answer = st.selectbox("Select the correct answer:", options, key=correct_answer_key)
+
+    # Add Question Button
+    if st.button("Add Question"):
+        if not question.strip() or any(opt.strip() == "" for opt in options):
+            st.error("Please fill in all fields before adding the question.")
+        else:
+            new_question = {
+                "question": question,
+                "options": options,
+                "correct": correct_answer
+            }
+            st.session_state.questions.append(new_question)
+            save_questions(st.session_state.questions)  # Save questions to file
+            st.success("Question added!")
+
+            # Increase key counter to reset input fields
+            st.session_state.input_key_counter += 1
+
+            # Wait for UI feedback
+            time.sleep(1.5)
+
+            # Force UI refresh
+            st.rerun()
+            
     st.write("Preview and manage questions in the 'Preview Questions' section.")
     st.write("You can also save the question set for later use.")
-    
+
+
+# 
 if page == "Preview Questions":
-    # preview the questions
-    st.subheader("Preview Questions:")
+    st.subheader("Preview & Reorder Questions")
+
+    # Load questions from JSON
     questions = load_questions()
-    st.session_state.questions = questions
-    with st.expander("Click to preview questions"):
+    st.session_state.questions = questions.copy()  # Prevent modifying original data accidentally
+
+    with st.expander("Click to preview and reorder questions"):
         # Splitting questions into two columns
         col1, col2 = st.columns(2)
 
-        for i, question in enumerate(questions):
+        new_order = []  # Store the new order
+
+        for i, question in enumerate(st.session_state.questions):
             # Alternate placement of questions in columns
             col = col1 if i % 2 == 0 else col2
             with col:
                 with st.container(border=True):
+                    # Dropdown for reordering questions
+                    new_index = st.selectbox(
+                        f"Move Q{i+1} to:",
+                        list(range(1, len(st.session_state.questions) + 1)),
+                        index=i,
+                        key=f"order_{i}"
+                    )
+
+                    # Store new positions
+                    new_order.append((new_index, question))
+
+                    # Display question
                     st.markdown(f"<h3 style='color:#662D91;'>Question {i+1}</h3>", unsafe_allow_html=True)
                     st.markdown(f"**{question['question']}**")
+
+                    # Show options
                     for opt in question["options"]:
                         if opt == question["correct"]:
                             st.markdown(f"✅ **{opt}**")
                         else:
                             st.markdown(f"🔹 {opt}")
+
+        # Sort questions based on new order
+        new_order.sort(key=lambda x: x[0])
+        st.session_state.questions = [q for _, q in new_order]
+
+        # Save reordered questions to JSON
+        if st.button("Save Order"):
+            with open("questions.json", "w") as f:
+                json.dump(st.session_state.questions, f, indent=4)
+            st.success("Question order saved successfully!")
+            st.rerun()
     # Save question set with a custom name
     st.subheader("Save Questions Package")
     filename = st.text_input("Enter a filename to save this question set (without extension)")
