@@ -1,13 +1,11 @@
 import streamlit as st
 import pandas as pd
-import random
 import json
 import os
 import urllib.parse
 import time
 import datetime
-import glob
-import pyperclip
+
 
 st.set_page_config(
     page_title="🎉 Quiz Time!",
@@ -229,14 +227,18 @@ def player_links():
 
             st.write(f"{player}: [Click here]({player_url})")
             st.write(f"Or copy the link above and share it with {player} to start the quiz!")
-            
-    # Hidden text input (stores the link for copying)
-            link_box = st.text_input(f"Player {player} Link", player_url, key=f"link_{player}", disabled=True)
+                
+                # Display hidden text input with the link
+            link_box = st.text_input(f"Link for {player} (click copy):", player_url, key=f"link_{player}", disabled=False)
 
-            # Copy button using `pyperclip`
-            if st.button(f"Copy Link for {player}", key=f"copy_{player}"):
-                pyperclip.copy(player_url)  # Copies to clipboard
-                st.success(f"Link copied to clipboard for {player}!")
+            
+    # # Hidden text input (stores the link for copying)
+    #         link_box = st.text_input(f"Player {player} Link", player_url, key=f"link_{player}", disabled=True)
+
+    #         # Copy button using `pyperclip`
+    #         if st.button(f"Copy Link for {player}", key=f"copy_{player}"):
+    #             pyperclip.copy(player_url)  # Copies to clipboard
+    #             st.success(f"Link copied to clipboard for {player}!")
             
  
 # Page 1: Add Questions
