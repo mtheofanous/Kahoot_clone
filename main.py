@@ -13,6 +13,35 @@ st.set_page_config(
     layout="centered" 
 )
 
+# Inject CSS to customize fonts and sizes
+st.markdown("""
+    <style>
+        /* Change the font for the entire app */
+        html, body, [class*="st-"] {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px !important;
+        }
+
+        /* Sidebar customization */
+        .sidebar-content {
+            font-size: 20px !important;
+
+        }
+
+        /* Style for headings */
+        h1 {
+            font-size: 30px !important;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 28px !important;
+        }
+        h3 {
+            font-size: 26px !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # File for storing scores and questions
 DATA_FILE = "game_scores.json"
 QUESTIONS_FILE = "questions.json"
@@ -87,13 +116,15 @@ def save_questions(questions):
 # delete a question
 def delete_question():
     st.sidebar.title("Delete Question")
-    question = st.sidebar.selectbox("Select a question to delete", st.session_state.questions)
+    question = st.sidebar.selectbox("Select a question to delete", st.session_state.questions, format_func=lambda x: x["question"])
     if st.sidebar.button("Delete Question"):
-        st.session_state.questions.remove(question)
-        save_questions(st.session_state.questions)
-        st.success("Question deleted!")
-        st.rerun()
-
+        try:
+            st.session_state.questions.remove(question)
+            save_questions(st.session_state.questions)
+            st.success("Question deleted!")
+            st.rerun()
+        except ValueError:
+            st.error("Question not found.")
 
 # Ensure questions are loaded into session
 if not st.session_state.questions:
@@ -116,10 +147,13 @@ def delete_player():
     st.title("Delete Player")
     player = st.selectbox("Select a player to delete", st.session_state.players)
     if st.button("Delete Player"):
-        del st.session_state.players[player] 
-        save_players(st.session_state.players)
-        st.success("Player deleted!")
-        st.rerun()
+        try:
+            del st.session_state.players[player] 
+            save_players(st.session_state.players)
+            st.success("Player deleted!")
+            st.rerun()
+        except KeyError:
+            st.error("Player not found.")
 
 # Load scores
 def load_scores():
@@ -178,6 +212,9 @@ def reset_game():
     st.session_state.quiz_finished = False
     st.session_state.current_question_index = 0
     st.session_state.answers = {}
+    st.session_state.scores = {}
+    
+    
     # Save state
     save_questions(st.session_state.questions)
     save_players(st.session_state.players)
@@ -215,59 +252,25 @@ if player_name and not st.session_state.quiz_finished:
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
 else:
-    page = st.sidebar.radio("***MENU***", ["Create Questions", 'Load Questions', "Preview Questions","Setup Players", "Player Links", "Reset Game","Results"])
+    page = st.sidebar.radio("***GAME***", ["📝 Create New Questions", "📂 Load Previous Questions", "⚙️ Preview and Manage Questions", "👥 Setup Players", "🔗 Player Links", "🔄 Reset Game", "📊 Results", "🏆 Winners"])
 
 def player_links():
     st.title("Player Links")
-    base_url =  "https://kahootclone.streamlit.app/"  # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
+    base_url =  "http://localhost:8501/" # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
             st.write("Open the link below in a new tab to start the quiz:")
 
             st.write(f"{player}: [Click here]({player_url})")
-            st.write(f"Or copy the link above and share it with {player} to start the quiz!")
+            st.write(f"Or copy the link below and share it with {player} to start the quiz!")
                 
                 # Display hidden text input with the link
-            link_box = st.text_input(f"Link for {player} (click copy):", player_url, key=f"link_{player}", disabled=False)
-
-            
-    # # Hidden text input (stores the link for copying)
-    #         link_box = st.text_input(f"Player {player} Link", player_url, key=f"link_{player}", disabled=True)
-
-    #         # Copy button using `pyperclip`
-    #         if st.button(f"Copy Link for {player}", key=f"copy_{player}"):
-    #             pyperclip.copy(player_url)  # Copies to clipboard
-    #             st.success(f"Link copied to clipboard for {player}!")
-            
- 
-# Page 1: Add Questions
-# if page == "Create Questions":
-#     st.title("Create Questions")
-#     st.write("Add questions, answer options and select the correct answer.")
-#     question = st.text_input("Enter the question:", key="question", max_chars=500, help="Enter the question here", value="")
-#     options = [st.text_input(f"Option {i+1}") for i in range(4)]
-#     correct_answer = st.selectbox("Select the correct answer:", options)
-    
-#     if st.button("Add Question"):
-#         new_question = {
-#             "question": question,
-#             "options": options,
-#             "correct": correct_answer
-#         }
-#         st.session_state.questions.append(new_question)
-#         save_questions(st.session_state.questions)  # Save questions to file
-#         st.success("Question added!")
-#         time.sleep(1.5)
-#         # clear the inputs
-        
-#         st.rerun()
-        
-    # st.write("Preview and manage questions in the 'Preview Questions' section.")
-    # st.write("You can also save the question set for later use.")
+            link_box = st.text_input(f"Link for {player} (copy):", player_url, key=f"link_{player}", disabled=False)
 
 
-if page == "Create Questions":
+
+if page == "📝 Create New Questions":
     st.title("Create Questions")
     st.write("Add questions, answer options, and select the correct answer.")
 
@@ -321,7 +324,7 @@ if page == "Create Questions":
 
 
 # 
-if page == "Preview Questions":
+if page == "⚙️ Preview and Manage Questions":
     st.subheader("Preview & Reorder Questions")
 
     # Load questions from JSON
@@ -383,14 +386,14 @@ if page == "Preview Questions":
     # delete a question
     delete_question()
 
-elif page == "Reset Game":
+elif page == "🔄 Reset Game":
     st.title("Reset Game")
     st.write("This will reset the game and clear all questions, players, and scores.")
     # Reset the game
     if st.button("🔄 Reset Game"):
         reset_game()
     
-elif page == 'Load Questions':
+elif page == '📂 Load Previous Questions':
     st.subheader("Load a Saved Question Package")
     saved_filenames = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
 
@@ -407,7 +410,7 @@ elif page == 'Load Questions':
         
 
 # Page 2: Setup Players
-elif page == "Setup Players":
+elif page == "👥 Setup Players":
     st.title("Setup Players")
     num_players = st.number_input("Enter number of players:", min_value=1, value=2)
     
@@ -432,7 +435,7 @@ elif page == "Setup Players":
     
 
 # Page 3: Generate Player Links
-elif page == "Player Links":
+elif page == "🔗 Player Links":
     player_links()
     
     
@@ -493,12 +496,21 @@ elif page == "Quiz Finished":
     st.markdown("Click on **Results** in the sidebar to see the final scores!")
 
 
-elif page == "Results":
+elif page == "📊 Results":
     st.title("Quiz Results")
     
     # Load questions and answers
     questions = load_questions()
     answers = load_answers()
+    
+    st.write("Total Players:", len(st.session_state.players))
+    st.write("Total Questions:", len(questions))
+    # show which players finished the all the quiz
+    st.write("Players who have completed the quiz:")
+    for player, response in answers.items():
+        if len(response) == len(questions):
+            st.write(player)
+            st.session_state.completed_players.add(player)
 
     st.subheader("Questions & Answers:")
 
@@ -527,8 +539,8 @@ elif page == "Results":
             # Show total responses
             st.markdown(f"**Total Responses:** {total_responses}")
 
-                    
-    st.subheader("Final Scores:")
+elif page == "🏆 Winners":
+    st.title("🏆 Winners")                 
     scores = load_scores()
     answers = load_answers()
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
@@ -536,15 +548,13 @@ elif page == "Results":
     for player, response in answers.items():
         last_answer = list(response.keys())[-1]
         timestamp = response[last_answer]["timestamp"]
-        st.write(f"{player} last answered at: {timestamp}")
     scores_df = pd.DataFrame([(p, s) for p, s in sorted_scores], columns=["Player", "Score"])
     # make a dataframe with columns player, score and last answer timestamp
     try:
         final_scores_df = pd.DataFrame([(p, s, list(answers[p].keys())[-1], answers[p][list(answers[p].keys())[-1]]["timestamp"]) for p, s in sorted_scores], columns=["Player", "Score", "Last Answer", "Timestamp"])
         # sort first by score and then by timestamp
         final_scores_df = final_scores_df.sort_values(by=["Score", "Timestamp"], ascending=[False, True])
-        st.write(final_scores_df)
-        st.write(scores_df)
+ 
 
         if st.button("📢 Show Winners"):
 
@@ -567,7 +577,7 @@ elif page == "Results":
             # Display all players in order based on final_scores_df
             for i, (player, score, last_answer, timestamp) in enumerate(final_scores_df.itertuples(index=False)):
                 st.markdown(f"<p style='font-size:24px; font-weight:bold;'>{i+1}. {player} - {score} points</p>", unsafe_allow_html=True)
-                st.write(f"Last answered at: {timestamp}")
+                
         
             # st.write(sorted_scores)
             st.markdown("<p style='font-size:36px; font-weight:bold;'> Thank you for playing! </p>", unsafe_allow_html=True)
@@ -577,7 +587,7 @@ elif page == "Results":
         # show who has not answered yet
         not_answered = set(st.session_state.players.keys()) - set(answers.keys())
         st.write("Players who have not answered yet:")
-        st.write(not_answered)
-
+        for player in not_answered:
+            st.write(player)
 if __name__ == "__main__":
     pass
