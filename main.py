@@ -294,7 +294,7 @@ elif page == 'Load Questions':
     selected_file = st.selectbox("Select a question set to load:", saved_filenames)
     if selected_file:
         st.session_state.questions = load_question_set(selected_file)
-        save_questions(st.session_state.questions)  # Save loaded questions to ensure persistence
+        # save_questions(st.session_state.questions)  # Save loaded questions to ensure persistence
         st.success(f"Question set '{selected_file}' loaded successfully!")
         st.rerun()
         
