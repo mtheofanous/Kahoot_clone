@@ -220,7 +220,7 @@ else:
 
 def player_links():
     st.title("Player Links")
-    base_url =  "http://localhost:8501/"   # Change to your deployment URL "https://kahootclone.streamlit.app/"
+    base_url =  "https://kahootclone.streamlit.app/"   # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
