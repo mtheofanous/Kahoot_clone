@@ -475,9 +475,9 @@ elif page == "Player Quiz":
                 scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
             
-            time.sleep(0.5)
+            time.sleep(0.2)
             save_scores(scores)
-            time.sleep(0.5)
+            time.sleep(0.2)
             save_answers(st.session_state.answers)
             st.rerun()
     else:
