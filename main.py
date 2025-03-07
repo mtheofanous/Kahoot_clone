@@ -89,7 +89,7 @@ def save_question_set(filename):
 def load_question_set(filename):
     filepath = os.path.join(QUESTION_SETS_DIR, filename)
     try:
-        with open(filepath, "r") as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
         st.error(f"File '{filename}' not found.")
@@ -103,7 +103,7 @@ def load_question_set(filename):
 # Load questions from file if session is empty
 def load_questions():
     if os.path.exists(QUESTIONS_FILE):
-        with open(QUESTIONS_FILE, "r") as f:
+        with open(QUESTIONS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return []
 
@@ -222,6 +222,7 @@ def reset_game():
     save_answers(st.session_state.answers)
     
     st.success("Game reset successfully!")
+    time.sleep(1.5)
     st.rerun()
 
 scores = load_scores()
@@ -252,7 +253,7 @@ if player_name and not st.session_state.quiz_finished:
 elif st.session_state.quiz_finished:
     page = "Quiz Finished"
 else:
-    page = st.sidebar.radio("***GAME***", ["📝 Create New Questions", "📂 Load Previous Questions", "⚙️ Preview and Manage Questions", "👥 Setup Players", "🔗 Player Links", "🔄 Reset Game", "📊 Results", "🏆 Winners"])
+    page = st.sidebar.radio("***GAME***", ["📂 Load Previous Questions", "📝 Create New Questions", "⚙️ Preview and Manage Questions", "👥 Setup Players", "🔗 Player Links", "🔄 Reset Game", "📊 Results", "🏆 Winners"])
 
 def player_links():
     st.title("Player Links")
@@ -350,7 +351,12 @@ if page == "⚙️ Preview and Manage Questions":
                         key=f"order_{i}"
                     )
 
-                    # Store new positions
+                    # Store new positions for sorting and don't let questions have the same order
+                    if new_index in [pos for pos, _ in new_order]:
+                        st.error("Each question must have a unique position. Please adjust the order.")
+                        st.stop()
+                    
+                        
                     new_order.append((new_index, question))
 
                     # Display question
@@ -374,9 +380,15 @@ if page == "⚙️ Preview and Manage Questions":
                 json.dump(st.session_state.questions, f, indent=4)
             st.success("Question order saved successfully!")
             st.rerun()
+            
     # Save question set with a custom name
     st.subheader("Save Questions Package")
+    st.markdown("Save the current set of questions to a custom file for later use.")
     filename = st.text_input("Enter a filename to save this question set (without extension)")
+    # if filename exists, warn the user
+    if os.path.exists(os.path.join(QUESTION_SETS_DIR, filename + ".json")):
+        st.warning("A file with this name already exists. Saving will overwrite the existing file.")
+    # Save
     if st.button("Save Question Set"):
         if filename:
             save_question_set(filename)
@@ -475,10 +487,11 @@ elif page == "Player Quiz":
                 scores[player_name] = scores.get(player_name, 0) + 1
             st.session_state.current_question_index += 1
             
-            time.sleep(0.2)
+            time.sleep(0.1)
             save_scores(scores)
-            time.sleep(0.2)
+            
             save_answers(st.session_state.answers)
+            time.sleep(0.1)
             st.rerun()
     else:
         st.title("🎉 Quiz Completed!"

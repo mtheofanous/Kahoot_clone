@@ -1,6 +1,6 @@
 [
     {
-        "question": "Marios ",
+        "question": "Question 1 Test",
         "options": [
             "1",
             "2",
@@ -10,13 +10,13 @@
         "correct": "1"
     },
     {
-        "question": "Marios asd",
+        "question": "Question 2 Test",
         "options": [
-            "1",
-            "2",
-            "3",
-            "4"
+            "a",
+            "b",
+            "c",
+            "d"
         ],
-        "correct": "1"
+        "correct": "a"
     }
 ]
