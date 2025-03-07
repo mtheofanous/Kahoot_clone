@@ -258,6 +258,9 @@ else:
 def player_links():
     st.title("Player Links")
     base_url =  "https://kahootclone.streamlit.app/"  # Change to your deployment URL "https://kahootclone.streamlit.app/" or "http://localhost:8501/"
+    if not st.session_state.players:
+        st.warning("No players found. Please set up players first.")
+    
     for player in st.session_state.players.keys():
         with st.container(border=True):
             player_url = f"{base_url}?page=Player_Quiz&player={urllib.parse.quote(player)}"
@@ -330,7 +333,10 @@ if page == "⚙️ Preview and Manage Questions":
 
     # Load questions from JSON
     questions = load_questions()
-    st.session_state.questions = questions.copy()  # Prevent modifying original data accidentally
+    st.session_state.questions = questions.copy() # Prevent modifying original data accidentally
+    
+    if not questions:
+        st.warning("No questions found. Please create questions first.")
 
     with st.expander("Click to preview and reorder questions"):
         # Splitting questions into two columns
@@ -556,6 +562,9 @@ elif page == "🏆 Winners":
     st.title("🏆 Winners")                 
     scores = load_scores()
     answers = load_answers()
+    if not answers or not scores:
+        st.warning("No answers or scores found. Please ensure players have completed the quiz.")
+
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     # show me the timestamp of the last answer for each player
     for player, response in answers.items():
