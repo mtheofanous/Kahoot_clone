@@ -7,7 +7,6 @@ import time
 import datetime
 import random
 import string
-from streamlit_lottie import st_lottie
 import requests
 
 # Custom Teladoc CSS styles
@@ -66,12 +65,7 @@ if "quiz_finished" not in st.session_state:
     st.session_state.quiz_finished = False  # Track if quiz is completed
 if "current_question_index" not in st.session_state:
     st.session_state.current_question_index = 0  # Track the current question number
-    
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+
 
 def generate_game_id(length=6):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -268,7 +262,6 @@ if 'game' not in st.session_state:
 
 def login_page():
     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
-    lottie_quiz = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_myejiggj.json")
 
     st.markdown("""
         <style>
@@ -317,8 +310,6 @@ def login_page():
     with col2:
 
         st.image(TELADOC_LOGO, width=250)
-        if lottie_quiz:
-            st_lottie(lottie_quiz, height=150)
 
         st.markdown('<div class="login-header">Welcome to the Teladoc Quiz!</div>', unsafe_allow_html=True)
         st.markdown('<div class="login-sub">Think you know it all? Let\'s find out!</div>', unsafe_allow_html=True)
