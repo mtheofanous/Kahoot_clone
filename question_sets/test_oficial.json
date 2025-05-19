@@ -1,0 +1,32 @@
+[
+    {
+        "question": "Marios",
+        "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "correct": "1"
+    },
+    {
+        "question": "Jule",
+        "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "correct": "2"
+    },
+    {
+        "question": "Takis",
+        "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "correct": "3"
+    }
+]

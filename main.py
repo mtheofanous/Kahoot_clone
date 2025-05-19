@@ -85,7 +85,6 @@ def save_question_set(filename):
     st.success(f"Question set saved as '{filename}.json'")
 
 # Function to load a question set from a custom file
-# Function to load a question set from a custom file
 def load_question_set(filename):
     filepath = os.path.join(QUESTION_SETS_DIR, filename)
     try:
@@ -213,7 +212,6 @@ def reset_game():
     st.session_state.current_question_index = 0
     st.session_state.answers = {}
     st.session_state.scores = {}
-    
     
     # Save state
     save_questions(st.session_state.questions)

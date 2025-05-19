@@ -1,5 +1,8 @@
 [theme]
-base="dark"
-secondaryBackgroundColor="#42487b"
+base = "light"
+primaryColor = "#662D91"               # Teladoc purple for buttons and highlights
+backgroundColor = "#F7F7F9"            # Very light gray background
+secondaryBackgroundColor = "#E9E4F6"   # Light purple for cards/sidebars
+textColor = "#000000"                  # Standard black text
 
 
