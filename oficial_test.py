@@ -192,7 +192,7 @@ translations = {
         "to:": "a:",
         "Choose a unique new position for this question": "Elige una nueva posición única para esta pregunta",
         "🚀 Generate Game Link": "🚀 Generar Enlace del Juego",
-
+        "🧩 Preview & Manage Questions": "🧩 Previsualizar y Gestionar Preguntas",
 
 
     }
