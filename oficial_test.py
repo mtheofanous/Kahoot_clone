@@ -9,6 +9,200 @@ import random
 import string
 import requests
 
+translations = {
+    "en": {
+        "Welcome to the Teladoc Quiz!": "Welcome to the Teladoc Quiz!",
+        "Think you know it all? Let's find out!": "Think you know it all? Let's find out!",
+        "🔑 Enter Game ID": "🔑 Enter Game ID",
+        "🚀 Join Game": "🚀 Join Game",
+        "❌ No game found with this Game ID.": "❌ No game found with this Game ID.",
+        "Please enter a valid Game ID to proceed.": "Please enter a valid Game ID to proceed.",
+        "Welcome to Teladoc Game": "Welcome to Teladoc Game",
+        "Your Name": "Your Name",
+        "🎮 Start Quiz": "🎮 Start Quiz",
+        "Please enter a name.": "Please enter a name.",
+        "Game ID not found. Please join through a valid game link.": "Game ID not found. Please join through a valid game link.",
+        "This name is already taken for this game. Please choose another one.": "This name is already taken for this game. Please choose another one.",
+        "❓ Question": "❓ Question",
+        "of": "of",
+        "Please enter a valid filename.": "Please enter a valid filename.",
+        "Question set saved as": "Question set saved as",
+        "Question set '": "Question set '",
+        "loaded successfully!": "loaded successfully!",
+        "Enter the question:": "Enter the question:",
+        "Select the correct answer:": "Select the correct answer:",
+        "Option": "Option",
+        "How many answer options?": "How many answer options?",
+        "➕ Add Question": "➕ Add Question",
+        "✅ Question added!": "✅ Question added!",
+        "The question cannot be empty.": "The question cannot be empty.",
+        "All options must be filled in and not empty.": "All options must be filled in and not empty.",
+        "Options must be unique — duplicates are not allowed.": "Options must be unique — duplicates are not allowed.",
+        "Save Question Set": "Save Question Set",
+        "💾 Save Set": "💾 Save Set",
+        "📥 Load Question Set": "📥 Load Question Set",
+        "🧹 Clear All Questions": "🧹 Clear All Questions",
+        "⚠️ I’m sure I want to clear all questions": "⚠️ I’m sure I want to clear all questions",
+        "🔄 Reorder Questions": "🔄 Reorder Questions",
+        "📊 Quiz Results": "📊 Quiz Results",
+        "📊 Results": "📊 Results",
+        "🏆 Winners": "🏆 Winners",
+        "Select Game ID to View Results": "Select Game ID to View Results",
+        "Total Players:": "Total Players:",
+        "Total Questions:": "Total Questions:",
+        "Players who completed all questions:": "Players who completed all questions:",
+        "📋 Questions & Answers": "📋 Questions & Answers",
+        "✅": "✅",
+        "🔹": "🔹",
+        "Total Responses:": "Total Responses:",
+        "Select Game ID": "Select Game ID",
+        "📢 Show Winners": "📢 Show Winners",
+        "Podium Winners": "Podium Winners",
+        "🥇 First Place": "🥇 First Place",
+        "🥈 Second Place": "🥈 Second Place",
+        "🥉 Third Place": "🥉 Third Place",
+        "🏅 All Players Ranking:": "🏅 All Players Ranking:",
+        "🧠 Create Quiz": "🧠 Create Quiz",
+        "🚀 Launch Game": "🚀 Launch Game",
+        "📊 Game Stats": "📊 Game Stats",
+        "🛠 Manage Games": "🛠 Manage Games",
+        "🔒 Log out": "🔒 Log out",
+        "Generate & Save Game": "Generate & Save Game",
+        "Send this Game ID to players to join:": "Send this Game ID to players to join:",
+        "No game sessions found yet.": "No game sessions found yet.",
+        "No valid answer data found.": "No valid answer data found.",
+        "🧰 Manage Question Sets & Games": "🧰 Manage Question Sets & Games",
+        "🗃 Question Sets": "🗃 Question Sets",
+        "🎮 Active Games": "🎮 Active Games",
+        "⚠️ Confirm deletion": "⚠️ Confirm deletion",
+        "🗑": "🗑",
+        "Congratulations": "Congratulations",
+        "You have completed the Teladoc Health quiz.": "You have completed the Teladoc Health quiz.",
+        "Your final score:": "Your final score:",
+        "points": "points",
+        "If this were a medical consult... you'd be the chief doctor!": "If this were a medical consult... you'd be the chief doctor!",
+        "Your Teladoc knowledge is stronger than a double shot of coffee ☕": "Your Teladoc knowledge is stronger than a double shot of coffee ☕",
+        "Share your result with the team and challenge your coworkers.": "Share your result with the team and challenge your coworkers.",
+    },
+    "es": {
+        "Welcome to the Teladoc Quiz!": "¡Bienvenido al Quiz de Teladoc!",
+        "Think you know it all? Let's find out!": "¿Crees que lo sabes todo? ¡Descubrámoslo!",
+        "🔑 Enter Game ID": "🔑 Introduce el ID del juego",
+        "🚀 Join Game": "🚀 Unirse al Juego",
+        "❌ No game found with this Game ID.": "❌ No se encontró ningún juego con este ID.",
+        "Please enter a valid Game ID to proceed.": "Por favor, introduce un ID de juego válido para continuar.",
+        "Welcome to Teladoc Game": "Bienvenido al Juego de Teladoc",
+        "Your Name": "Tu Nombre",
+        "🎮 Start Quiz": "🎮 Comenzar Quiz",
+        "Please enter a name.": "Por favor, introduce un nombre.",
+        "Game ID not found. Please join through a valid game link.": "ID de juego no encontrado. Únete mediante un enlace válido.",
+        "This name is already taken for this game. Please choose another one.": "Este nombre ya está en uso para este juego. Por favor, elige otro.",
+        "❓ Question": "❓ Pregunta",
+        "of": "de",
+        "Please enter a valid filename.": "Por favor, introduce un nombre de archivo válido.",
+        "Question set saved as": "Conjunto de preguntas guardado como",
+        "Question set '": "Conjunto de preguntas '",
+        "loaded successfully!": "cargado correctamente!",
+        "Enter the question:": "Introduce la pregunta:",
+        "Select the correct answer:": "Selecciona la respuesta correcta:",
+        "Option": "Opción",
+        "How many answer options?": "¿Cuántas opciones de respuesta?",
+        "➕ Add Question": "➕ Añadir Pregunta",
+        "✅ Question added!": "✅ ¡Pregunta añadida!",
+        "The question cannot be empty.": "La pregunta no puede estar vacía.",
+        "All options must be filled in and not empty.": "Todas las opciones deben estar completas y no vacías.",
+        "Options must be unique — duplicates are not allowed.": "Las opciones deben ser únicas. No se permiten duplicados.",
+        "Save Question Set": "Guardar Conjunto de Preguntas",
+        "💾 Save Set": "💾 Guardar Conjunto",
+        "📥 Load Question Set": "📥 Cargar Conjunto de Preguntas",
+        "🧹 Clear All Questions": "🧹 Borrar Todas las Preguntas",
+        "⚠️ I’m sure I want to clear all questions": "⚠️ Estoy seguro de que quiero borrar todas las preguntas",
+        "🔄 Reorder Questions": "🔄 Reordenar Preguntas",
+        "📊 Quiz Results": "📊 Resultados del Quiz",
+        "📊 Results": "📊 Resultados",
+        "**📊 Results**": "**📊 Resultados**",
+        "🏆 Winners": "🏆 Ganadores",
+        "**🏆 Winners**": "**🏆 Ganadores**",
+        "Select Game ID to View Results": "Selecciona el ID del Juego para ver los Resultados",
+        "Total Players:": "Total de Jugadores:",
+        "Total Questions:": "Total de Preguntas:",
+        "Players who completed all questions:": "Jugadores que completaron todas las preguntas:",
+        "📋 Questions & Answers": "📋 Preguntas y Respuestas",
+        "✅": "✅",
+        "🔹": "🔹",
+        "Total Responses:": "Respuestas Totales:",
+        "Select Game ID": "Seleccionar ID del Juego",
+        "📢 Show Winners": "📢 Mostrar Ganadores",
+        "Podium Winners": "Ganadores del Podio",
+        "🥇 First Place": "🥇 Primer Lugar",
+        "🥈 Second Place": "🥈 Segundo Lugar",
+        "🥉 Third Place": "🥉 Tercer Lugar",
+        "🏅 All Players Ranking:": "🏅 Clasificación de Todos los Jugadores:",
+        "🧠 Create Quiz": "🧠 Crear Quiz",
+        "🚀 Launch Game": "🚀 Lanzar Juego",
+        "📊 Game Stats": "📊 Estadísticas",
+        "🛠 Manage Games": "🛠 Gestionar",
+        "🔒 Log out": "🔒 Salir",
+        "Generate & Save Game": "Generar y Guardar Juego",
+        "Send this Game ID to players to join:": "Envía este ID de juego a los jugadores para unirse:",
+        "No game sessions found yet.": "No se encontraron sesiones de juego todavía.",
+        "No valid answer data found.": "No se encontraron datos de respuestas válidas.",
+        "🧰 Manage Question Sets & Games": "🧰 Gestionar Conjuntos de Preguntas y Juegos",
+        "🗃 Question Sets": "🗃 Conjuntos de Preguntas",
+        "🎮 Active Games": "🎮 Juegos Activos",
+        "⚠️ Confirm deletion": "⚠️ Confirmar eliminación",
+        "🗑": "🗑",
+        "Congratulations": "¡Felicidades",
+        "You have completed the Teladoc Health quiz.": "Has completado el quiz de Teladoc Health.",
+        "Your final score:": "Tu puntuación final:",
+        "points": "puntos",
+        "If this were a medical consult... you'd be the chief doctor!": "Si esto fuera una consulta médica... ¡serías el/la doctor/a en jefe!",
+        "Your Teladoc knowledge is stronger than a double shot of coffee ☕": "Tu conocimiento Teladoc está más fuerte que una taza doble de café ☕",
+        "Share your result with the team and challenge your coworkers.": "Comparte tu resultado con el equipo y reta a tus compañeros.",
+        "Hi team,": "Hola equipo,",
+        "Join our quiz game by clicking the link below and entering the following Game ID:": "Únete a nuestro quiz haciendo clic en el siguiente enlace e introduciendo este ID de juego:",
+        "Have fun and good luck!": "¡Diviértanse y mucha suerte!",
+        "You can copy and paste this message into an email or Teams chat.": "Puedes copiar y pegar este mensaje en un correo o en Teams.",
+        "Load a Saved Question Package": "Cargar un paquete de preguntas guardado",
+        "Select a question set to manage:": "Selecciona un conjunto de preguntas para gestionar:",
+        "📥 Load Question Set": "📥 Cargar Conjunto de Preguntas",
+        "Question set": "Conjunto de preguntas",
+        "loaded successfully!": "cargado correctamente!",
+        "🧠 Create & Edit Questions": "🧠 Crear y Editar Preguntas",
+        "Add questions, choose number of options, and set the correct one(s).": "Añade preguntas, elige el número de opciones y selecciona la(s) correcta(s).",
+        "How many answer options?": "¿Cuántas opciones de respuesta?",
+        "Enter the question:": "Introduce la pregunta:",
+        "Option": "Opción",
+        "Select the correct answer:": "Selecciona la respuesta correcta:",
+        "➕ Add Question": "➕ Añadir Pregunta",
+        "The question cannot be empty.": "La pregunta no puede estar vacía.",
+        "All options must be filled in and not empty.": "Todas las opciones deben estar completas y no vacías.",
+        "Options must be unique — duplicates are not allowed.": "Las opciones deben ser únicas. No se permiten duplicados.",
+        "✅ Question added!": "✅ ¡Pregunta añadida!",
+        "Welcome to the Quiz Game Manager!": "¡Bienvenido al Gestor de Quiz!",
+        "✏️ Edit Mode": "✏️ Modo Edición",
+        "Edit question text": "Editar texto de la pregunta",
+        "Number of options": "Número de opciones",
+        "Select correct answer": "Seleccionar respuesta correcta",
+        "💾 Save Changes": "💾 Guardar Cambios",
+        "✅ Question updated successfully.": "✅ Pregunta actualizada correctamente.",
+        "— Select new position —": "— Selecciona nueva posición —",
+        "Position": "Posición",
+        "Move": "Mover",
+        "to:": "a:",
+        "Choose a unique new position for this question": "Elige una nueva posición única para esta pregunta",
+        "🚀 Generate Game Link": "🚀 Generar Enlace del Juego",
+
+
+
+    }
+}
+
+
+def t(key):
+    lang = st.session_state.get("lang", "en")
+    return translations.get(lang, {}).get(key, key)
+
 # Custom Teladoc CSS styles
 st.markdown("""
     <style>
@@ -261,6 +455,21 @@ if 'game' not in st.session_state:
     
 
 def login_page():
+    if "lang" not in st.session_state:
+        st.session_state.lang = "en"  # default language
+        
+    _ , lang = st.columns([10,1.5])
+
+    with lang:
+        lang_choice = st.selectbox(
+        "🌐",
+        options=["en", "es"],
+        index=0 if st.session_state.lang == "en" else 1,
+        format_func=lambda x: "Eng" if x == "en" else "Esp"
+        )
+
+    st.session_state.lang = lang_choice
+    
     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
 
     st.markdown("""
@@ -307,16 +516,17 @@ def login_page():
     """, unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([0.5, 3, 0.5])
+    
     with col2:
+        
+        st.image(TELADOC_LOGO, width=350)
 
-        st.image(TELADOC_LOGO, width=250)
+        st.markdown(f'<div class="login-header">{t("Welcome to the Teladoc Quiz!")}</div>', unsafe_allow_html=True)
+        st.markdown(f"""<div class="login-sub">{t("Think you know it all? Let's find out!")}</div>""", unsafe_allow_html=True)
 
-        st.markdown('<div class="login-header">Welcome to the Teladoc Quiz!</div>', unsafe_allow_html=True)
-        st.markdown('<div class="login-sub">Think you know it all? Let\'s find out!</div>', unsafe_allow_html=True)
+        game_id_input = st.text_input(t("🔑 Enter Game ID"), max_chars=10).upper().strip()
 
-        game_id_input = st.text_input("🔑 Enter Game ID", max_chars=10).upper()
-
-        if st.button("🚀 Join Game"):
+        if st.button(t("🚀 Join Game")):
             if game_id_input == 'TELADOC':
                 st.session_state.logged_in = 'admin'
                 st.rerun()
@@ -326,10 +536,10 @@ def login_page():
                         with open(GAMES_FILE, "r") as f:
                             games_data = json.load(f)
                     except json.JSONDecodeError:
-                        st.error("Error loading games data.")  # << this line was missing
+                        st.error(t("Error loading games data."))
                         return
                 else:
-                    st.error("No games found.")
+                    st.error(t("No games found."))
                     return
 
                 if game_id_input in games_data:
@@ -339,28 +549,30 @@ def login_page():
                     st.session_state.questions = games_data[game_id_input].get("questions", [])
                     st.rerun()
                 else:
-                    st.error("❌ No game found with this Game ID.")
+                    st.error(t("❌ No game found with this Game ID."))
             else:
-                st.error("Please enter a valid Game ID to proceed.")
+                st.error(t("Please enter a valid Game ID to proceed."))
+
 
 
 def player_page():
-    st.title("Welcome to Teladoc Game")
+
+    st.title(t("Welcome to Teladoc Game"))
 
     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
     col1, col2 = st.columns([4, 3])
     with col2:
         st.image(TELADOC_LOGO, width=300)
 
-    player = st.text_input("Your Name", max_chars=40)
+    player = st.text_input(t("Your Name"), max_chars=40)
 
-    if st.button("🎮 Start Quiz"):
+    if st.button(t("🎮 Start Quiz")):
         if not player:
-            st.error("Please enter a name.")
+            st.error(t("Please enter a name."))
             return
 
         if "game_id" not in st.session_state:
-            st.error("Game ID not found. Please join through a valid game link.")
+            st.error(t("Game ID not found. Please join through a valid game link."))
             return
 
         game_id = st.session_state.game_id
@@ -375,7 +587,7 @@ def player_page():
             existing_players[game_id] = {}
 
         if player in existing_players[game_id]:
-            st.error("This name is already taken for this game. Please choose another one.")
+            st.error(t("This name is already taken for this game. Please choose another one."))
         else:
             existing_players[game_id][player] = {}
 
@@ -386,24 +598,32 @@ def player_page():
             st.session_state.game = 'start_game'
             st.rerun()
 
+
  
 def start_game():
+    
     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
     col1, col2 = st.columns([4, 3])
     with col2:
         st.image(TELADOC_LOGO, width=300)
+
     countdown_placeholder = st.empty()
 
     if "countdown_done" not in st.session_state:
         for i in range(5, 0, -1):
-            countdown_placeholder.markdown(f"<h1 style='text-align:center; font-size:80px;'>{i}</h1>", unsafe_allow_html=True)
+            countdown_placeholder.markdown(
+                f"<h1 style='text-align:center; font-size:80px;'>{i}</h1>", unsafe_allow_html=True
+            )
             time.sleep(1)
-        countdown_placeholder.markdown("<h1 style='text-align:center; font-size:80px;'>Go!</h1>", unsafe_allow_html=True)
+        countdown_placeholder.markdown(
+            f"<h1 style='text-align:center; font-size:80px;'>{t('Go!')}</h1>", unsafe_allow_html=True
+        )
         time.sleep(1)
         st.session_state.countdown_done = True
         st.rerun()
     else:
         question_page()
+
         
 
 def question_page():
@@ -431,13 +651,12 @@ def question_page():
         st.balloons()
         st.markdown(f"""
             <div style="background-color:#E9E4F6; padding:30px; border-radius:20px; text-align:center; margin-top:50px;">
-                <h2 style="color:#4B2991;">🎉 ¡Felicidades, {player}! 🎉</h2>
-                <p style="font-size:20px;">Has completado el quiz de Teladoc Health.</p>
-                <p style="font-size:22px;"><strong>Tu puntuación final:</strong> <span style="color:#00B1E1;">{final_score} puntos</span></p>
+                <h2 style="color:#4B2991;">🎉 {t("Congratulations")}, {player}! 🎉</h2>
+                <p style="font-size:20px;">{t("You have completed the Teladoc Health quiz.")}</p>
+                <p style="font-size:22px;"><strong>{t("Your final score:")}</strong> <span style="color:#00B1E1;">{final_score} {t("points")}</span></p>
                 <hr style="margin: 20px 0;">
-                <p style="font-size:18px;">🏅 Si esto fuera una consulta médica... ¡serías el/la doctor/a en jefe!</p>
-                <p style="font-size:18px;">🧠 Tu conocimiento Teladoc está más fuerte que una taza doble de café ☕</p>
-                <p style="font-size:16px; color:#555;">Comparte tu resultado con el equipo y reta a tus compañeros.</p>
+                <p style="font-size:18px;">🧠 {t("Your Teladoc knowledge is stronger than a double shot of coffee ☕")}</p>
+                <p style="font-size:16px; color:#555;">{t("Share your result with the team and challenge your coworkers.")}</p>
             </div>
         """, unsafe_allow_html=True)
         return
@@ -470,7 +689,7 @@ def question_page():
         <div class="progress-bar"><div class="progress-bar-fill"></div></div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"#### ❓ Question {current_index + 1} of {total_questions}")
+    st.markdown(f"#### ❓ {t('Question')} {current_index + 1} {t('of')} {total_questions}")
     st.markdown(f"<div class='question-card'><h3>{question['question']}</h3>", unsafe_allow_html=True)
 
     correct = question["correct"]
@@ -521,6 +740,7 @@ def question_page():
     st.markdown("</div>", unsafe_allow_html=True)
 
 
+
 def logged_in_page():
     
     # Initialize toggle states
@@ -534,31 +754,31 @@ def logged_in_page():
         st.session_state.manage_sets_games_active = False
     if "about" not in st.session_state:
         st.session_state.about = False
-        
+
     def clear_all_views():
         st.session_state.new_game_active = False
         st.session_state.game_link_active = False
         st.session_state.dashboard_active = False
         st.session_state.manage_sets_games_active = False
         st.session_state.about = False
-    
-    home, _ ,logout = st.columns([1,4,1])
+
+    home, _, logout = st.columns([1, 4, 1])
     with home:
-        if st.button("About"):
+        if st.button(t("About")):
             clear_all_views()
             st.session_state.about = True
-            
+
     with logout:
-        if st.button("🔒 Log out"):
+        if st.button(t("🔒 Log out")):
             st.session_state.logged_in = False
             st.session_state.game = False
             for key in list(st.session_state.keys()):
-                if key not in ["logged_in"]:  # Keep "logged_in" to allow redirect to login page
+                if key not in ["logged_in"]:
                     del st.session_state[key]
             st.rerun()
-            
-    st.markdown("## 👋 Welcome to the Quiz Game Manager!")
-    
+
+    st.markdown(f"## 👋 {t('Welcome to the Quiz Game Manager!')}")
+
     def reorder_questions():
         move_plan = []
 
@@ -583,40 +803,37 @@ def logged_in_page():
         for i in range(len(st.session_state.questions)):
             st.session_state.pop(f"order_{i}", None)
 
-        st.success("✅ Question order updated successfully!")
+        st.success(t("✅ Question order updated successfully!"))
         st.rerun()
 
     # Display the logo
     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
     st.sidebar.image(TELADOC_LOGO, width=300)
 
-
     with st.container(border=True):
-        menu1, menu2, menu3, menu4 = st.columns([1.5,1.5,1.5,1.5])
-        # Sidebar toggle buttons (no highlight)
-        
+        menu1, menu2, menu3, menu4 = st.columns([1.5, 1.5, 1.5, 1.5])
+
         with menu1:
-            if st.button("**🧠 Create Quiz**"):
+            if st.button(f"**{t('🧠 Create Quiz')}**"):
                 clear_all_views()
                 st.session_state.new_game_active = True
-                
+
         with menu2:
-            if st.button("**🚀 Launch Game**"):
+            if st.button(f"**{t('🚀 Launch Game')}**"):
                 clear_all_views()
                 st.session_state.game_link_active = True
-                
+
         with menu3:
-            if st.button("**📊 Game Stats**"):
+            if st.button(f"**{t('📊 Game Stats')}**"):
                 clear_all_views()
                 st.session_state.dashboard_active = True
-                
+
         with menu4:
-            if st.button("**🛠 Manage Games**"):
+            if st.button(f"**{t('🛠 Manage Games')}**"):
                 clear_all_views()
                 st.session_state.manage_sets_games_active = True
+
                 
-      
-   
     # --- Show game presentation ---
     if st.session_state.get("about", False):
 
@@ -676,22 +893,22 @@ def logged_in_page():
         👉 Use the buttons above to get started.
         """)
 
-    # --- CREATE GAME SECTION ---
+# --- CREATE GAME SECTION ---
     if st.session_state.new_game_active:
         with st.sidebar.container():
-            st.subheader("Load a Saved Question Package")
+            st.subheader(t("Load a Saved Question Package"))
             saved_filenames = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
-            selected_file = st.selectbox("Select a question set to manage:", saved_filenames)
+            selected_file = st.selectbox(t("Select a question set to manage:"), saved_filenames)
 
-            if st.button("📥 Load Question Set"):
+            if st.button(t("📥 Load Question Set")):
                 st.session_state.questions = load_question_set(selected_file)
                 save_questions(st.session_state.questions)
-                st.success(f"Question set '{selected_file}' loaded successfully!")
+                st.success(f"{t('Question set')} '{selected_file}' {t('loaded successfully!')}")
                 time.sleep(1)
                 st.rerun()
 
-            st.title("🧠 Create & Edit Questions")
-            st.write("Add questions, choose number of options, and set the correct one(s).")
+            st.title(t("🧠 Create & Edit Questions"))
+            st.write(t("Add questions, choose number of options, and set the correct one(s)."))
 
             # Initialize session state for questions
             if "questions" not in st.session_state:
@@ -703,7 +920,8 @@ def logged_in_page():
 
             # 🔢 Select number of options
             num_options = st.number_input(
-                "How many answer options?", min_value=2, max_value=6, value=4, step=1, key="num_options_selector"
+                t("How many answer options?"),
+                min_value=2, max_value=6, value=4, step=1, key="num_options_selector"
             )
 
             # Generate input keys
@@ -712,23 +930,23 @@ def logged_in_page():
             correct_answer_key = f"correct_{st.session_state.input_key_counter}"
 
             # Question input
-            question = st.text_input("Enter the question:", key=question_key, max_chars=500)
+            question = st.text_input(t("Enter the question:"), key=question_key, max_chars=500)
 
             # Option inputs
-            options = [st.text_input(f"Option {i+1}", key=option_keys[i]) for i in range(num_options)]
+            options = [st.text_input(f"{t('Option')} {i+1}", key=option_keys[i]) for i in range(num_options)]
 
             # Correct answer selection
             non_empty_options = [opt for opt in options if opt.strip()]
-            correct_answer = st.selectbox("Select the correct answer:", non_empty_options, key=correct_answer_key)
+            correct_answer = st.selectbox(t("Select the correct answer:"), non_empty_options, key=correct_answer_key)
 
             # ➕ Add Question
-            if st.button("➕ Add Question"):
+            if st.button(t("➕ Add Question")):
                 if not question.strip():
-                    st.error("The question cannot be empty.")
+                    st.error(t("The question cannot be empty."))
                 elif any(opt.strip() == "" for opt in options):
-                    st.error("All options must be filled in and not empty.")
+                    st.error(t("All options must be filled in and not empty."))
                 elif len(set(opt.strip() for opt in options)) < len(options):
-                    st.error("Options must be unique — duplicates are not allowed.")
+                    st.error(t("Options must be unique — duplicates are not allowed."))
                 else:
                     new_question = {
                         "question": question.strip(),
@@ -737,21 +955,20 @@ def logged_in_page():
                     }
                     st.session_state.questions.append(new_question)
                     save_questions(st.session_state.questions)
-                    st.success("✅ Question added!")
+                    st.success(t("✅ Question added!"))
                     st.session_state.input_key_counter += 1
                     time.sleep(0.5)
                     st.rerun()
 
-
             
         with st.container():
-            st.subheader("🧩 Preview & Manage Questions")
+            st.subheader(t("🧩 Preview & Manage Questions"))
 
             if "questions" not in st.session_state:
                 st.session_state.questions = load_questions()
 
             if not st.session_state.questions:
-                st.warning("No questions found. Please create questions first.")
+                st.warning(t("No questions found. Please create questions first."))
                 st.stop()
 
             col1, col2 = st.columns(2)
@@ -761,42 +978,36 @@ def logged_in_page():
                 col = col1 if i % 2 == 0 else col2
                 with col:
                     with st.container(border=True):
-                        action_col, _ ,delete_col = st.columns([1, 4 ,1])
+                        action_col, _, delete_col = st.columns([1, 4, 1])
 
-                        # ✏️ Edit Button
                         with action_col:
                             if st.button("✏️", key=f"edit_{i}"):
                                 st.session_state.editing_index = i
 
-                        # 🗑 Delete Button
                         with delete_col:
-                            if st.button("**🗑**", key=f"delete_{i}"):
+                            if st.button(f"**{t('🗑')}**", key=f"delete_{i}"):
                                 st.session_state.questions.remove(question)
                                 save_questions(st.session_state.questions)
-                                st.success("Question deleted!")
+                                st.success(t("Question deleted!"))
                                 st.rerun()
-                                
-                        # Show editable fields if this question is selected for editing
-                        if st.session_state.get("editing_index") == i:
-                            st.markdown("**✏️ Edit Mode**")
-                            
-                            # Edit question text
-                            new_question = st.text_input("Edit question text", value=question["question"], key=f"edit_q_{i}")
 
-                            # Editable number of options (default to current)
+                        if st.session_state.get("editing_index") == i:
+                            st.markdown(f"**{t('✏️ Edit Mode')}**")
+
+                            new_question = st.text_input(t("Edit question text"), value=question["question"], key=f"edit_q_{i}")
+
                             current_option_count = len(question["options"])
                             num_edit_options = st.number_input(
-                                "Number of options", min_value=2, max_value=6, value=current_option_count, step=1, key=f"edit_q_{i}_option_count"
+                                t("Number of options"),
+                                min_value=2, max_value=6, value=current_option_count, step=1, key=f"edit_q_{i}_option_count"
                             )
 
-                            # Option fields
                             new_options = []
                             for opt_idx in range(num_edit_options):
                                 default_val = question["options"][opt_idx] if opt_idx < len(question["options"]) else ""
-                                new_opt = st.text_input(f"Option {opt_idx+1}", value=default_val, key=f"edit_q_{i}_opt_{opt_idx}")
+                                new_opt = st.text_input(f"{t('Option')} {opt_idx+1}", value=default_val, key=f"edit_q_{i}_opt_{opt_idx}")
                                 new_options.append(new_opt)
 
-                            # Filter non-empty to prevent dropdown errors
                             valid_for_dropdown = [opt for opt in new_options if opt.strip()]
                             try:
                                 index_of_correct = valid_for_dropdown.index(question["correct"]) if question["correct"] in valid_for_dropdown else 0
@@ -804,19 +1015,19 @@ def logged_in_page():
                                 index_of_correct = 0
 
                             new_correct = st.selectbox(
-                                "Select correct answer",
+                                t("Select correct answer"),
                                 valid_for_dropdown,
                                 index=index_of_correct,
                                 key=f"edit_q_{i}_correct"
                             )
 
-                            if st.button("💾 Save Changes", key=f"save_edit_{i}"):
+                            if st.button(t("💾 Save Changes"), key=f"save_edit_{i}"):
                                 if not new_question.strip():
-                                    st.error("The question cannot be empty.")
+                                    st.error(t("The question cannot be empty."))
                                 elif any(opt.strip() == "" for opt in new_options):
-                                    st.error("All options must be filled in and not empty.")
+                                    st.error(t("All options must be filled in and not empty."))
                                 elif len(set(opt.strip() for opt in new_options)) < len(new_options):
-                                    st.error("Options must be unique — duplicates are not allowed.")
+                                    st.error(t("Options must be unique — duplicates are not allowed."))
                                 else:
                                     st.session_state.questions[i] = {
                                         "question": new_question.strip(),
@@ -824,10 +1035,9 @@ def logged_in_page():
                                         "correct": new_correct.strip()
                                     }
                                     save_questions(st.session_state.questions)
-                                    st.success("✅ Question updated successfully.")
+                                    st.success(t("✅ Question updated successfully."))
                                     st.session_state.editing_index = None
                                     st.rerun()
-
 
                         st.markdown(f"<h3 style='color:#662D91;'>Q{i+1}</h3>", unsafe_allow_html=True)
                         st.markdown(f"**{question['question']}**")
@@ -846,62 +1056,60 @@ def logged_in_page():
                             if pos != current_pos and pos not in selected_positions
                         ]
 
-                        display_options = ["— Select new position —"] + [f"Position {p}" for p in available_positions]
-
-                        previous_value = st.session_state.get(f"order_{i}", "— Select new position —")
+                        display_options = [t("— Select new position —")] + [f"Position {p}" for p in available_positions]
+                        previous_value = st.session_state.get(f"order_{i}", t("— Select new position —"))
 
                         selected = st.selectbox(
-                            f"Move Q{i+1} to:",
+                            f"{t('Move')} Q{i+1} {t('to:')}",
                             display_options,
                             index=display_options.index(previous_value) if previous_value in display_options else 0,
                             key=f"order_{i}",
-                            help="Choose a unique new position for this question", label_visibility="collapsed"
+                            help=t("Choose a unique new position for this question"), label_visibility="collapsed"
                         )
 
                         if selected.startswith("Position"):
                             selected_pos_number = int(selected.replace("Position ", ""))
                             selected_positions.add(selected_pos_number)
 
-            if st.button("🔄 Reorder Questions"):
+            if st.button(t("🔄 Reorder Questions")):
                 reorder_questions()
 
-            # Save question set with a custom name
-            st.subheader("Save Question Set")
-            st.markdown("Save the current set of questions to a custom file for later use.")
-            filename = st.text_input("Enter a filename to save this question set (without extension)")
-            # if filename exists, warn the user
+            st.subheader(t("Save Question Set"))
+            st.markdown(t("Save the current set of questions to a custom file for later use."))
+            filename = st.text_input(t("Enter a filename to save this question set (without extension)"))
+
             if os.path.exists(os.path.join(QUESTION_SETS_DIR, filename + ".json")):
-                st.warning("A file with this name already exists. Saving will overwrite the existing file.")
-            # Save
-            if st.button("💾 Save Set"):
+                st.warning(t("A file with this name already exists. Saving will overwrite the existing file."))
+
+            if st.button(t("💾 Save Set")):
                 if filename:
                     save_question_set(filename)
                 else:
-                    st.error("Please enter a valid filename.")
-        
-            # Button to reset only the question preview/management
-            confirm_clear = st.checkbox("⚠️ I’m sure I want to clear all questions", key="confirm_clear")
+                    st.error(t("Please enter a valid filename."))
 
-            if st.button("🧹 Clear All Questions"):
+            confirm_clear = st.checkbox(t("⚠️ I’m sure I want to clear all questions"), key="confirm_clear")
+
+            if st.button(t("🧹 Clear All Questions")):
                 if confirm_clear:
                     reset_questions_only()
                 else:
-                    st.warning("Please confirm clearing by checking the box.")
-            
+                    st.warning(t("Please confirm clearing by checking the box."))
+
             if not st.session_state.questions:
-                st.warning("No questions found. Please create questions first.")
+                st.warning(t("No questions found. Please create questions first."))
+
 
     # --- START GAME SECTION ---
     if st.session_state.game_link_active:
-        st.title("🚀 Generate Game Link")
+        st.title(t("🚀 Generate Game Link"))
         question_files = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
 
         if not question_files:
-            st.warning("No question sets found. Please create and save a question set first.")
+            st.warning(t("No question sets found. Please create and save a question set first."))
         else:
-            selected_file = st.selectbox("Select a question set:", question_files, label_visibility="collapsed")
+            selected_file = st.selectbox(t("Select a question set:"), question_files, label_visibility="collapsed")
 
-            if st.button("Generate & Save Game"):
+            if st.button(t("Generate & Save Game")):
                 selected_questions = load_question_set(selected_file)
                 game_id = generate_game_id()
                 st.session_state.game_id = game_id
@@ -922,28 +1130,38 @@ def logged_in_page():
                 with open(GAMES_FILE, "w") as f:
                     json.dump(games_data, f, indent=4)
 
-                st.success(f"Game ID {game_id} created and saved!")
-                st.markdown(f"Send this Game ID to players to join: {game_id}")
+                st.success(f"{t('Game ID')} {game_id} {t('created and saved!')}")
+                st.markdown(f"{t('Send this Game ID to players to join:')} {game_id}")
+                share_message = (
+                    f"{t('Hi team,')}\n\n"
+                    f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
+                    f"🌐 https://kahootclone.streamlit.app/\n"
+                    f"🆔 {t('Game ID')}: {game_id}\n\n"
+                    f"{t('Have fun and good luck!')}"
+                )
+
+                st.code(share_message, language="markdown")
+                st.markdown(t("You can copy and paste this message into an email or Teams chat."))
+
 
     # --- DASHBOARD SECTION ---
     if st.session_state.dashboard_active:
-        page = st.sidebar.radio('', ["**📊 Results**","**🏆 Winners**"], label_visibility="collapsed")
+        page = st.sidebar.radio('', [t("**📊 Results**"), t("**🏆 Winners**")], label_visibility="collapsed")
 
-        if page == "**📊 Results**":
-            st.title("📊 Quiz Results")
+        if page == t("**📊 Results**"):
+            st.title(t("📊 Quiz Results"))
 
             if "completed_players" not in st.session_state:
                 st.session_state.completed_players = set()
 
-            # Always use history
             history = load_game_history()
             available_game_ids = list(history.keys())
 
             if not available_game_ids:
-                st.warning("No game sessions found yet.")
+                st.warning(t("No game sessions found yet."))
                 return
 
-            selected_game_id = st.selectbox("Select Game ID to View Results", available_game_ids, key="selectbox_results")
+            selected_game_id = st.selectbox(t("Select Game ID to View Results"), available_game_ids, key="selectbox_results")
             game_id = selected_game_id
             st.session_state.game_id = game_id
 
@@ -951,19 +1169,19 @@ def logged_in_page():
             game_answers = selected_data.get("answers", {})
             questions = selected_data.get("questions", [])
 
-            st.write("Total Players:", len(game_answers))
-            st.write("Total Questions:", len(questions))
+            st.write(f"{t('Total Players:')} {len(game_answers)}")
+            st.write(f"{t('Total Questions:')} {len(questions)}")
 
-            st.write("Players who completed all questions:")
+            st.write(t("Players who completed all questions:"))
             for player, response in game_answers.items():
                 if len(response) == len(questions):
                     st.write(f"✅ {player}")
                     st.session_state.completed_players.add(player)
 
-            st.subheader("📋 Questions & Answers")
+            st.subheader(t("📋 Questions & Answers"))
 
             for i, question in enumerate(questions):
-                with st.expander(f"Question {i+1}: {question['question']}"):
+                with st.expander(f"{t('Question')} {i+1}: {question['question']}"):
                     response_counts = {opt: 0 for opt in question["options"]}
                     total_responses = 0
 
@@ -979,24 +1197,24 @@ def logged_in_page():
                         count = response_counts[opt]
                         percentage = (count / total_responses * 100) if total_responses > 0 else 0
                         if opt == question["correct"]:
-                            st.markdown(f"✅ **{opt}** — {count} responses ({percentage:.1f}%)")
+                            st.markdown(f"✅ **{opt}** — {count} {t('responses')} ({percentage:.1f}%)")
                         else:
-                            st.markdown(f"🔹 {opt} — {count} responses ({percentage:.1f}%)")
+                            st.markdown(f"🔹 {opt} — {count} {t('responses')} ({percentage:.1f}%)")
 
-                    st.markdown(f"**Total Responses:** {total_responses}")
+                    st.markdown(f"**{t('Total Responses:')}** {total_responses}")
 
 
-        elif page == "**🏆 Winners**":
-            st.title("🏆 Winners")
 
-            # Always use game history
+        elif page == t("**🏆 Winners**"):
+            st.title(t("🏆 Winners"))
+
             history = load_game_history()
             available_game_ids = list(history.keys())
 
             if not available_game_ids:
-                st.warning("No game sessions found yet.")
+                st.warning(t("No game sessions found yet."))
             else:
-                selected_game_id = st.selectbox("Select Game ID", available_game_ids, key="selectbox_winners")
+                selected_game_id = st.selectbox(t("Select Game ID"), available_game_ids, key="selectbox_winners")
                 game_id = selected_game_id
                 st.session_state.game_id = game_id
 
@@ -1017,40 +1235,40 @@ def logged_in_page():
                         data.append((player, score, timestamp))
 
                 if not data:
-                    st.warning("No valid answer data found.")
+                    st.warning(t("No valid answer data found."))
                 else:
                     sorted_data = sorted(data, key=lambda x: (-x[1], x[2]))
 
-                    if st.button("📢 Show Winners"):
+                    if st.button(t("📢 Show Winners")):
                         st.balloons()
-                        st.markdown("<h2 style='color: #FFD700;'>Podium Winners</h2>", unsafe_allow_html=True)
+                        st.markdown(f"<h2 style='color: #FFD700;'>{t('Podium Winners')}</h2>", unsafe_allow_html=True)
 
                         col_podium = st.columns(3)
                         if len(sorted_data) > 0:
                             with col_podium[1].container(border=True):
-                                st.markdown(f"<h4>🥇 {sorted_data[0][0]} - {sorted_data[0][1]} pts</h4>", unsafe_allow_html=True)
+                                st.markdown(f"<h4>{t('🥇 First Place')}: {sorted_data[0][0]} - {sorted_data[0][1]} pts</h4>", unsafe_allow_html=True)
                         if len(sorted_data) > 1:
                             with col_podium[0].container(border=True):
-                                st.markdown(f"<h4>🥈 {sorted_data[1][0]} - {sorted_data[1][1]} pts</h4>", unsafe_allow_html=True)
+                                st.markdown(f"<h4>{t('🥈 Second Place')}: {sorted_data[1][0]} - {sorted_data[1][1]} pts</h4>", unsafe_allow_html=True)
                         if len(sorted_data) > 2:
                             with col_podium[2].container(border=True):
-                                st.markdown(f"<h4>🥉 {sorted_data[2][0]} - {sorted_data[2][1]} pts</h4>", unsafe_allow_html=True)
+                                st.markdown(f"<h4>{t('🥉 Third Place')}: {sorted_data[2][0]} - {sorted_data[2][1]} pts</h4>", unsafe_allow_html=True)
 
                         with st.sidebar.container():
-                            st.markdown("## 🏅 All Players Ranking:")
+                            st.markdown(f"## {t('🏅 All Players Ranking:')}")
                             for i, (player, score, timestamp) in enumerate(sorted_data):
                                 st.markdown(f"<p style='font-size:18px;'>{i+1}. <strong>{player}</strong> — {score} pts</p>", unsafe_allow_html=True)
 
 
     # --- MANAGE SETS & GAMES SECTION ---
     if st.session_state.get("manage_sets_games_active", False):
-        st.header("🧰 Manage Question Sets & Games")
+        st.header(t("🧰 Manage Question Sets & Games"))
 
         # --- Manage Question Sets ---
-        st.subheader("🗃 Question Sets")
+        st.subheader(t("🗃 Question Sets"))
         sets = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
         if not sets:
-            st.info("No question sets found.")
+            st.info(t("No question sets found."))
         else:
             for qfile in sets:
                 col1, col2, col3 = st.columns([3, 1, 2])
@@ -1058,16 +1276,16 @@ def logged_in_page():
                     st.write(qfile)
                 with col3:
                     confirm_key = f"confirm_qset_{qfile}"
-                    st.checkbox("⚠️ Confirm deletion", key=confirm_key)
+                    st.checkbox(t("⚠️ Confirm deletion"), key=confirm_key)
                 with col2:
-                    if st.button("**🗑**", key=f"delete_qset_{qfile}"):
+                    if st.button(f"**{t('🗑')}**", key=f"delete_qset_{qfile}"):
                         if st.session_state.get(confirm_key, False):
                             delete_question_set(qfile)
                         else:
-                            st.warning("Please confirm deletion first.")
+                            st.warning(t("Please confirm deletion first."))
 
         # --- Manage Active Games ---
-        st.subheader("🎮 Active Games")
+        st.subheader(t("🎮 Active Games"))
         if os.path.exists(GAMES_FILE):
             with open(GAMES_FILE, "r") as f:
                 try:
@@ -1078,26 +1296,25 @@ def logged_in_page():
             games = {}
 
         if not games:
-            st.info("No active games found.")
+            st.info(t("No active games found."))
         else:
             for game_id in list(games.keys()):
                 col1, col2, col3 = st.columns([3, 1, 2])
                 with col1:
-                    st.write(f"Game ID: {game_id} — Set: {games[game_id]['question_file']}")
+                    st.write(f"{t('Game ID')}: {game_id} — {t('Set')}: {games[game_id]['question_file']}")
                 with col3:
                     confirm_key = f"confirm_game_{game_id}"
-                    st.checkbox("⚠️ Confirm deletion", key=confirm_key)
+                    st.checkbox(t("⚠️ Confirm deletion"), key=confirm_key)
                 with col2:
-                    if st.button("**🗑**", key=f"delete_game_{game_id}"):
+                    if st.button(f"**{t('🗑')}**", key=f"delete_game_{game_id}"):
                         if st.session_state.get(confirm_key, False):
                             del games[game_id]
                             with open(GAMES_FILE, "w") as f:
                                 json.dump(games, f, indent=4)
-                            st.success(f"Game {game_id} deleted.")
+                            st.success(f"{t('Game')} {game_id} {t('deleted.')}")
                             st.rerun()
                         else:
-                            st.warning("Please confirm deletion first.")
-
+                            st.warning(t("Please confirm deletion first."))
 
            
 def main():
