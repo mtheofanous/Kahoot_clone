@@ -274,14 +274,26 @@ def save_game_history(game_id, questions, answers, scores):
             except json.JSONDecodeError:
                 history = {}
 
+    # Extract player names from answers for easy access
+    players_with_names = {}
+    game_answers = answers.get(game_id, {})
+    for pid, responses in game_answers.items():
+        for q in responses.values():
+            name = q.get("player_name")
+            if name:
+                players_with_names[pid] = name
+            break
+
     history[game_id] = {
         "questions": questions,
-        "answers": answers.get(game_id, {}),
-        "scores": scores.get(game_id, {})
+        "answers": game_answers,
+        "scores": scores.get(game_id, {}),
+        "players": players_with_names
     }
 
     with open(HISTORY_FILE, "w") as f:
         json.dump(history, f, indent=4)
+
 
 
 # Function to save the current question set to a custom file
@@ -543,6 +555,8 @@ def login_page():
                     return
 
                 if game_id_input in games_data:
+                    #new changes
+                    st.session_state.player_id = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                     st.session_state.logged_in = 'player'
                     st.session_state.game_id = game_id_input
                     st.session_state.current_question_index = 0
@@ -589,7 +603,7 @@ def player_page():
         if player in existing_players[game_id]:
             st.error(t("This name is already taken for this game. Please choose another one."))
         else:
-            existing_players[game_id][player] = {}
+            existing_players[game_id][player] = {"player_id": st.session_state.player_id}
 
             with open(PLAYERS_FILE, "w") as f:
                 json.dump(existing_players, f, indent=4)
@@ -627,7 +641,8 @@ def start_game():
         
 
 def question_page():
-    player = st.session_state.current_player
+    player_name = st.session_state.current_player
+    player_id = st.session_state.get("player_id", player_name)
     game_id = st.session_state.get("game_id", "default")
 
     questions = st.session_state.get("questions", [])
@@ -635,12 +650,10 @@ def question_page():
     current_index = st.session_state.get("current_question_index", 0)
 
     if current_index >= total_questions:
-        final_score = load_scores().get(game_id, {}).get(player, 0)
+        final_score = load_scores().get(game_id, {}).get(player_id, 0)
         all_answers = st.session_state.answers
         all_scores = load_scores()
-        questions = st.session_state.questions
 
-        # Save history so it shows in the dashboard
         save_game_history(
             game_id=game_id,
             questions=questions,
@@ -651,7 +664,7 @@ def question_page():
         st.balloons()
         st.markdown(f"""
             <div style="background-color:#E9E4F6; padding:30px; border-radius:20px; text-align:center; margin-top:50px;">
-                <h2 style="color:#4B2991;">🎉 {t("Congratulations")}, {player}! 🎉</h2>
+                <h2 style="color:#4B2991;">🎉 {t("Congratulations")}, {player_name}! 🎉</h2>
                 <p style="font-size:20px;">{t("You have completed the Teladoc Health quiz.")}</p>
                 <p style="font-size:22px;"><strong>{t("Your final score:")}</strong> <span style="color:#00B1E1;">{final_score} {t("points")}</span></p>
                 <hr style="margin: 20px 0;">
@@ -661,8 +674,37 @@ def question_page():
         """, unsafe_allow_html=True)
         return
 
+    # Load time limit from game config
+    if os.path.exists(GAMES_FILE):
+        with open(GAMES_FILE, "r") as f:
+            games_data = json.load(f)
+        time_limit = games_data.get(game_id, {}).get("time_limit", 30)
+    else:
+        time_limit = 30
 
     question = questions[current_index]
+    correct = question["correct"]
+    options = question["options"]
+
+    # Setup timer per question
+    question_timer_key = f"question_timer_{current_index}"
+    timer_flag_key = f"timer_started_{question_timer_key}"
+
+    if timer_flag_key not in st.session_state:
+        st.session_state[question_timer_key] = time.time()
+        st.session_state[timer_flag_key] = True
+
+    elapsed = time.time() - st.session_state[question_timer_key]
+    remaining_time = max(0, int(time_limit - elapsed))
+
+    # Countdown display
+    countdown_placeholder = st.empty()
+    countdown_placeholder.markdown(
+        f"<h2 style='color:red;'>⏱ {remaining_time} seconds left</h2>",
+        unsafe_allow_html=True
+    )
+
+    # Progress bar
     st.markdown(f"""
         <style>
         .question-card {{
@@ -692,34 +734,28 @@ def question_page():
     st.markdown(f"#### ❓ {t('Question')} {current_index + 1} {t('of')} {total_questions}")
     st.markdown(f"<div class='question-card'><h3>{question['question']}</h3>", unsafe_allow_html=True)
 
-    correct = question["correct"]
-    options = question["options"]
-
     col1, col2 = st.columns(2)
     columns = [col1, col2]
 
     for idx, option in enumerate(options):
         with columns[idx % 2]:
             with st.form(key=f"form_{current_index}_{idx}"):
-                submitted = st.form_submit_button(
-                    label=f"**{option}**",
-                    use_container_width=True
-                )
+                submitted = st.form_submit_button(label=f"**{option}**", use_container_width=True)
                 if submitted:
                     is_correct = option in correct if isinstance(correct, list) else option == correct
 
-                    # Record
-                    answers = st.session_state.get("answers", {})
+                    answers = load_answers()
                     if game_id not in answers:
                         answers[game_id] = {}
-                    if player not in answers[game_id]:
-                        answers[game_id][player] = {}
+                    if player_id not in answers[game_id]:
+                        answers[game_id][player_id] = {}
 
-                    answers[game_id][player][f"Q{current_index + 1}"] = {
+                    answers[game_id][player_id][f"Q{current_index + 1}"] = {
                         "selected_answer": option,
                         "correct_answer": correct,
                         "timestamp": datetime.datetime.now().isoformat(),
-                        "is_correct": is_correct
+                        "is_correct": is_correct,
+                        "player_name": player_name
                     }
 
                     st.session_state.answers = answers
@@ -728,16 +764,59 @@ def question_page():
                     scores = load_scores()
                     if game_id not in scores:
                         scores[game_id] = {}
-                    if player not in scores[game_id]:
-                        scores[game_id][player] = 0
+                    if player_id not in scores[game_id]:
+                        scores[game_id][player_id] = 0
                     if is_correct:
-                        scores[game_id][player] += 1
+                        scores[game_id][player_id] += 1
                     save_scores(scores)
+
+                    # Reset timer for next question
+                    st.session_state.pop(question_timer_key, None)
+                    st.session_state.pop(timer_flag_key, None)
 
                     st.session_state.current_question_index += 1
                     st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
+
+    # Handle timeout after full page renders
+    if remaining_time == 0:
+        answers = load_answers()
+        if game_id not in answers:
+            answers[game_id] = {}
+        if player_id not in answers[game_id]:
+            answers[game_id][player_id] = {}
+
+        answers[game_id][player_id][f"Q{current_index + 1}"] = {
+            "selected_answer": "No Answer",
+            "correct_answer": correct,
+            "timestamp": datetime.datetime.now().isoformat(),
+            "is_correct": False,
+            "player_name": player_name
+        }
+
+        st.session_state.answers = answers
+        save_answers(answers)
+
+        scores = load_scores()
+        if game_id not in scores:
+            scores[game_id] = {}
+        if player_id not in scores[game_id]:
+            scores[game_id][player_id] = 0
+        save_scores(scores)
+
+        # Reset timer for next question
+        st.session_state.pop(question_timer_key, None)
+        st.session_state.pop(timer_flag_key, None)
+
+        st.session_state.current_question_index += 1
+        st.rerun()
+
+    # Rerun every second if time is still ticking
+    if remaining_time > 0:
+        time.sleep(1)
+        st.rerun()
+
 
 
 
@@ -1108,6 +1187,8 @@ def logged_in_page():
             st.warning(t("No question sets found. Please create and save a question set first."))
         else:
             selected_file = st.selectbox(t("Select a question set:"), question_files, label_visibility="collapsed")
+            time_limit = st.number_input("⏱ Time limit per question (in seconds)", min_value=5, max_value=300, value=30)
+
 
             if st.button(t("Generate & Save Game")):
                 selected_questions = load_question_set(selected_file)
@@ -1124,7 +1205,8 @@ def logged_in_page():
 
                 games_data[game_id] = {
                     "question_file": selected_file,
-                    "questions": selected_questions
+                    "questions": selected_questions,
+                    "time_limit": time_limit
                 }
 
                 with open(GAMES_FILE, "w") as f:
@@ -1145,22 +1227,19 @@ def logged_in_page():
 
 
     # --- DASHBOARD SECTION ---
+    # --- DASHBOARD SECTION ---
     if st.session_state.dashboard_active:
         page = st.sidebar.radio('', [t("**📊 Results**"), t("**🏆 Winners**")], label_visibility="collapsed")
 
+        history = load_game_history()
+        available_game_ids = list(history.keys())
+
+        if not available_game_ids:
+            st.warning(t("No game sessions found yet."))
+            return
+
         if page == t("**📊 Results**"):
             st.title(t("📊 Quiz Results"))
-
-            if "completed_players" not in st.session_state:
-                st.session_state.completed_players = set()
-
-            history = load_game_history()
-            available_game_ids = list(history.keys())
-
-            if not available_game_ids:
-                st.warning(t("No game sessions found yet."))
-                return
-
             selected_game_id = st.selectbox(t("Select Game ID to View Results"), available_game_ids, key="selectbox_results")
             game_id = selected_game_id
             st.session_state.game_id = game_id
@@ -1168,15 +1247,17 @@ def logged_in_page():
             selected_data = history.get(game_id, {})
             game_answers = selected_data.get("answers", {})
             questions = selected_data.get("questions", [])
+            player_names = selected_data.get("players", {})
 
             st.write(f"{t('Total Players:')} {len(game_answers)}")
             st.write(f"{t('Total Questions:')} {len(questions)}")
 
             st.write(t("Players who completed all questions:"))
-            for player, response in game_answers.items():
+            for player_id, response in game_answers.items():
+                name = player_names.get(player_id, player_id)
                 if len(response) == len(questions):
-                    st.write(f"✅ {player}")
-                    st.session_state.completed_players.add(player)
+                    st.write(f"✅ {name}")
+                    st.session_state.completed_players.add(player_id)
 
             st.subheader(t("📋 Questions & Answers"))
 
@@ -1185,7 +1266,7 @@ def logged_in_page():
                     response_counts = {opt: 0 for opt in question["options"]}
                     total_responses = 0
 
-                    for player, responses in game_answers.items():
+                    for player_id, responses in game_answers.items():
                         q_key = f"Q{i+1}"
                         if q_key in responses:
                             selected_answer = responses[q_key]["selected_answer"]
@@ -1203,62 +1284,54 @@ def logged_in_page():
 
                     st.markdown(f"**{t('Total Responses:')}** {total_responses}")
 
-
-
         elif page == t("**🏆 Winners**"):
             st.title(t("🏆 Winners"))
+            selected_game_id = st.selectbox(t("Select Game ID"), available_game_ids, key="selectbox_winners")
+            game_id = selected_game_id
+            st.session_state.game_id = game_id
 
-            history = load_game_history()
-            available_game_ids = list(history.keys())
+            selected_data = history.get(game_id, {})
+            game_answers = selected_data.get("answers", {})
+            game_scores = selected_data.get("scores", {})
+            player_names = selected_data.get("players", {})
 
-            if not available_game_ids:
-                st.warning(t("No game sessions found yet."))
+            data = []
+            for player_id, response in game_answers.items():
+                if response:
+                    last_q = list(response.keys())[-1]
+                    timestamp_str = response[last_q].get("timestamp", "9999-12-31T23:59:59")
+                    try:
+                        timestamp = datetime.datetime.fromisoformat(timestamp_str)
+                    except:
+                        timestamp = datetime.datetime.max
+                    score = game_scores.get(player_id, 0)
+                    name = player_names.get(player_id, player_id)
+                    data.append((name, score, timestamp))
+
+            if not data:
+                st.warning(t("No valid answer data found."))
             else:
-                selected_game_id = st.selectbox(t("Select Game ID"), available_game_ids, key="selectbox_winners")
-                game_id = selected_game_id
-                st.session_state.game_id = game_id
+                sorted_data = sorted(data, key=lambda x: (-x[1], x[2]))
 
-                selected_data = history.get(game_id, {})
-                game_answers = selected_data.get("answers", {})
-                game_scores = selected_data.get("scores", {})
+                if st.button(t("📢 Show Winners")):
+                    st.balloons()
+                    st.markdown(f"<h2 style='color: #FFD700;'>{t('Podium Winners')}</h2>", unsafe_allow_html=True)
 
-                data = []
-                for player, response in game_answers.items():
-                    if response:
-                        last_q = list(response.keys())[-1]
-                        timestamp_str = response[last_q].get("timestamp", "9999-12-31T23:59:59")
-                        try:
-                            timestamp = datetime.datetime.fromisoformat(timestamp_str)
-                        except:
-                            timestamp = datetime.datetime.max
-                        score = game_scores.get(player, 0)
-                        data.append((player, score, timestamp))
+                    col_podium = st.columns(3)
+                    if len(sorted_data) > 0:
+                        with col_podium[1].container(border=True):
+                            st.markdown(f"<h4>{t('🥇 First Place')}: {sorted_data[0][0]} - {sorted_data[0][1]} pts</h4>", unsafe_allow_html=True)
+                    if len(sorted_data) > 1:
+                        with col_podium[0].container(border=True):
+                            st.markdown(f"<h4>{t('🥈 Second Place')}: {sorted_data[1][0]} - {sorted_data[1][1]} pts</h4>", unsafe_allow_html=True)
+                    if len(sorted_data) > 2:
+                        with col_podium[2].container(border=True):
+                            st.markdown(f"<h4>{t('🥉 Third Place')}: {sorted_data[2][0]} - {sorted_data[2][1]} pts</h4>", unsafe_allow_html=True)
 
-                if not data:
-                    st.warning(t("No valid answer data found."))
-                else:
-                    sorted_data = sorted(data, key=lambda x: (-x[1], x[2]))
-
-                    if st.button(t("📢 Show Winners")):
-                        st.balloons()
-                        st.markdown(f"<h2 style='color: #FFD700;'>{t('Podium Winners')}</h2>", unsafe_allow_html=True)
-
-                        col_podium = st.columns(3)
-                        if len(sorted_data) > 0:
-                            with col_podium[1].container(border=True):
-                                st.markdown(f"<h4>{t('🥇 First Place')}: {sorted_data[0][0]} - {sorted_data[0][1]} pts</h4>", unsafe_allow_html=True)
-                        if len(sorted_data) > 1:
-                            with col_podium[0].container(border=True):
-                                st.markdown(f"<h4>{t('🥈 Second Place')}: {sorted_data[1][0]} - {sorted_data[1][1]} pts</h4>", unsafe_allow_html=True)
-                        if len(sorted_data) > 2:
-                            with col_podium[2].container(border=True):
-                                st.markdown(f"<h4>{t('🥉 Third Place')}: {sorted_data[2][0]} - {sorted_data[2][1]} pts</h4>", unsafe_allow_html=True)
-
-                        with st.sidebar.container():
-                            st.markdown(f"## {t('🏅 All Players Ranking:')}")
-                            for i, (player, score, timestamp) in enumerate(sorted_data):
-                                st.markdown(f"<p style='font-size:18px;'>{i+1}. <strong>{player}</strong> — {score} pts</p>", unsafe_allow_html=True)
-
+                    with st.sidebar.container():
+                        st.markdown(f"## {t('🏅 All Players Ranking:')}")
+                        for i, (name, score, timestamp) in enumerate(sorted_data):
+                            st.markdown(f"<p style='font-size:18px;'>{i+1}. <strong>{name}</strong> — {score} pts</p>", unsafe_allow_html=True)
 
     # --- MANAGE SETS & GAMES SECTION ---
     if st.session_state.get("manage_sets_games_active", False):
