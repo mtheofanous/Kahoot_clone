@@ -193,6 +193,9 @@ translations = {
         "Choose a unique new position for this question": "Elige una nueva posición única para esta pregunta",
         "🚀 Generate Game Link": "🚀 Generar Enlace del Juego",
         "🧩 Preview & Manage Questions": "🧩 Previsualizar y Gestionar Preguntas",
+        "📚 Completed Games": "📚 Juegos Completados",
+        "⏱ Enable time limit per question?": "⏱ ¿Activar límite de tiempo por pregunta?",
+        "⏱ Time limit per question (in seconds)": "⏱ Límite de tiempo por pregunta (en segundos)",
 
 
     }
@@ -578,7 +581,7 @@ def player_page():
     with col2:
         st.image(TELADOC_LOGO, width=300)
 
-    player = st.text_input(t("Your Name"), max_chars=40)
+    player = st.text_input(t("Your Name"), max_chars=40).upper().strip()
 
     if st.button(t("🎮 Start Quiz")):
         if not player:
@@ -641,6 +644,35 @@ def start_game():
         
 
 def question_page():
+    
+    # buttons style
+    st.markdown("""
+        <style>
+        div.stButton > button {
+            background-color: #E3F2FD;
+            color: black;
+            border: 2px solid #90CAF9;
+            border-radius: 12px;
+
+            /* ⬆️ Make button taller & text bigger */
+            padding: 18px 24px;         /* top/bottom and left/right padding */
+            font-size: 18px;            /* bigger text */
+            font-weight: bold;
+
+            /* ⬅️ Stretch to column width */
+            width: 100%;                /* full width of column */
+
+            margin: 10px 0px;           /* space between buttons */
+            transition: 0.3s;
+        }
+        div.stButton > button:hover {
+            background-color: #BBDEFB;
+            transform: scale(1.02);
+        }
+        </style>
+        
+    """, unsafe_allow_html=True)
+    
     player_name = st.session_state.current_player
     player_id = st.session_state.get("player_id", player_name)
     game_id = st.session_state.get("game_id", "default")
@@ -673,46 +705,46 @@ def question_page():
             </div>
         """, unsafe_allow_html=True)
         return
-
+    
     # Load time limit from game config
+    time_limit = None
     if os.path.exists(GAMES_FILE):
         with open(GAMES_FILE, "r") as f:
             games_data = json.load(f)
-        time_limit = games_data.get(game_id, {}).get("time_limit", 30)
-    else:
-        time_limit = 30
+        time_limit = games_data.get(game_id, {}).get("time_limit")
 
     question = questions[current_index]
     correct = question["correct"]
     options = question["options"]
 
-    # Setup timer per question
-    question_timer_key = f"question_timer_{current_index}"
-    timer_flag_key = f"timer_started_{question_timer_key}"
+    # Optional Timer Logic
+    if time_limit:
+        question_timer_key = f"question_timer_{current_index}"
+        timer_flag_key = f"timer_started_{question_timer_key}"
 
-    if timer_flag_key not in st.session_state:
-        st.session_state[question_timer_key] = time.time()
-        st.session_state[timer_flag_key] = True
+        if timer_flag_key not in st.session_state:
+            st.session_state[question_timer_key] = time.time()
+            st.session_state[timer_flag_key] = True
 
-    elapsed = time.time() - st.session_state[question_timer_key]
-    remaining_time = max(0, int(time_limit - elapsed))
+        elapsed = time.time() - st.session_state[question_timer_key]
+        remaining_time = max(0, int(time_limit - elapsed))
 
-    # Countdown display
-    countdown_placeholder = st.empty()
-    countdown_placeholder.markdown(
-        f"<h2 style='color:red;'>⏱ {remaining_time} seconds left</h2>",
-        unsafe_allow_html=True
-    )
+        countdown_placeholder = st.empty()
+        countdown_placeholder.markdown(
+            f"<h2 style='color:red;'>⏱ {remaining_time} seconds left</h2>",
+            unsafe_allow_html=True
+        )
 
     # Progress bar
     st.markdown(f"""
         <style>
         .question-card {{
-            background-color: white;
+            background-color: #C398E2; /* 🔵 light purple */
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin-top: 40px;
+            margin-bottom: 20px;
         }}
         .progress-bar {{
             height: 20px;
@@ -730,6 +762,8 @@ def question_page():
         </style>
         <div class="progress-bar"><div class="progress-bar-fill"></div></div>
     """, unsafe_allow_html=True)
+   
+    
 
     st.markdown(f"#### ❓ {t('Question')} {current_index + 1} {t('of')} {total_questions}")
     st.markdown(f"<div class='question-card'><h3>{question['question']}</h3>", unsafe_allow_html=True)
@@ -739,55 +773,47 @@ def question_page():
 
     for idx, option in enumerate(options):
         with columns[idx % 2]:
-            with st.form(key=f"form_{current_index}_{idx}"):
-                submitted = st.form_submit_button(label=f"**{option}**", use_container_width=True)
-                if submitted:
-                    is_correct = option in correct if isinstance(correct, list) else option == correct
+            if st.button(f"{option}", key=f"button_{current_index}_{idx}"):
+   
+                is_correct = option in correct if isinstance(correct, list) else option == correct
 
-                    answers = load_answers()
-                    if game_id not in answers:
-                        answers[game_id] = {}
-                    if player_id not in answers[game_id]:
-                        answers[game_id][player_id] = {}
+                answers = load_answers()
+                if game_id not in answers:
+                    answers[game_id] = {}
+                if player_id not in answers[game_id]:
+                    answers[game_id][player_id] = {}
 
-                    answers[game_id][player_id][f"Q{current_index + 1}"] = {
-                        "selected_answer": option,
-                        "correct_answer": correct,
-                        "timestamp": datetime.datetime.now().isoformat(),
-                        "is_correct": is_correct,
-                        "player_name": player_name
-                    }
+                answers[game_id][player_id][f"Q{current_index + 1}"] = {
+                    "selected_answer": option,
+                    "correct_answer": correct,
+                    "timestamp": datetime.datetime.now().isoformat(),
+                    "is_correct": is_correct,
+                    "player_name": player_name
+                }
 
-                    st.session_state.answers = answers
-                    save_answers(answers)
+                st.session_state.answers = answers
+                save_answers(answers)
+                
+                scores = load_scores()
+                scores.setdefault(game_id, {}).setdefault(player_id, 0)
+                if is_correct:
+                    scores[game_id][player_id] += 1
+                save_scores(scores)
 
-                    scores = load_scores()
-                    if game_id not in scores:
-                        scores[game_id] = {}
-                    if player_id not in scores[game_id]:
-                        scores[game_id][player_id] = 0
-                    if is_correct:
-                        scores[game_id][player_id] += 1
-                    save_scores(scores)
-
-                    # Reset timer for next question
+                # Reset timer
+                if time_limit:
                     st.session_state.pop(question_timer_key, None)
                     st.session_state.pop(timer_flag_key, None)
 
-                    st.session_state.current_question_index += 1
-                    st.rerun()
+                st.session_state.current_question_index += 1
+                st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Handle timeout after full page renders
-    if remaining_time == 0:
+    # Timeout behavior
+    if time_limit and remaining_time == 0:
         answers = load_answers()
-        if game_id not in answers:
-            answers[game_id] = {}
-        if player_id not in answers[game_id]:
-            answers[game_id][player_id] = {}
-
-        answers[game_id][player_id][f"Q{current_index + 1}"] = {
+        answers.setdefault(game_id, {}).setdefault(player_id, {})[f"Q{current_index + 1}"] = {
             "selected_answer": "No Answer",
             "correct_answer": correct,
             "timestamp": datetime.datetime.now().isoformat(),
@@ -799,21 +825,18 @@ def question_page():
         save_answers(answers)
 
         scores = load_scores()
-        if game_id not in scores:
-            scores[game_id] = {}
-        if player_id not in scores[game_id]:
-            scores[game_id][player_id] = 0
+        scores.setdefault(game_id, {}).setdefault(player_id, 0)
         save_scores(scores)
 
-        # Reset timer for next question
+        # Reset timer
         st.session_state.pop(question_timer_key, None)
         st.session_state.pop(timer_flag_key, None)
 
         st.session_state.current_question_index += 1
         st.rerun()
 
-    # Rerun every second if time is still ticking
-    if remaining_time > 0:
+    # Auto refresh
+    if time_limit and remaining_time > 0:
         time.sleep(1)
         st.rerun()
 
@@ -1187,7 +1210,12 @@ def logged_in_page():
             st.warning(t("No question sets found. Please create and save a question set first."))
         else:
             selected_file = st.selectbox(t("Select a question set:"), question_files, label_visibility="collapsed")
-            time_limit = st.number_input("⏱ Time limit per question (in seconds)", min_value=5, max_value=300, value=30)
+            use_timer = st.checkbox(t("⏱ Enable time limit per question?"), value=True)
+
+            if use_timer:
+                time_limit = st.number_input(t("⏱ Time limit per question (in seconds)"), min_value=5, max_value=300, value=30)
+            else:
+                time_limit = None  # or you can set it to 0 if preferred
 
 
             if st.button(t("Generate & Save Game")):
@@ -1206,7 +1234,7 @@ def logged_in_page():
                 games_data[game_id] = {
                     "question_file": selected_file,
                     "questions": selected_questions,
-                    "time_limit": time_limit
+                    "time_limit": time_limit if use_timer else None
                 }
 
                 with open(GAMES_FILE, "w") as f:
@@ -1375,6 +1403,17 @@ def logged_in_page():
                 col1, col2, col3 = st.columns([3, 1, 2])
                 with col1:
                     st.write(f"{t('Game ID')}: {game_id} — {t('Set')}: {games[game_id]['question_file']}")
+
+                    with st.expander("📤 Show Invite Message"):
+                        share_message = (
+                            f"{t('Hi team,')}\n\n"
+                            f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
+                            f"🌐 https://kahootclone.streamlit.app/\n"
+                            f"🆔 {t('Game ID')}: {game_id}\n\n"
+                            f"{t('Have fun and good luck!')}"
+                        )
+                        st.code(share_message, language="markdown")
+                        st.caption(t("You can copy and paste this message into an email or Teams chat."))
                 with col3:
                     confirm_key = f"confirm_game_{game_id}"
                     st.checkbox(t("⚠️ Confirm deletion"), key=confirm_key)
@@ -1388,6 +1427,40 @@ def logged_in_page():
                             st.rerun()
                         else:
                             st.warning(t("Please confirm deletion first."))
+        # --- Manage Game History (Completed Games) ---
+        st.subheader(t("📚 Completed Games"))
+
+        # Load current active games
+        active_game_ids = set(games.keys())
+
+        # Load game history
+        history = load_game_history()
+        historical_game_ids = set(history.keys())
+
+        # Identify completed (inactive) games
+        completed_game_ids = historical_game_ids - active_game_ids
+
+        if not completed_game_ids:
+            st.info("No completed games found.")
+        else:
+            for game_id in sorted(completed_game_ids):
+                col1, col2, col3 = st.columns([3, 1, 2])
+                with col1:
+                    st.write(f"Game ID: {game_id}")
+                with col3:
+                    confirm_key = f"confirm_completed_{game_id}"
+                    st.checkbox("⚠️ Confirm deletion", key=confirm_key)
+                with col2:
+                    if st.button("🗑", key=f"delete_completed_{game_id}"):
+                        if st.session_state.get(confirm_key, False):
+                            del history[game_id]
+                            with open(HISTORY_FILE, "w") as f:
+                                json.dump(history, f, indent=4)
+                            st.success(f"Game history {game_id} deleted.")
+                            st.rerun()
+                        else:
+                            st.warning("Please confirm deletion first.")
+
 
            
 def main():
