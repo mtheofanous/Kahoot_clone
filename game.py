@@ -1355,7 +1355,7 @@ def logged_in_page():
                 share_message = (
                     f"{t('Hi team,')}\n\n"
                     f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
-                    f"🌐 https://kahootclone.streamlit.app/\n"
+                    f"🌐 https://telagame.streamlit.app/\n"
                     f"🆔 {t('Game ID')}: {game_id}\n\n"
                     f"{t('Have fun and good luck!')}"
                 )
@@ -1518,7 +1518,7 @@ def logged_in_page():
                         share_message = (
                             f"{t('Hi team,')}\n\n"
                             f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
-                            f"🌐 https://kahootclone.streamlit.app/\n"
+                            f"🌐 https://telagame.streamlit.app/\n"
                             f"🆔 {t('Game ID')}: {game_id}\n\n"
                             f"{t('Have fun and good luck!')}"
                         )
