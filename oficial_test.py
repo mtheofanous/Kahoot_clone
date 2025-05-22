@@ -199,6 +199,10 @@ translations = {
         "⏱ Enable time limit per question?": "⏱ ¿Activar límite de tiempo por pregunta?",
         "⏱ Time limit per question (in seconds)": "⏱ Límite de tiempo por pregunta (en segundos)",
         "A file with this name already exists. Saving will overwrite the existing file.": "Ya existe un archivo con este nombre. Guardar sobrescribirá el archivo existente.",
+        "This is just a suggestion — feel free to change it.": "Solo es una sugerencia — puedes cambiarlo si quieres.",
+        "Enter a filename to save this question set": "Introduce un nombre de archivo para guardar este conjunto de preguntas"
+
+
 
 
 
@@ -1257,11 +1261,29 @@ def logged_in_page():
             if st.button(t("🔄 Reorder Questions")):
                 reorder_questions()
 
+
             st.subheader(t("Save Question Set"))
             st.markdown(t("Save the current set of questions to a custom file for later use."))
-            filename = st.text_input(t("Enter a filename to save this question set (without extension)"))
+
+            # Get admin name or fallback to "admin"
+            admin_name = st.session_state.get("admin_name", "admin").replace(" ", "_")
+
+            # Format date and time
+            now = datetime.datetime.now()
+            timestamp_str = now.strftime("%d_%m_%Y_%H.%M")  # e.g. 22_05_2025_11.55
+
+            # Build default filename
+            default_filename = f"{admin_name}_{timestamp_str}"
+
+            # Show input with default value
+            filename = st.text_input(
+                t("Enter a filename to save this question set"),
+                value=default_filename
+            )
+            st.caption(t("This is just a suggestion — feel free to change it."))
 
             file_exists = os.path.exists(os.path.join(QUESTION_SETS_DIR, filename + ".json"))
+
 
             if file_exists:
                 st.warning(t("A file with this name already exists. Saving will overwrite the existing file."))
