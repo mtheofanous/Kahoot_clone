@@ -8,6 +8,8 @@ import datetime
 import random
 import string
 import requests
+import uuid
+
 
 translations = {
     "en": {
@@ -196,6 +198,8 @@ translations = {
         "📚 Completed Games": "📚 Juegos Completados",
         "⏱ Enable time limit per question?": "⏱ ¿Activar límite de tiempo por pregunta?",
         "⏱ Time limit per question (in seconds)": "⏱ Límite de tiempo por pregunta (en segundos)",
+        "A file with this name already exists. Saving will overwrite the existing file.": "Ya existe un archivo con este nombre. Guardar sobrescribirá el archivo existente.",
+
 
 
     }
@@ -238,6 +242,8 @@ ANSWERS_FILE = "answers.json"
 QUESTION_SETS_DIR = "question_sets"
 GAMES_FILE = "games.json"
 HISTORY_FILE = "game_history.json"
+ADMIN_SESSIONS_FILE = "admin_sessions.json"
+
 
 
 
@@ -305,6 +311,8 @@ def save_question_set(filename):
     with open(filepath, "w") as f:
         json.dump(st.session_state.questions, f, indent=4)
     st.success(f"Question set saved as '{filename}.json'")
+    time.sleep(2)
+    st.rerun()
 
 # Function to load a question set from a custom file
 def load_question_set(filename):
@@ -540,11 +548,51 @@ def login_page():
         st.markdown(f"""<div class="login-sub">{t("Think you know it all? Let's find out!")}</div>""", unsafe_allow_html=True)
 
         game_id_input = st.text_input(t("🔑 Enter Game ID"), max_chars=10).upper().strip()
+        if game_id_input == 'TELADOC':
+            admin_name = st.text_input(t("Your Name"), max_chars=40).upper().strip()
 
         if st.button(t("🚀 Join Game")):
-            if game_id_input == 'TELADOC':
+            # Admin login
+            if game_id_input == 'TELADOC' and admin_name:
+
+                if not admin_name:
+                    st.error(t("Please enter a name."))
+                    st.stop()
+
                 st.session_state.logged_in = 'admin'
+                st.session_state.admin_id = str(uuid.uuid4())  # Unique admin ID
+                st.session_state.admin_name = admin_name
+
+                # Load current sessions
+                try:
+                    if os.path.exists(ADMIN_SESSIONS_FILE):
+                        with open(ADMIN_SESSIONS_FILE, "r") as f:
+                            admin_sessions = json.load(f)
+                    else:
+                        admin_sessions = {}
+                except json.JSONDecodeError:
+                    admin_sessions = {}
+
+                # Add or update this admin's session with name and timestamp
+                admin_sessions[st.session_state.admin_id] = {
+                    "name": admin_name,
+                    "timestamp": time.time()
+                }
+
+                # Clean up old sessions
+                now = time.time()
+                admin_sessions = {
+                    k: v for k, v in admin_sessions.items()
+                    if isinstance(v, dict) and "timestamp" in v and now - v["timestamp"] < 600
+                }
+
+                # Save updated sessions
+                with open(ADMIN_SESSIONS_FILE, "w") as f:
+                    json.dump(admin_sessions, f, indent=4)
+
+                st.session_state.admin_sessions_count = len(admin_sessions)
                 st.rerun()
+                
             elif game_id_input:
                 if os.path.exists(GAMES_FILE):
                     try:
@@ -872,6 +920,16 @@ def logged_in_page():
 
     with logout:
         if st.button(t("🔒 Log out")):
+            # Remove from admin sessions
+            if st.session_state.get("admin_id"):
+                try:
+                    with open(ADMIN_SESSIONS_FILE, "r") as f:
+                        sessions = json.load(f)
+                    sessions.pop(st.session_state.admin_id, None)
+                    with open(ADMIN_SESSIONS_FILE, "w") as f:
+                        json.dump(sessions, f)
+                except:
+                    pass
             st.session_state.logged_in = False
             st.session_state.game = False
             for key in list(st.session_state.keys()):
@@ -880,6 +938,29 @@ def logged_in_page():
             st.rerun()
 
     st.markdown(f"## 👋 {t('Welcome to the Quiz Game Manager!')}")
+    # Show warning if multiple admins
+    if st.session_state.get("admin_sessions_count", 1) > 1:
+        other_admins = []
+
+        # Load admin sessions
+        if os.path.exists(ADMIN_SESSIONS_FILE):
+            try:
+                with open(ADMIN_SESSIONS_FILE, "r") as f:
+                    sessions = json.load(f)
+            except json.JSONDecodeError:
+                sessions = {}
+
+            # Filter out current admin
+            for admin_id, info in sessions.items():
+                if admin_id != st.session_state.get("admin_id"):
+                    name = info.get("name", "Unknown")
+                    other_admins.append(name)
+
+        if other_admins:
+            admin_list = ", ".join(other_admins)
+            st.warning(f"⚠️ Another admin is currently logged in: **{admin_list}**. Be careful — changes may overwrite each other.")
+
+
 
     def reorder_questions():
         move_plan = []
@@ -1180,14 +1261,21 @@ def logged_in_page():
             st.markdown(t("Save the current set of questions to a custom file for later use."))
             filename = st.text_input(t("Enter a filename to save this question set (without extension)"))
 
-            if os.path.exists(os.path.join(QUESTION_SETS_DIR, filename + ".json")):
+            file_exists = os.path.exists(os.path.join(QUESTION_SETS_DIR, filename + ".json"))
+
+            if file_exists:
                 st.warning(t("A file with this name already exists. Saving will overwrite the existing file."))
+                confirm_overwrite = st.checkbox(t("⚠️ I confirm I want to overwrite the existing file"), key="confirm_overwrite")
+            else:
+                confirm_overwrite = True  # No need to confirm if file doesn't exist
 
             if st.button(t("💾 Save Set")):
-                if filename:
-                    save_question_set(filename)
-                else:
+                if not filename:
                     st.error(t("Please enter a valid filename."))
+                elif file_exists and not confirm_overwrite:
+                    st.warning(t("Please confirm overwrite by checking the box."))
+                else:
+                    save_question_set(filename) 
 
             confirm_clear = st.checkbox(t("⚠️ I’m sure I want to clear all questions"), key="confirm_clear")
 
