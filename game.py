@@ -209,6 +209,7 @@ translations = {
         "**Select English Question Set:**": "**Selecciona el conjunto de preguntas en inglés:**",
         "📋 Spanish Questions": "📋 Preguntas en español",
         "📋 English Questions": "📋 Preguntas en inglés",
+        "You have been logged out.": "Has cerrado sesión.",
 
 
     }
@@ -613,14 +614,11 @@ def login_page():
                 else:
                     st.error(t("No games found."))
                     return
-
                 if game_id_input in games_data:
-                    #new changes
                     st.session_state.player_id = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
                     st.session_state.logged_in = 'player'
                     st.session_state.game_id = game_id_input
                     st.session_state.current_question_index = 0
-                    st.session_state.questions = games_data[game_id_input].get("questions", [])
                     st.rerun()
                 else:
                     st.error(t("❌ No game found with this Game ID."))
@@ -628,49 +626,6 @@ def login_page():
                 st.error(t("Please enter a valid Game ID to proceed."))
 
 
-
-# def player_page():
-
-#     st.title(t("Welcome to Teladoc Game"))
-
-#     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
-#     col1, col2 = st.columns([4, 3])
-#     with col2:
-#         st.image(TELADOC_LOGO, width=300)
-
-#     player = st.text_input(t("Your Name"), max_chars=40).upper().strip()
-
-#     if st.button(t("🎮 Start Quiz")):
-#         if not player:
-#             st.error(t("Please enter a name."))
-#             return
-
-#         if "game_id" not in st.session_state:
-#             st.error(t("Game ID not found. Please join through a valid game link."))
-#             return
-
-#         game_id = st.session_state.game_id
-
-#         # Load existing players
-#         existing_players = {}
-#         if os.path.exists(PLAYERS_FILE):
-#             with open(PLAYERS_FILE, "r") as f:
-#                 existing_players = json.load(f)
-
-#         if game_id not in existing_players:
-#             existing_players[game_id] = {}
-
-#         if player in existing_players[game_id]:
-#             st.error(t("This name is already taken for this game. Please choose another one."))
-#         else:
-#             existing_players[game_id][player] = {"player_id": st.session_state.player_id}
-
-#             with open(PLAYERS_FILE, "w") as f:
-#                 json.dump(existing_players, f, indent=4)
-
-#             st.session_state.current_player = player
-#             st.session_state.game = 'start_game'
-#             st.rerun()
 
 def player_page():
 
@@ -680,6 +635,18 @@ def player_page():
     col1, col2 = st.columns([4, 3])
     with col2:
         st.image(TELADOC_LOGO, width=300)
+    with col1:
+        new_lang = st.selectbox(
+            "",
+            options=["en", "es"],
+            index=0 if st.session_state.lang == "en" else 1,
+            format_func=lambda x: "English" if x == "en" else "Español",
+            key="player_lang_selector"
+        )
+
+        if new_lang != st.session_state.lang:
+            st.session_state.lang = new_lang
+            st.info(t("Language changed. Questions will load after you start the quiz."))
 
     player = st.text_input(t("Your Name"), max_chars=40).upper().strip()
 
@@ -712,7 +679,7 @@ def player_page():
             with open(PLAYERS_FILE, "w") as f:
                 json.dump(existing_players, f, indent=4)
 
-            # Load game config and questions based on language
+            # Load game config and questions based on current language
             if os.path.exists(GAMES_FILE):
                 with open(GAMES_FILE, "r") as f:
                     games_data = json.load(f)
@@ -735,6 +702,7 @@ def player_page():
             st.session_state.current_player = player
             st.session_state.game = 'start_game'
             st.rerun()
+
 
  
 def start_game():
@@ -773,16 +741,11 @@ def question_page():
             color: black;
             border: 2px solid #90CAF9;
             border-radius: 12px;
-
-            /* ⬆️ Make button taller & text bigger */
-            padding: 18px 24px;         /* top/bottom and left/right padding */
-            font-size: 18px;            /* bigger text */
+            padding: 18px 24px;
+            font-size: 18px;
             font-weight: bold;
-
-            /* ⬅️ Stretch to column width */
-            width: 100%;                /* full width of column */
-
-            margin: 10px 0px;           /* space between buttons */
+            width: 100%;
+            margin: 10px 0px;
             transition: 0.3s;
         }
         div.stButton > button:hover {
@@ -790,17 +753,23 @@ def question_page():
             transform: scale(1.02);
         }
         </style>
-        
     """, unsafe_allow_html=True)
     
     player_name = st.session_state.current_player
     player_id = st.session_state.get("player_id", player_name)
     game_id = st.session_state.get("game_id", "default")
-
+    
     questions = st.session_state.get("questions", [])
     total_questions = len(questions)
     current_index = st.session_state.get("current_question_index", 0)
 
+    # Safe check
+    if not questions:
+        st.error(t("No questions loaded. Please start the quiz again."))
+        st.session_state.game = False
+        st.rerun()
+
+    # FINAL SCREEN → no Log out button here!
     if current_index >= total_questions:
         final_score = load_scores().get(game_id, {}).get(player_id, 0)
         all_answers = st.session_state.answers
@@ -812,7 +781,7 @@ def question_page():
             answers=all_answers,
             scores=all_scores
         )
-
+        
         st.balloons()
         st.markdown(f"""
             <div style="background-color:#E9E4F6; padding:30px; border-radius:20px; text-align:center; margin-top:50px;">
@@ -824,8 +793,48 @@ def question_page():
                 <p style="font-size:16px; color:#555;">{t("Share your result with the team and challenge your coworkers.")}</p>
             </div>
         """, unsafe_allow_html=True)
-        return
-    
+
+        return  # 🚀 Very important → prevent rest of the function running
+
+    # DURING QUIZ → show Log out button here
+    _, columna = st.columns([5,2])
+    with columna:
+        if st.button(t("🔒 Log out")):
+            # Remove from players.json
+            if os.path.exists(PLAYERS_FILE) and player_name:
+                with open(PLAYERS_FILE, "r") as f:
+                    players_data = json.load(f)
+
+                if game_id in players_data and player_name in players_data[game_id]:
+                    del players_data[game_id][player_name]
+                    with open(PLAYERS_FILE, "w") as f:
+                        json.dump(players_data, f, indent=4)
+
+            # Remove from answers.json
+            if os.path.exists(ANSWERS_FILE) and player_id:
+                with open(ANSWERS_FILE, "r") as f:
+                    answers_data = json.load(f)
+
+                if game_id in answers_data and player_id in answers_data[game_id]:
+                    del answers_data[game_id][player_id]
+                    with open(ANSWERS_FILE, "w") as f:
+                        json.dump(answers_data, f, indent=4)
+
+            # Clear session state for player
+            st.session_state.logged_in = False
+            st.session_state.game = False
+            st.session_state.current_player = None
+            st.session_state.player_id = None
+            st.session_state.current_question_index = 0
+            st.session_state.questions = []
+            st.session_state.quiz_finished = False
+            st.session_state.answers = {}
+            st.session_state.countdown_done = False
+
+            st.success(t("You have been logged out."))
+            time.sleep(0.5)
+            st.rerun()
+
     # Load time limit from game config
     time_limit = None
     if os.path.exists(GAMES_FILE):
@@ -859,7 +868,7 @@ def question_page():
     st.markdown(f"""
         <style>
         .question-card {{
-            background-color: #C398E2; /* 🔵 light purple */
+            background-color: #C398E2;
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -876,14 +885,12 @@ def question_page():
         }}
         .progress-bar-fill {{
             height: 100%;
-            width: {100 * (current_index + 1) // total_questions}%;
+            width: {100 * (current_index + 1) // total_questions}% ;
             background-color: #662D91;
         }}
         </style>
         <div class="progress-bar"><div class="progress-bar-fill"></div></div>
     """, unsafe_allow_html=True)
-   
-    
 
     st.markdown(f"#### ❓ {t('Question')} {current_index + 1} {t('of')} {total_questions}")
     st.markdown(f"<div class='question-card'><h3>{question['question']}</h3>", unsafe_allow_html=True)
@@ -894,7 +901,6 @@ def question_page():
     for idx, option in enumerate(options):
         with columns[idx % 2]:
             if st.button(f"{option}", key=f"button_{current_index}_{idx}"):
-   
                 is_correct = option in correct if isinstance(correct, list) else option == correct
 
                 answers = load_answers()
@@ -913,7 +919,7 @@ def question_page():
 
                 st.session_state.answers = answers
                 save_answers(answers)
-                
+
                 scores = load_scores()
                 scores.setdefault(game_id, {}).setdefault(player_id, 0)
                 if is_correct:
@@ -959,8 +965,6 @@ def question_page():
     if time_limit and remaining_time > 0:
         time.sleep(1)
         st.rerun()
-
-
 
 
 def logged_in_page():
@@ -1455,86 +1459,6 @@ def logged_in_page():
                 st.code(share_message, language="markdown")
                 st.markdown(t("You can copy and paste this message into an email or Teams chat."))
 
-    # if st.session_state.game_link_active:
-    #     st.title(t("🚀 Generate Game Link"))
-    #     question_files = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
-
-    #     if not question_files:
-    #         st.warning(t("No question sets found. Please create and save a question set first."))
-    #     else:
-    #     # STEP 1 — Admin chooses mode
-    #         question_mode = st.radio("Question Set Mode", ["Single set for both languages", "Separate sets for each language"])
-
-    #         if question_mode == "Single set for both languages":
-    #             st.markdown("**Select Question Set (used for both EN and ES):**")
-    #             selected_file = st.selectbox("📋 Question Set", question_files, key="selectbox_single")
-
-    #             selected_file_en = selected_file
-    #             selected_file_es = selected_file
-
-    #         else:  # Separate sets
-    #             st.markdown("**Select Spanish Question Set:**")
-    #             selected_file_es = st.selectbox("📋 Spanish Questions", question_files, key="selectbox_es")
-
-    #             st.markdown("**Select English Question Set:**")
-    #             selected_file_en = st.selectbox("📋 English Questions", question_files, key="selectbox_en")
-
-    #     # else:
-    #     #     st.markdown("**Select Spanish question set:**")
-    #     #     selected_file_es = st.selectbox("📋 Spanish Questions", question_files, key="selectbox_es")
-
-    #     #     st.markdown("**Select English question set:**")
-    #     #     selected_file_en = st.selectbox("📋 English Questions", question_files, key="selectbox_en")
-
-    #         use_timer = st.checkbox(t("⏱ Enable time limit per question?"), value=True)
-
-    #         if use_timer:
-    #             time_limit = st.number_input(t("⏱ Time limit per question (in seconds)"), min_value=5, max_value=300, value=30)
-    #         else:
-    #             time_limit = None  # or you can set it to 0 if preferred
-
-
-    #         if st.button(t("Generate & Save Game")):
-    #             selected_questions = load_question_set(selected_file)
-    #             game_id = generate_game_id()
-    #             st.session_state.game_id = game_id
-
-    #             games_data = {}
-    #             if os.path.exists(GAMES_FILE):
-    #                 with open(GAMES_FILE, "r") as f:
-    #                     try:
-    #                         games_data = json.load(f)
-    #                     except json.JSONDecodeError:
-    #                         games_data = {}
-                            
-    #             games_data[game_id] = {
-    #                 "question_file_es": selected_file_es,
-    #                 "question_file_en": selected_file_en,
-    #                 "time_limit": time_limit if use_timer else None
-    #             }
-
-    #             games_data[game_id] = {
-    #                 "question_file": selected_file,
-    #                 "questions": selected_questions,
-    #                 "time_limit": time_limit if use_timer else None
-    #             }
-
-    #             with open(GAMES_FILE, "w") as f:
-    #                 json.dump(games_data, f, indent=4)
-
-    #             st.success(f"{t('Game ID')} {game_id} {t('created and saved!')}")
-    #             st.markdown(f"{t('Send this Game ID to players to join:')} {game_id}")
-    #             share_message = (
-    #                 f"{t('Hi team,')}\n\n"
-    #                 f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
-    #                 f"🌐 https://telagame.streamlit.app/\n"
-    #                 f"🆔 {t('Game ID')}: {game_id}\n\n"
-    #                 f"{t('Have fun and good luck!')}"
-    #             )
-
-    #             st.code(share_message, language="markdown")
-    #             st.markdown(t("You can copy and paste this message into an email or Teams chat."))
-
 
     # --- DASHBOARD SECTION ---
     if st.session_state.dashboard_active:
@@ -1683,7 +1607,9 @@ def logged_in_page():
             for game_id in list(games.keys()):
                 col1, col2, col3 = st.columns([3, 1, 2])
                 with col1:
-                    st.write(f"{t('Game ID')}: {game_id} — {t('Set')}: {games[game_id]['question_file']}")
+                    st.write(f"{t('Game ID')}: {game_id} — EN: {games[game_id].get('question_file_en', 'N/A')} — ES: {games[game_id].get('question_file_es', 'N/A')}"
+                            )
+
 
                     with st.expander("📤 Show Invite Message"):
                         share_message = (

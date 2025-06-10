@@ -200,5 +200,309 @@
                 "player_name": "TAKIS"
             }
         }
+    },
+    "8I5D29": {},
+    "M12QQB": {},
+    "STZIR0": {
+        "UX5jrWUbWs": {
+            "Q1": {
+                "selected_answer": "Jason Gorevic",
+                "correct_answer": "Charles Divita",
+                "timestamp": "2025-06-11T00:21:24.238605",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q2": {
+                "selected_answer": "Carlos Nueno",
+                "correct_answer": "Carlos Nueno",
+                "timestamp": "2025-06-11T00:21:24.954750",
+                "is_correct": true,
+                "player_name": "TAKIS"
+            },
+            "Q3": {
+                "selected_answer": "International Operations Manager",
+                "correct_answer": "Country Manager for Spain",
+                "timestamp": "2025-06-11T00:21:25.472307",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q4": {
+                "selected_answer": "Advance Medical",
+                "correct_answer": "Advance Medical",
+                "timestamp": "2025-06-11T00:21:25.918051",
+                "is_correct": true,
+                "player_name": "TAKIS"
+            },
+            "Q5": {
+                "selected_answer": "2015",
+                "correct_answer": "2018",
+                "timestamp": "2025-06-11T00:21:26.421714",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q6": {
+                "selected_answer": "680",
+                "correct_answer": "790",
+                "timestamp": "2025-06-11T00:21:26.872048",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q7": {
+                "selected_answer": "Medical Director",
+                "correct_answer": "Director of Risk Assessment",
+                "timestamp": "2025-06-11T00:21:27.438039",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q8": {
+                "selected_answer": "Virtual medical consultations and urgent care",
+                "correct_answer": "All of the above",
+                "timestamp": "2025-06-11T00:21:28.023634",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q9": {
+                "selected_answer": "2018",
+                "correct_answer": "2020",
+                "timestamp": "2025-06-11T00:21:28.597081",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q10": {
+                "selected_answer": "Customer Service",
+                "correct_answer": "Risk Assessment",
+                "timestamp": "2025-06-11T00:21:29.117066",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q11": {
+                "selected_answer": "50",
+                "correct_answer": "80",
+                "timestamp": "2025-06-11T00:21:29.565193",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q12": {
+                "selected_answer": "6",
+                "correct_answer": "6",
+                "timestamp": "2025-06-11T00:21:30.041070",
+                "is_correct": true,
+                "player_name": "TAKIS"
+            },
+            "Q13": {
+                "selected_answer": "11",
+                "correct_answer": "13",
+                "timestamp": "2025-06-11T00:21:30.519072",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "correct_answer": "21",
+                "timestamp": "2025-06-11T00:21:31.128747",
+                "is_correct": false,
+                "player_name": "TAKIS"
+            }
+        },
+        "TX15CpugI1": {
+            "Q1": {
+                "selected_answer": "Jason Gorevic",
+                "correct_answer": "Charles Divita",
+                "timestamp": "2025-06-11T00:21:58.530988",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q2": {
+                "selected_answer": "Carlos Nueno",
+                "correct_answer": "Carlos Nueno",
+                "timestamp": "2025-06-11T00:21:59.649737",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q3": {
+                "selected_answer": "Responsable de Servicios al Cliente",
+                "correct_answer": "Country Manager para Espa\u00f1a",
+                "timestamp": "2025-06-11T00:22:00.256541",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q4": {
+                "selected_answer": "HealthConnect",
+                "correct_answer": "Advance Medical",
+                "timestamp": "2025-06-11T00:22:00.886886",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q5": {
+                "selected_answer": "2018",
+                "correct_answer": "2018",
+                "timestamp": "2025-06-11T00:22:01.368262",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q6": {
+                "selected_answer": "1045",
+                "correct_answer": "790",
+                "timestamp": "2025-06-11T00:22:02.016118",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q7": {
+                "selected_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                "correct_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                "timestamp": "2025-06-11T00:22:02.659070",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q8": {
+                "selected_answer": "Todas las anteriores",
+                "correct_answer": "Todas las anteriores",
+                "timestamp": "2025-06-11T00:22:03.646019",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q9": {
+                "selected_answer": "2018",
+                "correct_answer": "2020",
+                "timestamp": "2025-06-11T00:22:04.783588",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q10": {
+                "selected_answer": "Equipo M\u00e9dico",
+                "correct_answer": "Risk assessment",
+                "timestamp": "2025-06-11T00:22:05.356256",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q11": {
+                "selected_answer": "30",
+                "correct_answer": "80",
+                "timestamp": "2025-06-11T00:22:05.926918",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q12": {
+                "selected_answer": "4",
+                "correct_answer": "6",
+                "timestamp": "2025-06-11T00:22:06.570845",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q13": {
+                "selected_answer": "7",
+                "correct_answer": "13",
+                "timestamp": "2025-06-11T00:22:07.016518",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "correct_answer": "21",
+                "timestamp": "2025-06-11T00:22:07.612572",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            }
+        },
+        "LcCqraTgFK": {
+            "Q1": {
+                "selected_answer": "Carlos Nueno",
+                "correct_answer": "Charles Divita",
+                "timestamp": "2025-06-11T00:23:14.610428",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q2": {
+                "selected_answer": "Kathy Hern\u00e1ndez",
+                "correct_answer": "Carlos Nueno",
+                "timestamp": "2025-06-11T00:23:15.385655",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q3": {
+                "selected_answer": "Customer Service Manager",
+                "correct_answer": "Country Manager for Spain",
+                "timestamp": "2025-06-11T00:23:16.082516",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q4": {
+                "selected_answer": "HealthConnect",
+                "correct_answer": "Advance Medical",
+                "timestamp": "2025-06-11T00:23:16.706572",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q5": {
+                "selected_answer": "2018",
+                "correct_answer": "2018",
+                "timestamp": "2025-06-11T00:23:17.401657",
+                "is_correct": true,
+                "player_name": "GIANNIS"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "correct_answer": "790",
+                "timestamp": "2025-06-11T00:23:18.190644",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q7": {
+                "selected_answer": "Mental Health Team Leader",
+                "correct_answer": "Director of Risk Assessment",
+                "timestamp": "2025-06-11T00:23:19.062731",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q8": {
+                "selected_answer": "Virtual medical consultations and urgent care",
+                "correct_answer": "All of the above",
+                "timestamp": "2025-06-11T00:23:19.853639",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q9": {
+                "selected_answer": "2019",
+                "correct_answer": "2020",
+                "timestamp": "2025-06-11T00:23:20.901750",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q10": {
+                "selected_answer": "Medical Team",
+                "correct_answer": "Risk Assessment",
+                "timestamp": "2025-06-11T00:23:21.784516",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q11": {
+                "selected_answer": "80",
+                "correct_answer": "80",
+                "timestamp": "2025-06-11T00:23:22.557535",
+                "is_correct": true,
+                "player_name": "GIANNIS"
+            },
+            "Q12": {
+                "selected_answer": "4",
+                "correct_answer": "6",
+                "timestamp": "2025-06-11T00:23:23.392037",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q13": {
+                "selected_answer": "7",
+                "correct_answer": "13",
+                "timestamp": "2025-06-11T00:23:25.821354",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "correct_answer": "21",
+                "timestamp": "2025-06-11T00:23:28.613022",
+                "is_correct": false,
+                "player_name": "GIANNIS"
+            }
+        }
     }
 }
