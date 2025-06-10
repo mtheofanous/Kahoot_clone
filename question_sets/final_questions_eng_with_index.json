@@ -1,0 +1,156 @@
+[
+    {
+        "question": "Who is the current CEO of Teladoc Health?",
+        "options": [
+            "Jason Gorevic",
+            "Carlos Nueno",
+            "Charles Divita",
+            "Mala Murthy"
+        ],
+        "correct": "Charles Divita",
+        "correct_index": 2
+    },
+    {
+        "question": "Who is the International President of Teladoc Health?",
+        "options": [
+            "Kathy Hernández",
+            "Carlos Nueno",
+            "Oscar Masvidal",
+            "Jason Gorevic"
+        ],
+        "correct": "Carlos Nueno",
+        "correct_index": 1
+    },
+    {
+        "question": "What position does Oscar Masvidal hold at Teladoc Health?",
+        "options": [
+            "International Operations Manager",
+            "Country Manager for Spain",
+            "Head of Human Resources",
+            "Customer Service Manager"
+        ],
+        "correct": "Country Manager for Spain",
+        "correct_index": 1
+    },
+    {
+        "question": "What was the name of Teladoc Health’s office in Barcelona before the acquisition?",
+        "options": [
+            "HealthConnect",
+            "Advance Medical",
+            "Medical Direct",
+            "TeleSalud"
+        ],
+        "correct": "Advance Medical",
+        "correct_index": 1
+    },
+    {
+        "question": "In what year did Teladoc Health acquire Advance Medical?",
+        "options": [
+            "2015",
+            "2018",
+            "2020",
+            "2022"
+        ],
+        "correct": "2018",
+        "correct_index": 1
+    },
+    {
+        "question": "Approximately how many employees does Teladoc Health International have in Barcelona?",
+        "options": [
+            "420",
+            "680",
+            "790",
+            "1045"
+        ],
+        "correct": "790",
+        "correct_index": 2
+    },
+    {
+        "question": "What position does Carolina Brunet hold at Teladoc Health?",
+        "options": [
+            "Director of Risk Assessment",
+            "Mental Health Team Leader",
+            "Medical Director",
+            "Director of International Operations"
+        ],
+        "correct": "Director of Risk Assessment",
+        "correct_index": 0
+    },
+    {
+        "question": "What types of services does Teladoc Health offer?",
+        "options": [
+            "Virtual medical consultations and urgent care",
+            "Online mental health and second medical opinion",
+            "Telemedicine hardware and software",
+            "All of the above"
+        ],
+        "correct": "All of the above",
+        "correct_index": 3
+    },
+    {
+        "question": "In what year did Teladoc Health establish its international headquarters in Barcelona?",
+        "options": [
+            "2017",
+            "2018",
+            "2019",
+            "2020"
+        ],
+        "correct": "2020",
+        "correct_index": 3
+    },
+    {
+        "question": "Which department in Barcelona focuses on risk assessments for insurance?",
+        "options": [
+            "Medical Team",
+            "International Operations",
+            "Risk Assessment",
+            "Customer Service"
+        ],
+        "correct": "Risk Assessment",
+        "correct_index": 2
+    },
+    {
+        "question": "How many employees work in the risk assessment department?",
+        "options": [
+            "50",
+            "80",
+            "120",
+            "30"
+        ],
+        "correct": "80",
+        "correct_index": 1
+    },
+    {
+        "question": "In how many countries does the risk assessment department have projects?",
+        "options": [
+            "4",
+            "6",
+            "8",
+            "10"
+        ],
+        "correct": "6",
+        "correct_index": 1
+    },
+    {
+        "question": "In how many languages does the risk assessment department provide services?",
+        "options": [
+            "21",
+            "7",
+            "11",
+            "13"
+        ],
+        "correct": "13",
+        "correct_index": 3
+    },
+    {
+        "question": "How many employees work in the international risk assessment area?",
+        "options": [
+            "34",
+            "15",
+            "21",
+            "32"
+        ],
+        "correct": "21",
+        "correct_index": 2
+    }
+]

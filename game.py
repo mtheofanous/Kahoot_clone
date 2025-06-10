@@ -901,7 +901,8 @@ def question_page():
     for idx, option in enumerate(options):
         with columns[idx % 2]:
             if st.button(f"{option}", key=f"button_{current_index}_{idx}"):
-                is_correct = option in correct if isinstance(correct, list) else option == correct
+                correct_index = question.get("correct_index", -1)
+                is_correct = (idx == correct_index)
 
                 answers = load_answers()
                 if game_id not in answers:
@@ -909,9 +910,12 @@ def question_page():
                 if player_id not in answers[game_id]:
                     answers[game_id][player_id] = {}
 
+                correct_index = question.get("correct_index", -1)
+
                 answers[game_id][player_id][f"Q{current_index + 1}"] = {
                     "selected_answer": option,
-                    "correct_answer": correct,
+                    "selected_index": idx,   # 🚀 Add this line!
+                    "correct_index": correct_index,
                     "timestamp": datetime.datetime.now().isoformat(),
                     "is_correct": is_correct,
                     "player_name": player_name
@@ -1492,6 +1496,30 @@ def logged_in_page():
                     st.write(f"✅ {name}")
                     st.session_state.completed_players.add(player_id)
 
+            # st.subheader(t("📋 Questions & Answers"))
+
+            # for i, question in enumerate(questions):
+            #     with st.expander(f"{t('Question')} {i+1}: {question['question']}"):
+            #         response_counts = {opt: 0 for opt in question["options"]}
+            #         total_responses = 0
+
+            #         for player_id, responses in game_answers.items():
+            #             q_key = f"Q{i+1}"
+            #             if q_key in responses:
+            #                 selected_answer = responses[q_key]["selected_answer"]
+            #                 if selected_answer in response_counts:
+            #                     response_counts[selected_answer] += 1
+            #                 total_responses += 1
+
+            #         for opt in question["options"]:
+            #             count = response_counts[opt]
+            #             percentage = (count / total_responses * 100) if total_responses > 0 else 0
+            #             if opt == question["correct"]:
+            #                 st.markdown(f"✅ **{opt}** — {count} {t('responses')} ({percentage:.1f}%)")
+            #             else:
+            #                 st.markdown(f"🔹 {opt} — {count} {t('responses')} ({percentage:.1f}%)")
+
+            #         st.markdown(f"**{t('Total Responses:')}** {total_responses}")
             st.subheader(t("📋 Questions & Answers"))
 
             for i, question in enumerate(questions):
@@ -1502,20 +1530,39 @@ def logged_in_page():
                     for player_id, responses in game_answers.items():
                         q_key = f"Q{i+1}"
                         if q_key in responses:
-                            selected_answer = responses[q_key]["selected_answer"]
-                            if selected_answer in response_counts:
-                                response_counts[selected_answer] += 1
+                            selected_index = responses[q_key].get("selected_index", None)
+                            
+                            if selected_index is not None and 0 <= selected_index < len(question["options"]):
+                                option_text = question["options"][selected_index]
+                                response_counts[option_text] += 1
+                            else:
+                                # Fallback for players with missing selected_index
+                                response_counts["No Answer"] = response_counts.get("No Answer", 0) + 1
+                            
                             total_responses += 1
 
+                    # Get correct option text by index
+                    correct_index = question.get("correct_index", -1)
+                    correct_option = question["options"][correct_index] if 0 <= correct_index < len(question["options"]) else None
+
+                    # Show responses
                     for opt in question["options"]:
                         count = response_counts[opt]
                         percentage = (count / total_responses * 100) if total_responses > 0 else 0
-                        if opt == question["correct"]:
+
+                        if opt == correct_option:
                             st.markdown(f"✅ **{opt}** — {count} {t('responses')} ({percentage:.1f}%)")
                         else:
                             st.markdown(f"🔹 {opt} — {count} {t('responses')} ({percentage:.1f}%)")
 
+                    # Optional: show "No Answer" if any
+                    if "No Answer" in response_counts:
+                        count = response_counts["No Answer"]
+                        percentage = (count / total_responses * 100) if total_responses > 0 else 0
+                        st.markdown(f"❓ {t('No Answer')} — {count} {t('responses')} ({percentage:.1f}%)")
+
                     st.markdown(f"**{t('Total Responses:')}** {total_responses}")
+
 
         elif page == t("**🏆 Winners**"):
             st.title(t("🏆 Winners"))

@@ -19,5 +19,27 @@
         "GIANNIS": {
             "player_id": "LcCqraTgFK"
         }
+    },
+    "ZN92GR": {
+        "ENG": {
+            "player_id": "Jsbhpetuda"
+        },
+        "ESP": {
+            "player_id": "Dxp6jtR9he"
+        }
+    },
+    "W4DUSQ": {
+        "ENG": {
+            "player_id": "IpuP1l9WU6"
+        },
+        "ESP": {
+            "player_id": "PnLTJg9Ip2"
+        },
+        "ESP2": {
+            "player_id": "CpsCy7ZbLG"
+        },
+        "ENG2": {
+            "player_id": "sT12Brv8nc"
+        }
     }
 }

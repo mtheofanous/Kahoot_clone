@@ -455,5 +455,1001 @@
             "TX15CpugI1": "MARIOS",
             "LcCqraTgFK": "GIANNIS"
         }
+    },
+    "ZN92GR": {
+        "questions": [
+            {
+                "question": "\u00bfQui\u00e9n es el CEO actual de Teladoc Health?",
+                "options": [
+                    "Jason Gorevic",
+                    "Carlos Nueno",
+                    "Charles Divita",
+                    "Mala Murthy"
+                ],
+                "correct": "Charles Divita",
+                "correct_index": 2
+            },
+            {
+                "question": "\u00bfQui\u00e9n es el Presidente Internacional de Teladoc Health?",
+                "options": [
+                    "Kathy Hern\u00e1ndez",
+                    "Carlos Nueno",
+                    "Oscar Masvidal",
+                    "Jason Gorevic"
+                ],
+                "correct": "Carlos Nueno",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfQu\u00e9 posici\u00f3n ocupa Oscar Masvidal en Teladoc Health?",
+                "options": [
+                    "Gerente de Operaciones Internacionales",
+                    "Country Manager para Espa\u00f1a",
+                    "Jefe de Recursos Humanos",
+                    "Responsable de Servicios al Cliente"
+                ],
+                "correct": "Country Manager para Espa\u00f1a",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfCu\u00e1l era el nombre de la oficina de Teladoc Health en Barcelona antes de la adquisici\u00f3n?",
+                "options": [
+                    "HealthConnect",
+                    "Advance Medical",
+                    "Medical Direct",
+                    "TeleSalud"
+                ],
+                "correct": "Advance Medical",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfEn qu\u00e9 a\u00f1o adquiri\u00f3 Teladoc Health a Advance Medical?",
+                "options": [
+                    "2015",
+                    "2018",
+                    "2020",
+                    "2022"
+                ],
+                "correct": "2018",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfCu\u00e1ntos empleados aproximadamente tiene Teladoc Health International en Barcelona?",
+                "options": [
+                    "420",
+                    "680",
+                    "790",
+                    "1045"
+                ],
+                "correct": "790",
+                "correct_index": 2
+            },
+            {
+                "question": "\u00bfQu\u00e9 posici\u00f3n ocupa Carolina Brunet en Teladoc Health?",
+                "options": [
+                    "Directora de Evaluaci\u00f3n de Riesgos",
+                    "L\u00edder del Equipo de Salud Mental",
+                    "Directora M\u00e9dica",
+                    "Directora de Operaciones Internacionales"
+                ],
+                "correct": "Directora de Evaluaci\u00f3n de Riesgos",
+                "correct_index": 0
+            },
+            {
+                "question": "\u00bfQu\u00e9 tipo de servicios ofrece Teladoc Health?",
+                "options": [
+                    "Consultas m\u00e9dicas virtuales y consultas de urgencias",
+                    "Salud mental en l\u00ednea y segunda opini\u00f3n m\u00e9dica",
+                    "Hardware y software para telemedicina",
+                    "Todas las anteriores"
+                ],
+                "correct": "Todas las anteriores",
+                "correct_index": 3
+            },
+            {
+                "question": "\u00bfEn qu\u00e9 a\u00f1o Teladoc Health estableci\u00f3 su sede internacional en Barcelona?",
+                "options": [
+                    "2017",
+                    "2018",
+                    "2019",
+                    "2020"
+                ],
+                "correct": "2020",
+                "correct_index": 3
+            },
+            {
+                "question": "\u00bfQu\u00e9 departamento en Barcelona se enfoca en las evaluaciones de riesgo para seguros?",
+                "options": [
+                    "Equipo M\u00e9dico",
+                    "Operaciones Internacionales",
+                    "Risk assessment",
+                    "Servicios al Cliente"
+                ],
+                "correct": "Risk assessment",
+                "correct_index": 2
+            },
+            {
+                "question": "\u00bfCu\u00e1ntos empleados trabajan en el departamento de risk assessment?",
+                "options": [
+                    "50",
+                    "80",
+                    "120",
+                    "30"
+                ],
+                "correct": "80",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfCon cu\u00e1ntos pa\u00edses tiene proyectos el departamento de risk assessment?",
+                "options": [
+                    "4",
+                    "6",
+                    "8",
+                    "10"
+                ],
+                "correct": "6",
+                "correct_index": 1
+            },
+            {
+                "question": "\u00bfEn cu\u00e1ntos idiomas presta servicio el departamento de risk assessment?",
+                "options": [
+                    "21",
+                    "7",
+                    "11",
+                    "13"
+                ],
+                "correct": "13",
+                "correct_index": 3
+            },
+            {
+                "question": "\u00bfCu\u00e1ntos empleados trabajan en el \u00e1rea internacional de riskassessment?",
+                "options": [
+                    "34",
+                    "15",
+                    "21",
+                    "32"
+                ],
+                "correct": "21",
+                "correct_index": 2
+            }
+        ],
+        "answers": {
+            "Jsbhpetuda": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "correct_answer": "Charles Divita",
+                    "timestamp": "2025-06-11T00:44:16.073654",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "correct_answer": "Carlos Nueno",
+                    "timestamp": "2025-06-11T00:44:17.428026",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q3": {
+                    "selected_answer": "International Operations Manager",
+                    "correct_answer": "Country Manager for Spain",
+                    "timestamp": "2025-06-11T00:44:18.703141",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "correct_answer": "Advance Medical",
+                    "timestamp": "2025-06-11T00:44:20.038716",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "correct_answer": "2018",
+                    "timestamp": "2025-06-11T00:44:21.307146",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "correct_answer": "790",
+                    "timestamp": "2025-06-11T00:44:22.705671",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q7": {
+                    "selected_answer": "Director of Risk Assessment",
+                    "correct_answer": "Director of Risk Assessment",
+                    "timestamp": "2025-06-11T00:44:24.041544",
+                    "is_correct": true,
+                    "player_name": "ENG"
+                },
+                "Q8": {
+                    "selected_answer": "Virtual medical consultations and urgent care",
+                    "correct_answer": "All of the above",
+                    "timestamp": "2025-06-11T00:44:25.393184",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "correct_answer": "2020",
+                    "timestamp": "2025-06-11T00:44:26.930769",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q10": {
+                    "selected_answer": "Medical Team",
+                    "correct_answer": "Risk Assessment",
+                    "timestamp": "2025-06-11T00:44:28.353320",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "correct_answer": "80",
+                    "timestamp": "2025-06-11T00:44:29.722872",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "correct_answer": "6",
+                    "timestamp": "2025-06-11T00:44:31.326821",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "correct_answer": "13",
+                    "timestamp": "2025-06-11T00:44:32.698148",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "correct_answer": "21",
+                    "timestamp": "2025-06-11T00:44:33.928737",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                }
+            },
+            "Dxp6jtR9he": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "correct_answer": "Charles Divita",
+                    "timestamp": "2025-06-11T00:44:58.105329",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "correct_answer": "Carlos Nueno",
+                    "timestamp": "2025-06-11T00:44:59.072823",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q3": {
+                    "selected_answer": "Gerente de Operaciones Internacionales",
+                    "correct_answer": "Country Manager para Espa\u00f1a",
+                    "timestamp": "2025-06-11T00:45:00.039495",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "correct_answer": "Advance Medical",
+                    "timestamp": "2025-06-11T00:45:01.244683",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "correct_answer": "2018",
+                    "timestamp": "2025-06-11T00:45:02.315036",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "correct_answer": "790",
+                    "timestamp": "2025-06-11T00:45:03.272278",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q7": {
+                    "selected_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                    "correct_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                    "timestamp": "2025-06-11T00:45:04.310096",
+                    "is_correct": true,
+                    "player_name": "ESP"
+                },
+                "Q8": {
+                    "selected_answer": "Consultas m\u00e9dicas virtuales y consultas de urgencias",
+                    "correct_answer": "Todas las anteriores",
+                    "timestamp": "2025-06-11T00:45:05.291914",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "correct_answer": "2020",
+                    "timestamp": "2025-06-11T00:45:06.400664",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q10": {
+                    "selected_answer": "Equipo M\u00e9dico",
+                    "correct_answer": "Risk assessment",
+                    "timestamp": "2025-06-11T00:45:07.428808",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "correct_answer": "80",
+                    "timestamp": "2025-06-11T00:45:08.426644",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "correct_answer": "6",
+                    "timestamp": "2025-06-11T00:45:09.441935",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "correct_answer": "13",
+                    "timestamp": "2025-06-11T00:45:10.323799",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "correct_answer": "21",
+                    "timestamp": "2025-06-11T00:45:11.160146",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                }
+            }
+        },
+        "scores": {
+            "Jsbhpetuda": 1,
+            "Dxp6jtR9he": 1
+        },
+        "players": {
+            "Jsbhpetuda": "ENG",
+            "Dxp6jtR9he": "ESP"
+        }
+    },
+    "W4DUSQ": {
+        "questions": [
+            {
+                "question": "Who is the current CEO of Teladoc Health?",
+                "options": [
+                    "Jason Gorevic",
+                    "Carlos Nueno",
+                    "Charles Divita",
+                    "Mala Murthy"
+                ],
+                "correct": "Charles Divita",
+                "correct_index": 2
+            },
+            {
+                "question": "Who is the International President of Teladoc Health?",
+                "options": [
+                    "Kathy Hern\u00e1ndez",
+                    "Carlos Nueno",
+                    "Oscar Masvidal",
+                    "Jason Gorevic"
+                ],
+                "correct": "Carlos Nueno",
+                "correct_index": 1
+            },
+            {
+                "question": "What position does Oscar Masvidal hold at Teladoc Health?",
+                "options": [
+                    "International Operations Manager",
+                    "Country Manager for Spain",
+                    "Head of Human Resources",
+                    "Customer Service Manager"
+                ],
+                "correct": "Country Manager for Spain",
+                "correct_index": 1
+            },
+            {
+                "question": "What was the name of Teladoc Health\u2019s office in Barcelona before the acquisition?",
+                "options": [
+                    "HealthConnect",
+                    "Advance Medical",
+                    "Medical Direct",
+                    "TeleSalud"
+                ],
+                "correct": "Advance Medical",
+                "correct_index": 1
+            },
+            {
+                "question": "In what year did Teladoc Health acquire Advance Medical?",
+                "options": [
+                    "2015",
+                    "2018",
+                    "2020",
+                    "2022"
+                ],
+                "correct": "2018",
+                "correct_index": 1
+            },
+            {
+                "question": "Approximately how many employees does Teladoc Health International have in Barcelona?",
+                "options": [
+                    "420",
+                    "680",
+                    "790",
+                    "1045"
+                ],
+                "correct": "790",
+                "correct_index": 2
+            },
+            {
+                "question": "What position does Carolina Brunet hold at Teladoc Health?",
+                "options": [
+                    "Director of Risk Assessment",
+                    "Mental Health Team Leader",
+                    "Medical Director",
+                    "Director of International Operations"
+                ],
+                "correct": "Director of Risk Assessment",
+                "correct_index": 0
+            },
+            {
+                "question": "What types of services does Teladoc Health offer?",
+                "options": [
+                    "Virtual medical consultations and urgent care",
+                    "Online mental health and second medical opinion",
+                    "Telemedicine hardware and software",
+                    "All of the above"
+                ],
+                "correct": "All of the above",
+                "correct_index": 3
+            },
+            {
+                "question": "In what year did Teladoc Health establish its international headquarters in Barcelona?",
+                "options": [
+                    "2017",
+                    "2018",
+                    "2019",
+                    "2020"
+                ],
+                "correct": "2020",
+                "correct_index": 3
+            },
+            {
+                "question": "Which department in Barcelona focuses on risk assessments for insurance?",
+                "options": [
+                    "Medical Team",
+                    "International Operations",
+                    "Risk Assessment",
+                    "Customer Service"
+                ],
+                "correct": "Risk Assessment",
+                "correct_index": 2
+            },
+            {
+                "question": "How many employees work in the risk assessment department?",
+                "options": [
+                    "50",
+                    "80",
+                    "120",
+                    "30"
+                ],
+                "correct": "80",
+                "correct_index": 1
+            },
+            {
+                "question": "In how many countries does the risk assessment department have projects?",
+                "options": [
+                    "4",
+                    "6",
+                    "8",
+                    "10"
+                ],
+                "correct": "6",
+                "correct_index": 1
+            },
+            {
+                "question": "In how many languages does the risk assessment department provide services?",
+                "options": [
+                    "21",
+                    "7",
+                    "11",
+                    "13"
+                ],
+                "correct": "13",
+                "correct_index": 3
+            },
+            {
+                "question": "How many employees work in the international risk assessment area?",
+                "options": [
+                    "34",
+                    "15",
+                    "21",
+                    "32"
+                ],
+                "correct": "21",
+                "correct_index": 2
+            }
+        ],
+        "answers": {
+            "IpuP1l9WU6": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:55:28.382730",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:29.675874",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q3": {
+                    "selected_answer": "International Operations Manager",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:30.958585",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:32.000978",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:33.011210",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:55:34.218680",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q7": {
+                    "selected_answer": "Director of Risk Assessment",
+                    "selected_index": 0,
+                    "correct_index": 0,
+                    "timestamp": "2025-06-11T00:55:35.126387",
+                    "is_correct": true,
+                    "player_name": "ENG"
+                },
+                "Q8": {
+                    "selected_answer": "Virtual medical consultations and urgent care",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:55:36.695390",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:55:37.987009",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q10": {
+                    "selected_answer": "Medical Team",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:55:38.881351",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:40.151986",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:55:41.219170",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:55:43.066679",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:55:44.396408",
+                    "is_correct": false,
+                    "player_name": "ENG"
+                }
+            },
+            "PnLTJg9Ip2": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:56:03.104193",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:04.507310",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q3": {
+                    "selected_answer": "Gerente de Operaciones Internacionales",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:06.150683",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:08.018656",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:09.336213",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:56:10.713307",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q7": {
+                    "selected_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                    "selected_index": 0,
+                    "correct_index": 0,
+                    "timestamp": "2025-06-11T00:56:12.275696",
+                    "is_correct": true,
+                    "player_name": "ESP"
+                },
+                "Q8": {
+                    "selected_answer": "Consultas m\u00e9dicas virtuales y consultas de urgencias",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:56:13.716165",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:56:15.078679",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q10": {
+                    "selected_answer": "Equipo M\u00e9dico",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:56:16.860111",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:18.239237",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:56:19.591490",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:56:20.885696",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:56:22.174283",
+                    "is_correct": false,
+                    "player_name": "ESP"
+                }
+            },
+            "CpsCy7ZbLG": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:57:37.494012",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:38.857214",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q3": {
+                    "selected_answer": "Gerente de Operaciones Internacionales",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:40.389051",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:42.037154",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:43.699283",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:57:45.367526",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q7": {
+                    "selected_answer": "Directora de Evaluaci\u00f3n de Riesgos",
+                    "selected_index": 0,
+                    "correct_index": 0,
+                    "timestamp": "2025-06-11T00:57:47.066268",
+                    "is_correct": true,
+                    "player_name": "ESP2"
+                },
+                "Q8": {
+                    "selected_answer": "Consultas m\u00e9dicas virtuales y consultas de urgencias",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:57:48.881185",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:57:50.569638",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q10": {
+                    "selected_answer": "Equipo M\u00e9dico",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:57:52.417293",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:54.222189",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:57:56.308139",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:57:58.370662",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:58:00.083675",
+                    "is_correct": false,
+                    "player_name": "ESP2"
+                }
+            },
+            "sT12Brv8nc": {
+                "Q1": {
+                    "selected_answer": "Jason Gorevic",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:58:23.581278",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:25.014670",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q3": {
+                    "selected_answer": "International Operations Manager",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:26.360164",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q4": {
+                    "selected_answer": "HealthConnect",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:28.174402",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q5": {
+                    "selected_answer": "2015",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:29.787732",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:58:31.641283",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q7": {
+                    "selected_answer": "Director of Risk Assessment",
+                    "selected_index": 0,
+                    "correct_index": 0,
+                    "timestamp": "2025-06-11T00:58:33.361381",
+                    "is_correct": true,
+                    "player_name": "ENG2"
+                },
+                "Q8": {
+                    "selected_answer": "Virtual medical consultations and urgent care",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:58:35.124122",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q9": {
+                    "selected_answer": "2017",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:58:36.832646",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q10": {
+                    "selected_answer": "Medical Team",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:58:38.730941",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q11": {
+                    "selected_answer": "50",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:40.330991",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q12": {
+                    "selected_answer": "4",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-11T00:58:41.885490",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-11T00:58:43.716321",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-11T00:58:45.522671",
+                    "is_correct": false,
+                    "player_name": "ENG2"
+                }
+            }
+        },
+        "scores": {
+            "IpuP1l9WU6": 1,
+            "PnLTJg9Ip2": 1,
+            "CpsCy7ZbLG": 1,
+            "sT12Brv8nc": 1
+        },
+        "players": {
+            "IpuP1l9WU6": "ENG",
+            "PnLTJg9Ip2": "ESP",
+            "CpsCy7ZbLG": "ESP2",
+            "sT12Brv8nc": "ENG2"
+        }
     }
 }
