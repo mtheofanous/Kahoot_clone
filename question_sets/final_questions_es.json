@@ -1,6 +1,6 @@
 [
     {
-        "question": "\u00bfQui\u00e9n es el CEO actual de Teladoc Health?",
+        "question": "¿Quién es el CEO actual de Teladoc Health?",
         "options": [
             "Jason Gorevic",
             "Carlos Nueno",
@@ -10,9 +10,9 @@
         "correct": "Charles Divita"
     },
     {
-        "question": "\u00bfQui\u00e9n es el Presidente Internacional de Teladoc Health?",
+        "question": "¿Quién es el Presidente Internacional de Teladoc Health?",
         "options": [
-            "Kathy Hern\u00e1ndez",
+            "Kathy Hernández",
             "Carlos Nueno",
             "Oscar Masvidal",
             "Jason Gorevic"
@@ -20,17 +20,17 @@
         "correct": "Carlos Nueno"
     },
     {
-        "question": "\u00bfQu\u00e9 posici\u00f3n ocupa Oscar Masvidal en Teladoc Health?",
+        "question": "¿Qué posición ocupa Oscar Masvidal en Teladoc Health?",
         "options": [
             "Gerente de Operaciones Internacionales",
-            "Country Manager para Espa\u00f1a",
+            "Country Manager para España",
             "Jefe de Recursos Humanos",
             "Responsable de Servicios al Cliente"
         ],
-        "correct": "Country Manager para Espa\u00f1a"
+        "correct": "Country Manager para España"
     },
     {
-        "question": "\u00bfCu\u00e1l era el nombre de la oficina de Teladoc Health en Barcelona antes de la adquisici\u00f3n?",
+        "question": "¿Cuál era el nombre de la oficina de Teladoc Health en Barcelona antes de la adquisición?",
         "options": [
             "HealthConnect",
             "Advance Medical",
@@ -40,7 +40,7 @@
         "correct": "Advance Medical"
     },
     {
-        "question": "\u00bfEn qu\u00e9 a\u00f1o adquiri\u00f3 Teladoc Health a Advance Medical?",
+        "question": "¿En qué año adquirió Teladoc Health a Advance Medical?",
         "options": [
             "2015",
             "2018",
@@ -50,7 +50,7 @@
         "correct": "2018"
     },
     {
-        "question": "\u00bfCu\u00e1ntos empleados aproximadamente tiene Teladoc Health International en Barcelona?",
+        "question": "¿Cuántos empleados aproximadamente tiene Teladoc Health International en Barcelona?",
         "options": [
             "420",
             "680",
@@ -60,27 +60,27 @@
         "correct": "790"
     },
     {
-        "question": "\u00bfQu\u00e9 posici\u00f3n ocupa Carolina Brunet en Teladoc Health?",
+        "question": "¿Qué posición ocupa Carolina Brunet en Teladoc Health?",
         "options": [
-            "Directora de Evaluaci\u00f3n de Riesgos",
-            "L\u00edder del Equipo de Salud Mental",
-            "Directora M\u00e9dica",
+            "Directora de Evaluación de Riesgos",
+            "Líder del Equipo de Salud Mental",
+            "Directora Médica",
             "Directora de Operaciones Internacionales"
         ],
-        "correct": "Directora de Evaluaci\u00f3n de Riesgos"
+        "correct": "Directora de Evaluación de Riesgos"
     },
     {
-        "question": "\u00bfQu\u00e9 tipo de servicios ofrece Teladoc Health?",
+        "question": "¿Qué tipo de servicios ofrece Teladoc Health?",
         "options": [
-            "Consultas m\u00e9dicas virtuales y consultas de urgencias",
-            "Salud mental en l\u00ednea y segunda opini\u00f3n m\u00e9dica",
+            "Consultas médicas virtuales y consultas de urgencias",
+            "Salud mental en línea y segunda opinión médica",
             "Hardware y software para telemedicina",
             "Todas las anteriores"
         ],
         "correct": "Todas las anteriores"
     },
     {
-        "question": "\u00bfEn qu\u00e9 a\u00f1o Teladoc Health estableci\u00f3 su sede internacional en Barcelona?",
+        "question": "¿En qué año Teladoc Health estableció su sede internacional en Barcelona?",
         "options": [
             "2017",
             "2018",
@@ -90,9 +90,9 @@
         "correct": "2020"
     },
     {
-        "question": "\u00bfQu\u00e9 departamento en Barcelona se enfoca en las evaluaciones de riesgo para seguros?",
+        "question": "¿Qué departamento en Barcelona se enfoca en las evaluaciones de riesgo para seguros?",
         "options": [
-            "Equipo M\u00e9dico",
+            "Equipo Médico",
             "Operaciones Internacionales",
             "Risk assessment",
             "Servicios al Cliente"
@@ -100,7 +100,7 @@
         "correct": "Risk assessment"
     },
     {
-        "question": "\u00bfCu\u00e1ntos empleados trabajan en el departamento de risk assessment?",
+        "question": "¿Cuántos empleados trabajan en el departamento de risk assessment?",
         "options": [
             "50",
             "80",
@@ -110,7 +110,7 @@
         "correct": "80"
     },
     {
-        "question": "\u00bfCon cu\u00e1ntos pa\u00edses tiene proyectos el departamento de risk assessment?",
+        "question": "¿Con cuántos países tiene proyectos el departamento de risk assessment?",
         "options": [
             "4",
             "6",
@@ -120,7 +120,7 @@
         "correct": "6"
     },
     {
-        "question": "\u00bfEn cu\u00e1ntos idiomas presta servicio el departamento de risk assessment?",
+        "question": "¿En cuántos idiomas presta servicio el departamento de risk assessment?",
         "options": [
             "21",
             "7",
@@ -130,7 +130,7 @@
         "correct": "13"
     },
     {
-        "question": "\u00bfCu\u00e1ntos empleados trabajan en el \u00e1rea internacional de riskassessment?",
+        "question": "¿Cuántos empleados trabajan en el área internacional de riskassessment?",
         "options": [
             "34",
             "15",

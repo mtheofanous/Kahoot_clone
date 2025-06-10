@@ -1,0 +1,7 @@
+{
+    "ABGQKP": {
+        "question_file_en": "final_questions_eng.json",
+        "question_file_es": "final_questions_es.json",
+        "time_limit": 30
+    }
+}

@@ -200,10 +200,15 @@ translations = {
         "⏱ Time limit per question (in seconds)": "⏱ Límite de tiempo por pregunta (en segundos)",
         "A file with this name already exists. Saving will overwrite the existing file.": "Ya existe un archivo con este nombre. Guardar sobrescribirá el archivo existente.",
         "This is just a suggestion — feel free to change it.": "Solo es una sugerencia — puedes cambiarlo si quieres.",
-        "Enter a filename to save this question set": "Introduce un nombre de archivo para guardar este conjunto de preguntas"
-
-
-
+        "Enter a filename to save this question set": "Introduce un nombre de archivo para guardar este conjunto de preguntas",
+        "Question Set Mode": "Modo de conjunto de preguntas",
+        "Single set for both languages": "Un solo conjunto para ambos idiomas",
+        "Separate sets for each language": "Conjuntos separados para cada idioma",
+        "**Select Question Set (used for both EN and ES):**": "**Selecciona el conjunto de preguntas (usado para EN y ES):**",
+        "**Select Spanish Question Set:**": "**Selecciona el conjunto de preguntas en español:**",
+        "**Select English Question Set:**": "**Selecciona el conjunto de preguntas en inglés:**",
+        "📋 Spanish Questions": "📋 Preguntas en español",
+        "📋 English Questions": "📋 Preguntas en inglés",
 
 
     }
@@ -624,6 +629,49 @@ def login_page():
 
 
 
+# def player_page():
+
+#     st.title(t("Welcome to Teladoc Game"))
+
+#     TELADOC_LOGO = "https://images.ctfassets.net/l3v9j0ltz3yi/3o4PsPxE76WmyGqcsucKAI/adb5c6086ecb3a0a74876010c21f0c03/Teladoc_Health_Logo_PNG.png"
+#     col1, col2 = st.columns([4, 3])
+#     with col2:
+#         st.image(TELADOC_LOGO, width=300)
+
+#     player = st.text_input(t("Your Name"), max_chars=40).upper().strip()
+
+#     if st.button(t("🎮 Start Quiz")):
+#         if not player:
+#             st.error(t("Please enter a name."))
+#             return
+
+#         if "game_id" not in st.session_state:
+#             st.error(t("Game ID not found. Please join through a valid game link."))
+#             return
+
+#         game_id = st.session_state.game_id
+
+#         # Load existing players
+#         existing_players = {}
+#         if os.path.exists(PLAYERS_FILE):
+#             with open(PLAYERS_FILE, "r") as f:
+#                 existing_players = json.load(f)
+
+#         if game_id not in existing_players:
+#             existing_players[game_id] = {}
+
+#         if player in existing_players[game_id]:
+#             st.error(t("This name is already taken for this game. Please choose another one."))
+#         else:
+#             existing_players[game_id][player] = {"player_id": st.session_state.player_id}
+
+#             with open(PLAYERS_FILE, "w") as f:
+#                 json.dump(existing_players, f, indent=4)
+
+#             st.session_state.current_player = player
+#             st.session_state.game = 'start_game'
+#             st.rerun()
+
 def player_page():
 
     st.title(t("Welcome to Teladoc Game"))
@@ -658,15 +706,35 @@ def player_page():
         if player in existing_players[game_id]:
             st.error(t("This name is already taken for this game. Please choose another one."))
         else:
+            # Save player
             existing_players[game_id][player] = {"player_id": st.session_state.player_id}
 
             with open(PLAYERS_FILE, "w") as f:
                 json.dump(existing_players, f, indent=4)
 
+            # Load game config and questions based on language
+            if os.path.exists(GAMES_FILE):
+                with open(GAMES_FILE, "r") as f:
+                    games_data = json.load(f)
+            else:
+                st.error(t("No games found."))
+                return
+
+            lang = st.session_state.get("lang", "en")
+            lang_key = "question_file_en" if lang == "en" else "question_file_es"
+
+            question_file = games_data[game_id].get(lang_key, None)
+
+            if question_file:
+                st.session_state.questions = load_question_set(question_file)
+            else:
+                st.error("No question file found for selected language.")
+                return
+
+            # Now start the game
             st.session_state.current_player = player
             st.session_state.game = 'start_game'
             st.rerun()
-
 
  
 def start_game():
@@ -1312,6 +1380,7 @@ def logged_in_page():
 
 
     # --- START GAME SECTION ---
+    # --- START GAME SECTION ---
     if st.session_state.game_link_active:
         st.title(t("🚀 Generate Game Link"))
         question_files = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
@@ -1319,17 +1388,37 @@ def logged_in_page():
         if not question_files:
             st.warning(t("No question sets found. Please create and save a question set first."))
         else:
-            selected_file = st.selectbox(t("Select a question set:"), question_files, label_visibility="collapsed")
+            # STEP 1 — Admin chooses mode
+            question_mode = st.radio(t("Question Set Mode"), [t("Single set for both languages"), t("Separate sets for each language")])
+
+            if question_mode == t("Single set for both languages"):
+                st.markdown(t("**Select Question Set (used for both EN and ES):**"))
+                selected_file = st.selectbox(t("📋 Question Set"), question_files, key="selectbox_single")
+
+                selected_file_en = selected_file
+                selected_file_es = selected_file
+
+            else:  # Separate sets
+                st.markdown(t("**Select Spanish Question Set:**"))
+                selected_file_es = st.selectbox(t("📋 Spanish Questions"), question_files, key="selectbox_es")
+
+                st.markdown(t("**Select English Question Set:**"))
+                selected_file_en = st.selectbox(t("📋 English Questions"), question_files, key="selectbox_en")
+
+            # STEP 2 — Timer option
             use_timer = st.checkbox(t("⏱ Enable time limit per question?"), value=True)
 
             if use_timer:
                 time_limit = st.number_input(t("⏱ Time limit per question (in seconds)"), min_value=5, max_value=300, value=30)
             else:
-                time_limit = None  # or you can set it to 0 if preferred
+                time_limit = None
 
-
+            # STEP 3 — Generate Game
             if st.button(t("Generate & Save Game")):
-                selected_questions = load_question_set(selected_file)
+                # Load questions just to validate that the files are correct
+                questions_en = load_question_set(selected_file_en)
+                questions_es = load_question_set(selected_file_es)
+
                 game_id = generate_game_id()
                 st.session_state.game_id = game_id
 
@@ -1341,17 +1430,20 @@ def logged_in_page():
                         except json.JSONDecodeError:
                             games_data = {}
 
+                # Save both files in games.json
                 games_data[game_id] = {
-                    "question_file": selected_file,
-                    "questions": selected_questions,
+                    "question_file_en": selected_file_en,
+                    "question_file_es": selected_file_es,
                     "time_limit": time_limit if use_timer else None
                 }
 
                 with open(GAMES_FILE, "w") as f:
                     json.dump(games_data, f, indent=4)
 
+                # Success message
                 st.success(f"{t('Game ID')} {game_id} {t('created and saved!')}")
                 st.markdown(f"{t('Send this Game ID to players to join:')} {game_id}")
+
                 share_message = (
                     f"{t('Hi team,')}\n\n"
                     f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
@@ -1363,8 +1455,87 @@ def logged_in_page():
                 st.code(share_message, language="markdown")
                 st.markdown(t("You can copy and paste this message into an email or Teams chat."))
 
+    # if st.session_state.game_link_active:
+    #     st.title(t("🚀 Generate Game Link"))
+    #     question_files = [f for f in os.listdir(QUESTION_SETS_DIR) if f.endswith(".json")]
 
-    # --- DASHBOARD SECTION ---
+    #     if not question_files:
+    #         st.warning(t("No question sets found. Please create and save a question set first."))
+    #     else:
+    #     # STEP 1 — Admin chooses mode
+    #         question_mode = st.radio("Question Set Mode", ["Single set for both languages", "Separate sets for each language"])
+
+    #         if question_mode == "Single set for both languages":
+    #             st.markdown("**Select Question Set (used for both EN and ES):**")
+    #             selected_file = st.selectbox("📋 Question Set", question_files, key="selectbox_single")
+
+    #             selected_file_en = selected_file
+    #             selected_file_es = selected_file
+
+    #         else:  # Separate sets
+    #             st.markdown("**Select Spanish Question Set:**")
+    #             selected_file_es = st.selectbox("📋 Spanish Questions", question_files, key="selectbox_es")
+
+    #             st.markdown("**Select English Question Set:**")
+    #             selected_file_en = st.selectbox("📋 English Questions", question_files, key="selectbox_en")
+
+    #     # else:
+    #     #     st.markdown("**Select Spanish question set:**")
+    #     #     selected_file_es = st.selectbox("📋 Spanish Questions", question_files, key="selectbox_es")
+
+    #     #     st.markdown("**Select English question set:**")
+    #     #     selected_file_en = st.selectbox("📋 English Questions", question_files, key="selectbox_en")
+
+    #         use_timer = st.checkbox(t("⏱ Enable time limit per question?"), value=True)
+
+    #         if use_timer:
+    #             time_limit = st.number_input(t("⏱ Time limit per question (in seconds)"), min_value=5, max_value=300, value=30)
+    #         else:
+    #             time_limit = None  # or you can set it to 0 if preferred
+
+
+    #         if st.button(t("Generate & Save Game")):
+    #             selected_questions = load_question_set(selected_file)
+    #             game_id = generate_game_id()
+    #             st.session_state.game_id = game_id
+
+    #             games_data = {}
+    #             if os.path.exists(GAMES_FILE):
+    #                 with open(GAMES_FILE, "r") as f:
+    #                     try:
+    #                         games_data = json.load(f)
+    #                     except json.JSONDecodeError:
+    #                         games_data = {}
+                            
+    #             games_data[game_id] = {
+    #                 "question_file_es": selected_file_es,
+    #                 "question_file_en": selected_file_en,
+    #                 "time_limit": time_limit if use_timer else None
+    #             }
+
+    #             games_data[game_id] = {
+    #                 "question_file": selected_file,
+    #                 "questions": selected_questions,
+    #                 "time_limit": time_limit if use_timer else None
+    #             }
+
+    #             with open(GAMES_FILE, "w") as f:
+    #                 json.dump(games_data, f, indent=4)
+
+    #             st.success(f"{t('Game ID')} {game_id} {t('created and saved!')}")
+    #             st.markdown(f"{t('Send this Game ID to players to join:')} {game_id}")
+    #             share_message = (
+    #                 f"{t('Hi team,')}\n\n"
+    #                 f"{t('Join our quiz game by clicking the link below and entering the following Game ID:')}\n\n"
+    #                 f"🌐 https://telagame.streamlit.app/\n"
+    #                 f"🆔 {t('Game ID')}: {game_id}\n\n"
+    #                 f"{t('Have fun and good luck!')}"
+    #             )
+
+    #             st.code(share_message, language="markdown")
+    #             st.markdown(t("You can copy and paste this message into an email or Teams chat."))
+
+
     # --- DASHBOARD SECTION ---
     if st.session_state.dashboard_active:
         page = st.sidebar.radio('', [t("**📊 Results**"), t("**🏆 Winners**")], label_visibility="collapsed")
