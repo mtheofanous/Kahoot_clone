@@ -1451,5 +1451,285 @@
             "CpsCy7ZbLG": "ESP2",
             "sT12Brv8nc": "ENG2"
         }
+    },
+    "OJ3QCO": {
+        "questions": [
+            {
+                "question": "Who is the current CEO of Teladoc Health?",
+                "options": [
+                    "Jason Gorevic",
+                    "Carlos Nueno",
+                    "Charles Divita",
+                    "Mala Murthy"
+                ],
+                "correct": "Charles Divita",
+                "correct_index": 2
+            },
+            {
+                "question": "Who is the International President of Teladoc Health?",
+                "options": [
+                    "Kathy Hern\u00e1ndez",
+                    "Carlos Nueno",
+                    "Oscar Masvidal",
+                    "Jason Gorevic"
+                ],
+                "correct": "Carlos Nueno",
+                "correct_index": 1
+            },
+            {
+                "question": "What position does Oscar Masvidal hold at Teladoc Health?",
+                "options": [
+                    "International Operations Manager",
+                    "Country Manager for Spain",
+                    "Head of Human Resources",
+                    "Customer Service Manager"
+                ],
+                "correct": "Country Manager for Spain",
+                "correct_index": 1
+            },
+            {
+                "question": "What was the name of Teladoc Health\u2019s office in Barcelona before the acquisition?",
+                "options": [
+                    "HealthConnect",
+                    "Advance Medical",
+                    "Medical Direct",
+                    "TeleSalud"
+                ],
+                "correct": "Advance Medical",
+                "correct_index": 1
+            },
+            {
+                "question": "In what year did Teladoc Health acquire Advance Medical?",
+                "options": [
+                    "2015",
+                    "2018",
+                    "2020",
+                    "2022"
+                ],
+                "correct": "2018",
+                "correct_index": 1
+            },
+            {
+                "question": "Approximately how many employees does Teladoc Health International have in Barcelona?",
+                "options": [
+                    "420",
+                    "680",
+                    "790",
+                    "1045"
+                ],
+                "correct": "790",
+                "correct_index": 2
+            },
+            {
+                "question": "What position does Carolina Brunet hold at Teladoc Health?",
+                "options": [
+                    "Director of Risk Assessment",
+                    "Mental Health Team Leader",
+                    "Medical Director",
+                    "Director of International Operations"
+                ],
+                "correct": "Director of Risk Assessment",
+                "correct_index": 0
+            },
+            {
+                "question": "What types of services does Teladoc Health offer?",
+                "options": [
+                    "Virtual medical consultations and urgent care",
+                    "Online mental health and second medical opinion",
+                    "Telemedicine hardware and software",
+                    "All of the above"
+                ],
+                "correct": "All of the above",
+                "correct_index": 3
+            },
+            {
+                "question": "In what year did Teladoc Health establish its international headquarters in Barcelona?",
+                "options": [
+                    "2017",
+                    "2018",
+                    "2019",
+                    "2020"
+                ],
+                "correct": "2020",
+                "correct_index": 3
+            },
+            {
+                "question": "Which department in Barcelona focuses on risk assessments for insurance?",
+                "options": [
+                    "Medical Team",
+                    "International Operations",
+                    "Risk Assessment",
+                    "Customer Service"
+                ],
+                "correct": "Risk Assessment",
+                "correct_index": 2
+            },
+            {
+                "question": "How many employees work in the risk assessment department?",
+                "options": [
+                    "50",
+                    "80",
+                    "120",
+                    "30"
+                ],
+                "correct": "80",
+                "correct_index": 1
+            },
+            {
+                "question": "In how many countries does the risk assessment department have projects?",
+                "options": [
+                    "4",
+                    "6",
+                    "8",
+                    "10"
+                ],
+                "correct": "6",
+                "correct_index": 1
+            },
+            {
+                "question": "In how many languages does the risk assessment department provide services?",
+                "options": [
+                    "21",
+                    "7",
+                    "11",
+                    "13"
+                ],
+                "correct": "13",
+                "correct_index": 3
+            },
+            {
+                "question": "How many employees work in the international risk assessment area?",
+                "options": [
+                    "34",
+                    "15",
+                    "21",
+                    "32"
+                ],
+                "correct": "21",
+                "correct_index": 2
+            }
+        ],
+        "answers": {
+            "Dgzz6tBwNi": {
+                "Q1": {
+                    "selected_answer": "Carlos Nueno",
+                    "selected_index": 1,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-12T12:10:35.273925",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q2": {
+                    "selected_answer": "Kathy Hern\u00e1ndez",
+                    "selected_index": 0,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:35.941130",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q3": {
+                    "selected_answer": "Head of Human Resources",
+                    "selected_index": 2,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:36.551487",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q4": {
+                    "selected_answer": "TeleSalud",
+                    "selected_index": 3,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:37.133896",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q5": {
+                    "selected_answer": "2018",
+                    "selected_index": 1,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:37.821706",
+                    "is_correct": true,
+                    "player_name": "MARIOS"
+                },
+                "Q6": {
+                    "selected_answer": "420",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-12T12:10:38.539198",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q7": {
+                    "selected_answer": "Medical Director",
+                    "selected_index": 2,
+                    "correct_index": 0,
+                    "timestamp": "2025-06-12T12:10:39.808146",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q8": {
+                    "selected_answer": "Online mental health and second medical opinion",
+                    "selected_index": 1,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-12T12:10:40.639113",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q9": {
+                    "selected_answer": "2020",
+                    "selected_index": 3,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-12T12:10:41.421308",
+                    "is_correct": true,
+                    "player_name": "MARIOS"
+                },
+                "Q10": {
+                    "selected_answer": "Medical Team",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-12T12:10:42.337571",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q11": {
+                    "selected_answer": "120",
+                    "selected_index": 2,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:43.227172",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q12": {
+                    "selected_answer": "6",
+                    "selected_index": 1,
+                    "correct_index": 1,
+                    "timestamp": "2025-06-12T12:10:44.009100",
+                    "is_correct": true,
+                    "player_name": "MARIOS"
+                },
+                "Q13": {
+                    "selected_answer": "21",
+                    "selected_index": 0,
+                    "correct_index": 3,
+                    "timestamp": "2025-06-12T12:10:44.733336",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                },
+                "Q14": {
+                    "selected_answer": "34",
+                    "selected_index": 0,
+                    "correct_index": 2,
+                    "timestamp": "2025-06-12T12:10:45.549892",
+                    "is_correct": false,
+                    "player_name": "MARIOS"
+                }
+            }
+        },
+        "scores": {
+            "Dgzz6tBwNi": 3
+        },
+        "players": {
+            "Dgzz6tBwNi": "MARIOS"
+        }
     }
 }

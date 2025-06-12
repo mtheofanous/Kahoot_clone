@@ -1164,5 +1164,465 @@
                 "player_name": "ENG2"
             }
         }
+    },
+    "J3CYEE": {
+        "Qwrvs0NcvL": {
+            "Q1": {
+                "selected_answer": "Jason Gorevic",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:03:46.515401",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q2": {
+                "selected_answer": "Carlos Nueno",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:03:48.080934",
+                "is_correct": true,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q3": {
+                "selected_answer": "International Operations Manager",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:03:49.028091",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q4": {
+                "selected_answer": "TeleSalud",
+                "selected_index": 3,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:03:51.376573",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q5": {
+                "selected_answer": "2020",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:03:52.708022",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:03:54.256424",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q7": {
+                "selected_answer": "Mental Health Team Leader",
+                "selected_index": 1,
+                "correct_index": 0,
+                "timestamp": "2025-06-12T12:03:55.653633",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q8": {
+                "selected_answer": "Online mental health and second medical opinion",
+                "selected_index": 1,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:03:59.667494",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q9": {
+                "selected_answer": "2017",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:04:00.943681",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q10": {
+                "selected_answer": "Customer Service",
+                "selected_index": 3,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:02.274147",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q11": {
+                "selected_answer": "80",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:03.533953",
+                "is_correct": true,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q12": {
+                "selected_answer": "8",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:04.795444",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q13": {
+                "selected_answer": "21",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:04:05.872983",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            },
+            "Q14": {
+                "selected_answer": "15",
+                "selected_index": 1,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:07.192394",
+                "is_correct": false,
+                "player_name": "MARIOS_ENG"
+            }
+        },
+        "pPQfY9o6el": {
+            "Q1": {
+                "selected_answer": "Jason Gorevic",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:35.346419",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q2": {
+                "selected_answer": "Carlos Nueno",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:36.062275",
+                "is_correct": true,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q3": {
+                "selected_answer": "Responsable de Servicios al Cliente",
+                "selected_index": 3,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:36.697882",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q4": {
+                "selected_answer": "Medical Direct",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:37.345748",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q5": {
+                "selected_answer": "2015",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:38.065572",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:39.955584",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q7": {
+                "selected_answer": "L\u00edder del Equipo de Salud Mental",
+                "selected_index": 1,
+                "correct_index": 0,
+                "timestamp": "2025-06-12T12:04:40.784770",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q8": {
+                "selected_answer": "Salud mental en l\u00ednea y segunda opini\u00f3n m\u00e9dica",
+                "selected_index": 1,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:04:41.260989",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q9": {
+                "selected_answer": "2018",
+                "selected_index": 1,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:04:41.791750",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q10": {
+                "selected_answer": "Operaciones Internacionales",
+                "selected_index": 1,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:42.754230",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q11": {
+                "selected_answer": "80",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:43.369171",
+                "is_correct": true,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q12": {
+                "selected_answer": "6",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:04:43.941724",
+                "is_correct": true,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q13": {
+                "selected_answer": "7",
+                "selected_index": 1,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:04:44.592108",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            },
+            "Q14": {
+                "selected_answer": "15",
+                "selected_index": 1,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:04:45.180424",
+                "is_correct": false,
+                "player_name": "MARIOS_ESP"
+            }
+        },
+        "FzQgUgqOjm": {
+            "Q1": {
+                "selected_answer": "Jason Gorevic",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:05:23.001558",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q2": {
+                "selected_answer": "Kathy Hern\u00e1ndez",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:24.049759",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q3": {
+                "selected_answer": "International Operations Manager",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:24.667741",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q4": {
+                "selected_answer": "HealthConnect",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:25.348104",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q5": {
+                "selected_answer": "2015",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:25.896943",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:05:26.558383",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q7": {
+                "selected_answer": "Director of Risk Assessment",
+                "selected_index": 0,
+                "correct_index": 0,
+                "timestamp": "2025-06-12T12:05:27.323325",
+                "is_correct": true,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q8": {
+                "selected_answer": "Virtual medical consultations and urgent care",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:05:27.893561",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q9": {
+                "selected_answer": "2017",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:05:28.546447",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q10": {
+                "selected_answer": "Medical Team",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:05:29.294862",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q11": {
+                "selected_answer": "50",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:29.909622",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q12": {
+                "selected_answer": "4",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:05:30.655991",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q13": {
+                "selected_answer": "21",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:05:31.359811",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:05:32.822702",
+                "is_correct": false,
+                "player_name": "TAKIS_ENG"
+            }
+        }
+    },
+    "OJ3QCO": {
+        "Dgzz6tBwNi": {
+            "Q1": {
+                "selected_answer": "Carlos Nueno",
+                "selected_index": 1,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:10:35.273925",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q2": {
+                "selected_answer": "Kathy Hern\u00e1ndez",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:35.941130",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q3": {
+                "selected_answer": "Head of Human Resources",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:36.551487",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q4": {
+                "selected_answer": "TeleSalud",
+                "selected_index": 3,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:37.133896",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q5": {
+                "selected_answer": "2018",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:37.821706",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:10:38.539198",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q7": {
+                "selected_answer": "Medical Director",
+                "selected_index": 2,
+                "correct_index": 0,
+                "timestamp": "2025-06-12T12:10:39.808146",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q8": {
+                "selected_answer": "Online mental health and second medical opinion",
+                "selected_index": 1,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:10:40.639113",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q9": {
+                "selected_answer": "2020",
+                "selected_index": 3,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:10:41.421308",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q10": {
+                "selected_answer": "Medical Team",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:10:42.337571",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q11": {
+                "selected_answer": "120",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:43.227172",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q12": {
+                "selected_answer": "6",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:10:44.009100",
+                "is_correct": true,
+                "player_name": "MARIOS"
+            },
+            "Q13": {
+                "selected_answer": "21",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:10:44.733336",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:10:45.549892",
+                "is_correct": false,
+                "player_name": "MARIOS"
+            }
+        }
     }
 }

@@ -793,6 +793,7 @@ def question_page():
                 <p style="font-size:16px; color:#555;">{t("Share your result with the team and challenge your coworkers.")}</p>
             </div>
         """, unsafe_allow_html=True)
+        
 
         return  # 🚀 Very important → prevent rest of the function running
 
@@ -1374,6 +1375,16 @@ def logged_in_page():
                     st.warning(t("Please confirm overwrite by checking the box."))
                 else:
                     save_question_set(filename) 
+            # Add Download button under Save Set
+            if questions:  # Only if questions are loaded
+                questions_json_str = json.dumps(questions, ensure_ascii=False, indent=4)
+
+                st.download_button(
+                    label="⬇️ " + t("Download Question Set"),
+                    data=questions_json_str,
+                    file_name=f"{filename}.json",
+                    mime="application/json"
+                )
 
             confirm_clear = st.checkbox(t("⚠️ I’m sure I want to clear all questions"), key="confirm_clear")
 
@@ -1495,31 +1506,81 @@ def logged_in_page():
                 if len(response) == len(questions):
                     st.write(f"✅ {name}")
                     st.session_state.completed_players.add(player_id)
+                    
+            d1,d2,d3 = st.columns([1,1,1])
+            
+            with d1:       
+                # 1️⃣ Download Answers
+                if os.path.exists(ANSWERS_FILE):
+                    with open(ANSWERS_FILE, "r", encoding="utf-8") as f:
+                        answers_str = f.read()
 
-            # st.subheader(t("📋 Questions & Answers"))
+                    st.download_button(
+                        label="⬇️ Download Answers",
+                        data=answers_str,
+                        file_name="answers.json",
+                        mime="application/json"
+                    )
+                else:
+                    st.info("No answers.json file found.")
+            with d2:
+                # 2️⃣ Download Game History
+                if os.path.exists(HISTORY_FILE):
+                    with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                        history_str = f.read()
 
-            # for i, question in enumerate(questions):
-            #     with st.expander(f"{t('Question')} {i+1}: {question['question']}"):
-            #         response_counts = {opt: 0 for opt in question["options"]}
-            #         total_responses = 0
+                    st.download_button(
+                        label="⬇️ Download Game History",
+                        data=history_str,
+                        file_name="game_history.json",
+                        mime="application/json"
+                    )
+                else:
+                    st.info("No game_history.json file found.")
+            with d3:
+                # 3️⃣ Download Game Scores
+                if os.path.exists(DATA_FILE):
+                    with open(DATA_FILE, "r", encoding="utf-8") as f:
+                        scores_str = f.read()
 
-            #         for player_id, responses in game_answers.items():
-            #             q_key = f"Q{i+1}"
-            #             if q_key in responses:
-            #                 selected_answer = responses[q_key]["selected_answer"]
-            #                 if selected_answer in response_counts:
-            #                     response_counts[selected_answer] += 1
-            #                 total_responses += 1
+                    st.download_button(
+                        label="⬇️ Download Game Scores",
+                        data=scores_str,
+                        file_name="game_scores.json",
+                        mime="application/json"
+                    )
+                else:
+                    st.info("No game_scores.json file found.")
+                    
+            # # 1️⃣ Download Answers
+            # if os.path.exists(ANSWERS_FILE):
+            #     with open(ANSWERS_FILE, "r", encoding="utf-8") as f:
+            #         answers_str = f.read()
 
-            #         for opt in question["options"]:
-            #             count = response_counts[opt]
-            #             percentage = (count / total_responses * 100) if total_responses > 0 else 0
-            #             if opt == question["correct"]:
-            #                 st.markdown(f"✅ **{opt}** — {count} {t('responses')} ({percentage:.1f}%)")
-            #             else:
-            #                 st.markdown(f"🔹 {opt} — {count} {t('responses')} ({percentage:.1f}%)")
+            #     st.download_button(
+            #         label="⬇️ Download Answers",
+            #         data=answers_str,
+            #         file_name="answers.json",
+            #         mime="application/json"
+            #     )
+            # else:
+            #     st.info("No answers.json file found.")
 
-            #         st.markdown(f"**{t('Total Responses:')}** {total_responses}")
+            # # 2️⃣ Download Game History
+            # if os.path.exists(HISTORY_FILE):
+            #     with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            #         history_str = f.read()
+
+            #     st.download_button(
+            #         label="⬇️ Download Game History",
+            #         data=history_str,
+            #         file_name="game_history.json",
+            #         mime="application/json"
+            #     )
+            # else:
+            #     st.info("No game_history.json file found.")
+
+
             st.subheader(t("📋 Questions & Answers"))
 
             for i, question in enumerate(questions):
