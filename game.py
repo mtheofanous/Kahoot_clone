@@ -935,6 +935,8 @@ def question_page():
                 if time_limit:
                     st.session_state.pop(question_timer_key, None)
                     st.session_state.pop(timer_flag_key, None)
+                    
+                time.sleep(0.1) 
 
                 st.session_state.current_question_index += 1
                 st.rerun()
@@ -963,6 +965,8 @@ def question_page():
         st.session_state.pop(question_timer_key, None)
         st.session_state.pop(timer_flag_key, None)
 
+        time.sleep(0.1)
+        
         st.session_state.current_question_index += 1
         st.rerun()
 

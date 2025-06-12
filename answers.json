@@ -1623,6 +1623,120 @@
                 "is_correct": false,
                 "player_name": "MARIOS"
             }
+        },
+        "HtXdPWOdKy": {
+            "Q1": {
+                "selected_answer": "Carlos Nueno",
+                "selected_index": 1,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:40:01.394296",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q2": {
+                "selected_answer": "Kathy Hern\u00e1ndez",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:03.074781",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q3": {
+                "selected_answer": "Country Manager for Spain",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:04.440276",
+                "is_correct": true,
+                "player_name": "MARIOS3"
+            },
+            "Q4": {
+                "selected_answer": "TeleSalud",
+                "selected_index": 3,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:05.636921",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q5": {
+                "selected_answer": "2020",
+                "selected_index": 2,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:06.777188",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q6": {
+                "selected_answer": "420",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:40:07.696513",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q7": {
+                "selected_answer": "Mental Health Team Leader",
+                "selected_index": 1,
+                "correct_index": 0,
+                "timestamp": "2025-06-12T12:40:08.577407",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q8": {
+                "selected_answer": "Virtual medical consultations and urgent care",
+                "selected_index": 0,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:40:09.473874",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q9": {
+                "selected_answer": "2019",
+                "selected_index": 2,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:40:10.273152",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q10": {
+                "selected_answer": "Medical Team",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:40:11.061916",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q11": {
+                "selected_answer": "80",
+                "selected_index": 1,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:11.887584",
+                "is_correct": true,
+                "player_name": "MARIOS3"
+            },
+            "Q12": {
+                "selected_answer": "4",
+                "selected_index": 0,
+                "correct_index": 1,
+                "timestamp": "2025-06-12T12:40:12.609228",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q13": {
+                "selected_answer": "11",
+                "selected_index": 2,
+                "correct_index": 3,
+                "timestamp": "2025-06-12T12:40:13.375875",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            },
+            "Q14": {
+                "selected_answer": "34",
+                "selected_index": 0,
+                "correct_index": 2,
+                "timestamp": "2025-06-12T12:40:14.228231",
+                "is_correct": false,
+                "player_name": "MARIOS3"
+            }
         }
     }
 }
