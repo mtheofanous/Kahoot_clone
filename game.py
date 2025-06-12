@@ -1507,7 +1507,7 @@ def logged_in_page():
                     st.write(f"✅ {name}")
                     st.session_state.completed_players.add(player_id)
                     
-            d1,d2,d3 = st.columns([1,1,1])
+            d1,d2,d3,d4 = st.columns([1,1,1,1])
             
             with d1:       
                 # 1️⃣ Download Answers
@@ -1551,6 +1551,20 @@ def logged_in_page():
                     )
                 else:
                     st.info("No game_scores.json file found.")
+            with d4:
+                # 4️⃣ Download Games Config
+                if os.path.exists(GAMES_FILE):
+                    with open(GAMES_FILE, "r", encoding="utf-8") as f:
+                        games_str = f.read()
+
+                    st.download_button(
+                        label="⬇️ Download Games Config",
+                        data=games_str,
+                        file_name="games.json",
+                        mime="application/json"
+                    )
+                else:
+                    st.info("No games.json file found.")
                     
             # # 1️⃣ Download Answers
             # if os.path.exists(ANSWERS_FILE):
