@@ -1,25 +1,5 @@
 {
-    "STZIR0": {
-        "question_file_en": "final_questions_eng.json",
-        "question_file_es": "final_questions_es.json",
-        "time_limit": 30
-    },
-    "ZN92GR": {
-        "question_file_en": "final_questions_eng_with_index.json",
-        "question_file_es": "final_questions_es_with_index.json",
-        "time_limit": 30
-    },
-    "W4DUSQ": {
-        "question_file_en": "final_questions_eng_with_index.json",
-        "question_file_es": "final_questions_es_with_index.json",
-        "time_limit": 20
-    },
-    "L750U7": {
-        "question_file_en": "final_questions_eng_with_index.json",
-        "question_file_es": "final_questions_es_with_index.json",
-        "time_limit": 30
-    },
-    "OJ3QCO": {
+    "9YBPKK": {
         "question_file_en": "final_questions_eng_with_index.json",
         "question_file_es": "final_questions_es_with_index.json",
         "time_limit": 30
