@@ -86,6 +86,10 @@ six==1.17.0
 smmap==5.0.2
     # via gitdb
 streamlit==1.42.2
+    # via
+    #   -r requirements.in
+    #   streamlit-lottie
+streamlit-lottie==0.0.5
     # via -r requirements.in
 tenacity==9.0.0
     # via streamlit
