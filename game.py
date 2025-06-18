@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import json
 import os
-import urllib.parse
+from filelock import FileLock
 import time
 import datetime
 import random
@@ -407,16 +407,21 @@ def load_scores():
 
 
 def save_scores(scores):
+    from filelock import FileLock
+    lock = FileLock(DATA_FILE + ".lock")
+
     all_scores = {}
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            all_scores = json.load(f)
+        with lock:
+            with open(DATA_FILE, "r") as f:
+                all_scores = json.load(f)
 
     game_id = st.session_state.get("game_id", "default")
-    all_scores[game_id] = scores  # Save scores under this game
+    all_scores[game_id] = scores
 
-    with open(DATA_FILE, "w") as f:
-        json.dump(all_scores, f, indent=4)
+    with lock:
+        with open(DATA_FILE, "w") as f:
+            json.dump(all_scores, f, indent=4)
         
 # Function to load answers
 def load_answers():
@@ -434,8 +439,11 @@ def load_answers():
 
 # Function to save answers
 def save_answers(answers):
-    with open(ANSWERS_FILE, "w") as f:
-        json.dump(answers, f, indent=4)
+    from filelock import FileLock
+    lock = FileLock(ANSWERS_FILE + ".lock")
+    with lock:
+        with open(ANSWERS_FILE, "w") as f:
+            json.dump(answers, f, indent=4)
         
 answers = load_answers()
 
@@ -649,7 +657,7 @@ def player_page():
             st.info(t("Language changed. Questions will load after you start the quiz."))
 
     player = st.text_input(t("Your Name"), max_chars=40).upper().strip()
-
+    
     if st.button(t("🎮 Start Quiz")):
         if not player:
             st.error(t("Please enter a name."))
@@ -661,47 +669,114 @@ def player_page():
 
         game_id = st.session_state.game_id
 
-        # Load existing players
-        existing_players = {}
-        if os.path.exists(PLAYERS_FILE):
-            with open(PLAYERS_FILE, "r") as f:
-                existing_players = json.load(f)
+        # Introduce random delay to reduce simultaneous locking collisions
+        time.sleep(random.uniform(0.2, 1.0))
 
-        if game_id not in existing_players:
-            existing_players[game_id] = {}
+        # ✅ Locking to prevent concurrent writes to players.json
+        lock = FileLock(PLAYERS_FILE + ".lock")
 
-        if player in existing_players[game_id]:
-            st.error(t("This name is already taken for this game. Please choose another one."))
+        with lock:
+            # Load existing players
+            existing_players = {}
+            if os.path.exists(PLAYERS_FILE):
+                with open(PLAYERS_FILE, "r", encoding="utf-8") as f:
+                    try:
+                        existing_players = json.load(f)
+                    except json.JSONDecodeError:
+                        existing_players = {}
+
+            if game_id not in existing_players:
+                existing_players[game_id] = {}
+
+            if player in existing_players[game_id]:
+                st.error(t("This name is already taken for this game. Please choose another one."))
+                return
+            else:
+                # Save player
+                existing_players[game_id][player] = {"player_id": st.session_state.player_id}
+                with open(PLAYERS_FILE, "w", encoding="utf-8") as f:
+                    json.dump(existing_players, f, indent=4)
+
+        # Load game config and questions based on current language
+        if os.path.exists(GAMES_FILE):
+            with open(GAMES_FILE, "r", encoding="utf-8") as f:
+                games_data = json.load(f)
         else:
-            # Save player
-            existing_players[game_id][player] = {"player_id": st.session_state.player_id}
+            st.error(t("No games found."))
+            return
 
-            with open(PLAYERS_FILE, "w") as f:
-                json.dump(existing_players, f, indent=4)
+        lang = st.session_state.get("lang", "en")
+        lang_key = "question_file_en" if lang == "en" else "question_file_es"
 
-            # Load game config and questions based on current language
-            if os.path.exists(GAMES_FILE):
-                with open(GAMES_FILE, "r") as f:
-                    games_data = json.load(f)
-            else:
-                st.error(t("No games found."))
-                return
+        question_file = games_data[game_id].get(lang_key, None)
 
-            lang = st.session_state.get("lang", "en")
-            lang_key = "question_file_en" if lang == "en" else "question_file_es"
+        if question_file:
+            st.session_state.questions = load_question_set(question_file)
+        else:
+            st.error("No question file found for selected language.")
+            return
 
-            question_file = games_data[game_id].get(lang_key, None)
+        # Now start the game
+        st.session_state.current_player = player
+        st.session_state.game = 'start_game'
+        st.rerun()
 
-            if question_file:
-                st.session_state.questions = load_question_set(question_file)
-            else:
-                st.error("No question file found for selected language.")
-                return
 
-            # Now start the game
-            st.session_state.current_player = player
-            st.session_state.game = 'start_game'
-            st.rerun()
+    # if st.button(t("🎮 Start Quiz")):
+    #     if not player:
+    #         st.error(t("Please enter a name."))
+    #         return
+
+    #     if "game_id" not in st.session_state:
+    #         st.error(t("Game ID not found. Please join through a valid game link."))
+    #         return
+
+    #     game_id = st.session_state.game_id
+
+    #     # Load existing players
+    #     existing_players = {}
+    #     if os.path.exists(PLAYERS_FILE):
+    #         with open(PLAYERS_FILE, "r") as f:
+    #             existing_players = json.load(f)
+
+    #     if game_id not in existing_players:
+    #         existing_players[game_id] = {}
+
+    #     if player in existing_players[game_id]:
+    #         st.error(t("This name is already taken for this game. Please choose another one."))
+    #     else:
+    #         # Add random short sleep to avoid race conditions
+    #         time.sleep(random.uniform(0.2, 1.0))  # e.g. between 100ms and 800ms
+    #         lock = FileLock("players.json.lock")  # creates lock file
+    #         # Save player
+    #         existing_players[game_id][player] = {"player_id": st.session_state.player_id}
+
+    #         with open(PLAYERS_FILE, "w") as f:
+    #             json.dump(existing_players, f, indent=4)
+
+    #         # Load game config and questions based on current language
+    #         if os.path.exists(GAMES_FILE):
+    #             with open(GAMES_FILE, "r") as f:
+    #                 games_data = json.load(f)
+    #         else:
+    #             st.error(t("No games found."))
+    #             return
+
+    #         lang = st.session_state.get("lang", "en")
+    #         lang_key = "question_file_en" if lang == "en" else "question_file_es"
+
+    #         question_file = games_data[game_id].get(lang_key, None)
+
+    #         if question_file:
+    #             st.session_state.questions = load_question_set(question_file)
+    #         else:
+    #             st.error("No question file found for selected language.")
+    #             return
+
+    #         # Now start the game
+    #         st.session_state.current_player = player
+    #         st.session_state.game = 'start_game'
+    #         st.rerun()
 
 
  
@@ -904,6 +979,9 @@ def question_page():
             if st.button(f"{option}", key=f"button_{current_index}_{idx}"):
                 correct_index = question.get("correct_index", -1)
                 is_correct = (idx == correct_index)
+                
+                # ⏱️ Capture timestamp before any delay/locking
+                answer_timestamp = datetime.datetime.now().isoformat()
 
                 answers = load_answers()
                 if game_id not in answers:
@@ -917,7 +995,7 @@ def question_page():
                     "selected_answer": option,
                     "selected_index": idx,   # 🚀 Add this line!
                     "correct_index": correct_index,
-                    "timestamp": datetime.datetime.now().isoformat(),
+                    "timestamp": answer_timestamp,
                     "is_correct": is_correct,
                     "player_name": player_name
                 }
@@ -1162,6 +1240,7 @@ def logged_in_page():
         """)
 
 # --- CREATE GAME SECTION ---
+# --- CREATE GAME SECTION ---
     if st.session_state.new_game_active:
         with st.sidebar.container():
             st.subheader(t("Load a Saved Question Package"))
@@ -1174,6 +1253,41 @@ def logged_in_page():
                 st.success(f"{t('Question set')} '{selected_file}' {t('loaded successfully!')}")
                 time.sleep(1)
                 st.rerun()
+
+            st.markdown("### 📂 Load Question Package from your Local")
+
+            uploaded_file = st.file_uploader("Choose a JSON file", type="json", key="local_upload")
+
+            if uploaded_file is not None and "uploaded_questions_ready" not in st.session_state:
+                try:
+                    uploaded_questions = json.load(uploaded_file)
+
+                    # Validate structure
+                    if isinstance(uploaded_questions, list) and all(
+                        isinstance(q, dict) and "question" in q and "options" in q and "correct" in q
+                        for q in uploaded_questions
+                    ):
+                        for q in uploaded_questions:
+                            if "correct_index" not in q:
+                                try:
+                                    q["correct_index"] = q["options"].index(q["correct"])
+                                except ValueError:
+                                    q["correct_index"] = -1
+
+                        st.session_state.questions = uploaded_questions
+                        st.session_state.uploaded_questions_ready = True  # 🚀 trigger post-rerun loading
+                        st.rerun()
+
+                    else:
+                        st.error("❌ Invalid file structure. Must be a list of questions with 'question', 'options', and 'correct' keys.")
+                except Exception as e:
+                    st.error(f"Error reading file: {e}")
+
+            # Run only after rerun is complete
+            if st.session_state.get("uploaded_questions_ready", False):
+                st.success("✅ Local question set loaded successfully! You can now preview or save it.")
+                del st.session_state.uploaded_questions_ready  # Clean up flag
+
 
             st.title(t("🧠 Create & Edit Questions"))
             st.write(t("Add questions, choose number of options, and set the correct one(s)."))
@@ -1216,11 +1330,16 @@ def logged_in_page():
                 elif len(set(opt.strip() for opt in options)) < len(options):
                     st.error(t("Options must be unique — duplicates are not allowed."))
                 else:
+                    cleaned_options = [opt.strip() for opt in options]
+                    correct_index = cleaned_options.index(correct_answer.strip())
+
                     new_question = {
                         "question": question.strip(),
-                        "options": [opt.strip() for opt in options],
-                        "correct": correct_answer.strip()
+                        "options": cleaned_options,
+                        "correct": correct_answer.strip(),
+                        "correct_index": correct_index  # ✅ Save correct index
                     }
+
                     st.session_state.questions.append(new_question)
                     save_questions(st.session_state.questions)
                     st.success(t("✅ Question added!"))
@@ -1297,10 +1416,14 @@ def logged_in_page():
                                 elif len(set(opt.strip() for opt in new_options)) < len(new_options):
                                     st.error(t("Options must be unique — duplicates are not allowed."))
                                 else:
+                                    cleaned_options = [opt.strip() for opt in new_options]
+                                    correct_index = cleaned_options.index(new_correct.strip())
+                                    
                                     st.session_state.questions[i] = {
                                         "question": new_question.strip(),
-                                        "options": [opt.strip() for opt in new_options],
-                                        "correct": new_correct.strip()
+                                        "options": cleaned_options,
+                                        "correct": new_correct.strip(),
+                                        "correct_index": correct_index  # ✅ Save correct index
                                     }
                                     save_questions(st.session_state.questions)
                                     st.success(t("✅ Question updated successfully."))
@@ -1380,6 +1503,8 @@ def logged_in_page():
                 else:
                     save_question_set(filename) 
             # Add Download button under Save Set
+            questions = st.session_state.get("questions", [])
+
             if questions:  # Only if questions are loaded
                 questions_json_str = json.dumps(questions, ensure_ascii=False, indent=4)
 
@@ -1402,7 +1527,6 @@ def logged_in_page():
                 st.warning(t("No questions found. Please create questions first."))
 
 
-    # --- START GAME SECTION ---
     # --- START GAME SECTION ---
     if st.session_state.game_link_active:
         st.title(t("🚀 Generate Game Link"))
@@ -1477,6 +1601,8 @@ def logged_in_page():
 
                 st.code(share_message, language="markdown")
                 st.markdown(t("You can copy and paste this message into an email or Teams chat."))
+                
+
 
 
     # --- DASHBOARD SECTION ---
@@ -1491,6 +1617,8 @@ def logged_in_page():
             return
 
         if page == t("**📊 Results**"):
+            
+                    
             st.title(t("📊 Quiz Results"))
             selected_game_id = st.selectbox(t("Select Game ID to View Results"), available_game_ids, key="selectbox_results")
             game_id = selected_game_id
@@ -1500,6 +1628,63 @@ def logged_in_page():
             game_answers = selected_data.get("answers", {})
             questions = selected_data.get("questions", [])
             player_names = selected_data.get("players", {})
+            
+            d1, _ = st.columns([1, 1])
+
+            with d1:
+                game_id = st.session_state.get("game_id")
+
+                if not game_id:
+                    st.info("No game selected.")
+                else:
+                    # Load games
+                    if os.path.exists(GAMES_FILE):
+                        try:
+                            with open(GAMES_FILE, "r", encoding="utf-8") as f:
+                                games_data = json.load(f)
+                            single_game = {game_id: games_data.get(game_id, {})}
+                        except json.JSONDecodeError:
+                            st.error("❌ Error reading games.json")
+                            single_game = {}
+                    else:
+                        single_game = {}
+
+                    # Load players
+                    if os.path.exists(PLAYERS_FILE):
+                        try:
+                            with open(PLAYERS_FILE, "r", encoding="utf-8") as f:
+                                players_data = json.load(f)
+                            single_players = {game_id: players_data.get(game_id, {})}
+                        except json.JSONDecodeError:
+                            st.error("❌ Error reading players.json")
+                            single_players = {}
+                    else:
+                        single_players = {}
+
+                    # Load history
+                    if os.path.exists(HISTORY_FILE):
+                        try:
+                            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                                history_data = json.load(f)
+                            single_history = {game_id: history_data.get(game_id, {})}
+                        except json.JSONDecodeError:
+                            st.error("❌ Error reading game_history.json")
+                            single_history = {}
+                    else:
+                        single_history = {}
+
+                    partial_bundle = {
+                        "games": single_game,
+                        "players": single_players,
+                        "history": single_history
+                    }
+
+                    st.download_button(
+                        label="⬇️ Download Backup of This Game",
+                        data=json.dumps(partial_bundle, indent=4),
+                        file_name=f"{game_id}_bundle.json",
+                        mime="application/json"
+                    )
 
             st.write(f"{t('Total Players:')} {len(game_answers)}")
             st.write(f"{t('Total Questions:')} {len(questions)}")
@@ -1511,93 +1696,9 @@ def logged_in_page():
                     st.write(f"✅ {name}")
                     st.session_state.completed_players.add(player_id)
                     
-            d1,d2,d3,d4 = st.columns([1,1,1,1])
             
-            with d1:       
-                # 1️⃣ Download Answers
-                if os.path.exists(ANSWERS_FILE):
-                    with open(ANSWERS_FILE, "r", encoding="utf-8") as f:
-                        answers_str = f.read()
 
-                    st.download_button(
-                        label="⬇️ Download Answers",
-                        data=answers_str,
-                        file_name="answers.json",
-                        mime="application/json"
-                    )
-                else:
-                    st.info("No answers.json file found.")
-            with d2:
-                # 2️⃣ Download Game History
-                if os.path.exists(HISTORY_FILE):
-                    with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-                        history_str = f.read()
-
-                    st.download_button(
-                        label="⬇️ Download Game History",
-                        data=history_str,
-                        file_name="game_history.json",
-                        mime="application/json"
-                    )
-                else:
-                    st.info("No game_history.json file found.")
-            with d3:
-                # 3️⃣ Download Game Scores
-                if os.path.exists(DATA_FILE):
-                    with open(DATA_FILE, "r", encoding="utf-8") as f:
-                        scores_str = f.read()
-
-                    st.download_button(
-                        label="⬇️ Download Game Scores",
-                        data=scores_str,
-                        file_name="game_scores.json",
-                        mime="application/json"
-                    )
-                else:
-                    st.info("No game_scores.json file found.")
-            with d4:
-                # 4️⃣ Download Games Config
-                if os.path.exists(GAMES_FILE):
-                    with open(GAMES_FILE, "r", encoding="utf-8") as f:
-                        games_str = f.read()
-
-                    st.download_button(
-                        label="⬇️ Download Games Config",
-                        data=games_str,
-                        file_name="games.json",
-                        mime="application/json"
-                    )
-                else:
-                    st.info("No games.json file found.")
                     
-            # # 1️⃣ Download Answers
-            # if os.path.exists(ANSWERS_FILE):
-            #     with open(ANSWERS_FILE, "r", encoding="utf-8") as f:
-            #         answers_str = f.read()
-
-            #     st.download_button(
-            #         label="⬇️ Download Answers",
-            #         data=answers_str,
-            #         file_name="answers.json",
-            #         mime="application/json"
-            #     )
-            # else:
-            #     st.info("No answers.json file found.")
-
-            # # 2️⃣ Download Game History
-            # if os.path.exists(HISTORY_FILE):
-            #     with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-            #         history_str = f.read()
-
-            #     st.download_button(
-            #         label="⬇️ Download Game History",
-            #         data=history_str,
-            #         file_name="game_history.json",
-            #         mime="application/json"
-            #     )
-            # else:
-            #     st.info("No game_history.json file found.")
-
 
             st.subheader(t("📋 Questions & Answers"))
 
@@ -1753,10 +1854,49 @@ def logged_in_page():
                 with col2:
                     if st.button(f"**{t('🗑')}**", key=f"delete_game_{game_id}"):
                         if st.session_state.get(confirm_key, False):
+                            # Delete from games.json
                             del games[game_id]
                             with open(GAMES_FILE, "w") as f:
                                 json.dump(games, f, indent=4)
-                            st.success(f"{t('Game')} {game_id} {t('deleted.')}")
+
+                            # Delete from answers.json
+                            if os.path.exists(ANSWERS_FILE):
+                                try:
+                                    with open(ANSWERS_FILE, "r", encoding="utf-8") as f:
+                                        answers_data = json.load(f)
+                                    if game_id in answers_data:
+                                        del answers_data[game_id]
+                                        with open(ANSWERS_FILE, "w", encoding="utf-8") as f:
+                                            json.dump(answers_data, f, indent=4)
+                                except Exception as e:
+                                    st.error(f"Error updating answers.json: {e}")
+
+                            # Delete from players.json
+                            if os.path.exists(PLAYERS_FILE):
+                                try:
+                                    with open(PLAYERS_FILE, "r", encoding="utf-8") as f:
+                                        players_data = json.load(f)
+                                    if game_id in players_data:
+                                        del players_data[game_id]
+                                        with open(PLAYERS_FILE, "w", encoding="utf-8") as f:
+                                            json.dump(players_data, f, indent=4)
+                                except Exception as e:
+                                    st.error(f"Error updating players.json: {e}")
+                                    
+                             # ✅ Delete from game_scores.json
+                            if os.path.exists(DATA_FILE):
+                                try:
+                                    with open(DATA_FILE, "r", encoding="utf-8") as f:
+                                        scores_data = json.load(f)
+                                    if game_id in scores_data:
+                                        del scores_data[game_id]
+                                        with open(DATA_FILE, "w", encoding="utf-8") as f:
+                                            json.dump(scores_data, f, indent=4)
+                                except Exception as e:
+                                    st.error(f"Error updating game_scores.json: {e}")
+
+
+                            st.success(f"{t('Game')} {game_id} {t('and related data')} {t('deleted.')}")
                             st.rerun()
                         else:
                             st.warning(t("Please confirm deletion first."))
@@ -1793,6 +1933,98 @@ def logged_in_page():
                             st.rerun()
                         else:
                             st.warning("Please confirm deletion first.")
+            st.markdown("---")
+
+        st.subheader("📥 Load Game Bundle")
+
+        # Show file uploader only if not yet uploaded
+        if "bundle_upload_success" not in st.session_state:
+            uploaded_bundle = st.file_uploader("Upload a game bundle (.json)", type="json", key="bundle_upload")
+
+            if uploaded_bundle:
+                try:
+                    bundle = json.load(uploaded_bundle)
+                    history_data = bundle.get("history", {})
+                    if not history_data:
+                        st.error("❌ No history found in uploaded bundle.")
+                        st.stop()
+
+                    game_id = list(history_data.keys())[0]
+
+                    if os.path.exists(HISTORY_FILE):
+                        with open(HISTORY_FILE, "r") as f:
+                            existing_history = json.load(f)
+                    else:
+                        existing_history = {}
+
+                    if game_id in existing_history:
+                        st.warning(f"⚠️ Game ID '{game_id}' already exists in game history.")
+                    else:
+                        # Save all the bundle parts
+                        existing_history.update(history_data)
+                        with open(HISTORY_FILE, "w") as f:
+                            json.dump(existing_history, f, indent=4)
+
+                        # Save scores
+                        new_scores = history_data[game_id].get("scores", {})
+                        if os.path.exists(DATA_FILE):
+                            with open(DATA_FILE, "r") as f:
+                                scores_data = json.load(f)
+                        else:
+                            scores_data = {}
+                        scores_data[game_id] = new_scores
+                        with open(DATA_FILE, "w") as f:
+                            json.dump(scores_data, f, indent=4)
+
+                        # Save answers
+                        new_answers = {game_id: history_data[game_id].get("answers", {})}
+                        if os.path.exists(ANSWERS_FILE):
+                            with open(ANSWERS_FILE, "r") as f:
+                                answers_data = json.load(f)
+                        else:
+                            answers_data = {}
+                        answers_data.update(new_answers)
+                        with open(ANSWERS_FILE, "w") as f:
+                            json.dump(answers_data, f, indent=4)
+
+                        # Save games
+                        new_games = bundle.get("games", {})
+                        if os.path.exists(GAMES_FILE):
+                            with open(GAMES_FILE, "r") as f:
+                                games_data = json.load(f)
+                        else:
+                            games_data = {}
+                        games_data.update(new_games)
+                        with open(GAMES_FILE, "w") as f:
+                            json.dump(games_data, f, indent=4)
+
+                        # Save players
+                        new_players = bundle.get("players", {})
+                        if os.path.exists(PLAYERS_FILE):
+                            with open(PLAYERS_FILE, "r") as f:
+                                players_data = json.load(f)
+                        else:
+                            players_data = {}
+                        for gid, players in new_players.items():
+                            if gid not in players_data:
+                                players_data[gid] = players
+                        with open(PLAYERS_FILE, "w") as f:
+                            json.dump(players_data, f, indent=4)
+
+                        st.success(f"✅ Game bundle for '{game_id}' loaded successfully!")
+
+                        # Set trigger to hide uploader and rerun
+                        st.session_state["bundle_upload_success"] = True
+                        time.sleep(2)
+                        st.rerun()
+
+                except Exception as e:
+                    st.error(f"❌ Error loading game bundle: {e}")
+        else:
+            # Reset after success on next rerun
+            st.session_state.pop("bundle_upload_success", None)
+
+
 
 
            
